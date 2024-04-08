@@ -3,6 +3,8 @@
 clear, clc
 close all
 
+%% DATA
+
 % ------------------- data (mandatory) -------------------
 T = 1000;                   % [N]
 P_start = 50e5;             % [Pa]
@@ -31,51 +33,76 @@ g0 = 9.80665;               % [m/s^2]
 % max usable volume
 V_max = vol_reduction_factor*pi*(diameter_max/2)^2*length_max;
 
+%% Combustion
+
 % rho mean
 rho_mean = 1.01e3;                  % TO BE COMPUTED WITH A FORMULA
 % MM mean
 MM_mean = 21.9e-3;                  % TO BE COMPUTED WITH A FORMULA
 R_MM_mean = R/MM_mean;
 % initial performances
-f = @(P_exit) -1/eps + (((k+1)/2)^(1/(k-1))) * ((P_exit/P_start)^(1/k)) * sqrt(((k+1)/(k-1))*(1-(P_exit/P_start)^((k-1)/k)));
-P_exit = fzero(f,1000);
-C_T = sqrt( 2*k^2/(k-1) * (2/(k+1))^((k+1)/(k-1))*(1-(P_exit/P_start)^((k-1)/k))) + (P_exit-P_amb)/P_start*eps;
+f = @(P_exit) -1/eps + (((k+1)/2)^(1/(k-1))) * ((P_exit/P_start)^(1/k)) * sqrt(((k+1)/(k-1))*(1-(P_exit/P_start)^((k-1)/k)));   
+P_exit = fzero(f,1000);             % [Pa]
 
-A_t = T/(P_start * C_T);
-D_t = sqrt(4*A_t/pi);
-r_t = D_t/2;
+%% Nozzle
 
+% Thrust coefficient
+C_T = sqrt( 2*k^2/(k-1) * (2/(k+1))^((k+1)/(k-1))*(1-(P_exit/P_start)^((k-1)/k))) + (P_exit-P_amb)/P_start*eps;                 %[-]
+
+% Throat area and radius
+A_t = T/(P_start * C_T);            % [m^2]
+D_t = sqrt(4*A_t/pi);               % [m]
+r_t = D_t/2;                        % [m]
+
+% Exit area and radius
 A_exit = eps*A_t;                   %[m^2]
-D_exit = sqrt(4*A_exit/pi);        
-r_exit = D_exit/2;
+D_exit = sqrt(4*A_exit/pi);         % [m]
+r_exit = D_exit/2;                  % [m]
 
-L_div_con_15 = (r_exit-r_t)/tand(15); 
-Ref_val = 0.6;
-L_div_RAO = Ref_val*L_div_con_15;
+% RAO divergent 15° cone nozzle length
+L_div_con_15 = (r_exit-r_t)/tand(15);   % [m]
+Ref_val = 0.6;                          % [-]
+L_div_RAO = Ref_val*L_div_con_15;       % [m]
 
-alpha_prime = atan((r_exit-r_t)/L_div_RAO);
+alpha_prime = atan((r_exit-r_t)/L_div_RAO); %[rad]
 
-theta_e = deg2rad(11);              % [deg] picked from table
-theta_i = 40;                       % [deg] picked from table
+% Final parabola angle
+theta_e = deg2rad(11);              % [rad] picked from graph
+% Initial parabola angle
+theta_i = deg2rad(40);              % [rad] picked from graph
 
-lambda  =  0.5*(1+ cos((alpha_prime + theta_e)/2));
+% Nozzle efficiency
+lambda  =  0.5*(1+ cos((alpha_prime + theta_e)/2));     % [-]
 
+% Convergent angle
 beta = 30;                          % [deg] assumed from range of (30-45)
 
+% Combustion chamber radius
 r_cc = diameter_max/2;              % [m]
 
+% Convergent length
 L_conv = (r_cc - r_t)/tand(beta);   % [m]
+% Total nozzle length
 L_tot = L_conv + L_div_RAO;         % [m]
 
-C_star_id = sqrt(R_MM_mean*T_cc/(k*(2/(k+1))^((k+1)/(k-1))));
+%% Performances
 
-I_sp_id = C_star_id*C_T/g0;
+% Ideal characteristic velocity
+C_star_id = sqrt(R_MM_mean*T_cc/(k*(2/(k+1))^((k+1)/(k-1))));       % [m/s]
 
-m_dot = T/I_sp_id/g0;
+% Ideal specific impulse
+I_sp_id = C_star_id*C_T/g0;                                         % [s]
 
-m_dot_ox = OF/(1+OF)*m_dot;
-m_dot_f = 1/(1+OF)*m_dot;
+% Total mass flow rate
+m_dot = T/I_sp_id/g0;                                               % [Kg/s]
 
+% Oxydizer mass flow rate
+m_dot_ox = OF/(1+OF)*m_dot;                                         % [Kg/s]
+% Fuel mass flow rate
+m_dot_f = 1/(1+OF)*m_dot;                                           % [Kg/s]
+
+% Check that the total mass flow rate is actually the sum of the fuel and
+% oxydizer one
 if m_dot ~= m_dot_f+m_dot_ox
-   fprintf("mass flow rate wrong DC")
+   error("mass flow rate wrong DC")
 end
