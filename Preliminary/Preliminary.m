@@ -29,8 +29,10 @@ propellants.OF = 2.24;                  % [-]       O/F fuel ratio
 geometry.T_cc = 3571;                   % [K]       cc temperature (tab 5.5, Sutton)
 propellants.k = 1.24;                   % [-]       cp/cv
 geometry.P_amb = 0;                     % [Pa]
-geometry.L_star = 35*(25.4/1000);                % [m]
+geometry.L_star = 35*(25.4/1000);       % [m]
 geometry.M_cc_guess = 0.3;              % [-]
+geometry.eps_c = 10;                    % [-]
+geometry.flag_cc = 1;                   % [check]
 propellants.T_lox_in = 90;              % [k]
 propellants.T_rp1_in = 273;             % [k]
 
