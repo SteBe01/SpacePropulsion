@@ -29,10 +29,10 @@ propellants.OF = 2.24;                  % [-]       O/F fuel ratio
 geometry.T_cc = 3571;                   % [K]       cc temperature (tab 5.5, Sutton)
 propellants.k = 1.24;                   % [-]       cp/cv
 geometry.P_amb = 0;                     % [Pa]
-geometry.L_star = 1.143;                % [m]
-geometry.M_cc_guess = 0.4;              % [-]
-propellants.T_lox_in = 85;              % [k]
-propellants.T_rp1_in = 273;             % [k]
+geometry.L_star = 35*(25.4/1000);                % [m]
+geometry.M_cc_guess = 0.3;              % [-]
+propellants.T_lox_in = 273;              % [k]
+propellants.T_rp1_in = 90;             % [k]
 
 %----------------------- constants -----------------------
 const.R = 8.31429;                % [J/(mol K)]
@@ -42,6 +42,7 @@ const.R_rp1 = const.R/propellants.MM_rp1;
 const.R_He  = const.R/propellants.MM_He;
 % max usable volume
 geometry.V_max = geometry.vol_reduction_factor*pi*(geometry.diameter_max/2)^2*geometry.length_max;
+geometry.V_free = (1-geometry.vol_reduction_factor)*pi*(geometry.diameter_max/2)^2*geometry.length_max;
 
 %% Combustion
 
@@ -59,7 +60,7 @@ geometry.V_max = geometry.vol_reduction_factor*pi*(geometry.diameter_max/2)^2*ge
 
 [geometry] = combustion_chamber(geometry,propellants);
 
-%% Tank
-
+%%
+[propellants, geometry, engine, const] = initialMasses(propellants, geometry, engine, const)
 
 
