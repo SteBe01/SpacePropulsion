@@ -16,7 +16,7 @@ geometry.vol_reduction_factor = 0.8; % [-]
 propellants.MM_lox = 32e-3;             % [kg/mol]
 propellants.MM_rp1 = 17.5e-3;           % [kg/mol]
 propellants.rho_lox = 1.14e3;           % [kg/m^3]  density
-propellants.rho_rp1 = 0.58e3 ;          % [kg/m^3]  density
+propellants.rho_rp1 = 0.58e3 ;          % [kg/m^3]  density AT 422 k, at 289 it is 0.807e3
 % Prop couple: LOx and RP-1
 engine = [];
 
@@ -26,6 +26,7 @@ propellants.OF = 2.24;                  % [-]       O/F fuel ratio
 geometry.T_cc = 3571;                % [K]       cc temperature (tab 5.5, Sutton)
 propellants.k = 1.24;                   % [-]       cp/cv
 geometry.P_amb = 0;                  % [Pa]
+geometry.L_star = 1.143;             % [m]
 
 %----------------------- constants -----------------------
 const.R = 8.31429;                % [J/(mol K)]
