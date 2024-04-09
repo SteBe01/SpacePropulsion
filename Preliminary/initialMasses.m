@@ -20,8 +20,8 @@ V_tank_ox = V_tank_fu*new_OF;
 
 % solve initial He volumes
 
-geometry.V_initial_He_fu = V_tank_fu * (P_f/P_i)^(1/1.66);
-geometry.V_initial_He_ox = V_tank_ox * (P_f/P_i)^(1/1.66);
+geometry.V_initial_He_fu = V_tank_fu * (P_f/P_i)^(1/propellants.k_He);
+geometry.V_initial_He_ox = V_tank_ox * (P_f/P_i)^(1/propellants.k_He);
 
 % solve final volumes of Ox and Fu
 
