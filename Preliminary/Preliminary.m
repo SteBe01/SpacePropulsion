@@ -31,8 +31,8 @@ propellants.k = 1.24;                   % [-]       cp/cv
 geometry.P_amb = 0;                     % [Pa]
 geometry.L_star = 35*(25.4/1000);                % [m]
 geometry.M_cc_guess = 0.3;              % [-]
-propellants.T_lox_in = 273;              % [k]
-propellants.T_rp1_in = 90;             % [k]
+propellants.T_lox_in = 90;              % [k]
+propellants.T_rp1_in = 273;             % [k]
 
 %----------------------- constants -----------------------
 const.R = 8.31429;                % [J/(mol K)]
