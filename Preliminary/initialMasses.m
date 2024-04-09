@@ -3,7 +3,12 @@ function [propellants, geometry, engine, const] = initialMasses(propellants, geo
 OF = propellants.OF;
 rho_f = propellants.rho_rp1;
 rho_ox = propellants.rho_lox;
-V_tot = 0.34; % m3
+
+V_conv = geometry.L_conv * pi/3 * (geometry.r_cc^2 + geometry.r_t^2 + geometry.r_cc*geometry.r_t);
+V_cc = geometry.L_cc * geometry.A_cc;
+V_occ = V_conv + V_cc;
+V = (geometry.L_conv+geometry.L_cc) * pi * (geometry.diameter_max/2)^2;
+V_tot = V - V_occ;
 
 P_i = geometry.P_start;
 P_f = geometry.P_min;
