@@ -27,6 +27,7 @@ geometry.T_cc = 3571;                % [K]       cc temperature (tab 5.5, Sutton
 propellants.k = 1.24;                   % [-]       cp/cv
 geometry.P_amb = 0;                  % [Pa]
 geometry.L_star = 1.143;             % [m]
+geometry.M_cc_guess = 0.4;           % [-]
 
 %----------------------- constants -----------------------
 const.R = 8.31429;                % [J/(mol K)]
@@ -46,3 +47,10 @@ geometry.V_max = geometry.vol_reduction_factor*pi*(geometry.diameter_max/2)^2*ge
 %% Performances
 
 [propellants, geometry, engine, const] = performances(propellants, geometry, engine, const);
+
+%% Combustion Chamber
+
+[geometry] = combustion_chamber(geometry,propellants);
+
+%% Tank
+
