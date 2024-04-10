@@ -111,5 +111,9 @@ geom.L_tot_cc_conv=geom.L_conv + geom.L_cc;            %[m]
 
 geom.L_tot_cc_nozzle=geom.L_tot_nozzle +  geom.L_cc;   %[m]
 
+% Exhaust velocity
+
+nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start)^((prop.k-1)/prop.k)));  % [m/s]
+
 
 end
