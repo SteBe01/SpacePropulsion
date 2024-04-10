@@ -1,4 +1,4 @@
-function [engine, inj] = performances(prop, engine, comb_ch, const)
+function [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const)
 
 % Ideal characteristic velocity
 engine.C_star_id = sqrt(prop.R_MM_mean*comb_ch.T_cc/(prop.k*(2/(prop.k+1))^((prop.k+1)/(prop.k-1))));       % [m/s]
@@ -26,11 +26,11 @@ Pc = 50e5;
 
 deltaP = 0.2 * Pc;
 
-rho_ox = prop.rho_lox; % [kg/m3]
-rho_f = prop.rho_rp1;   % [kg/m3]
+rho_ox = prop.rho_lox;                                  % [kg/m3]
+rho_f = prop.rho_rp1;                                   % [kg/m3]
 
-mass_dot_ox = engine.m_dot_ox; %[kg/s]
-mass_dot_f = engine.m_dot_f; %[kg/s]
+mass_dot_ox = engine.m_dot_ox;                          %[kg/s]
+mass_dot_f = engine.m_dot_f;                            %[kg/s]
 
 min_d = 0.0006; %from literature
 
@@ -54,6 +54,16 @@ if mod(inj.N_f,2)==1
 end
 inj.D_f = d_ox(inj.N_f);
 
+% Mach number in combustion chamber
+rho_mix = comb_ch.P_start/(prop.R_MM_mean*comb_ch.T_cc);    % [kg/m^3]
+v_cc = engine.m_dot/(rho_mix * geom.A_cc);                  % [m/s]
+a = sqrt(prop.k*prop.R_MM_mean*comb_ch.T_cc);               % [m/s]
+comb_ch.M_cc = v_cc/a;
 
+if comb_ch.M_cc <= comb_ch.M_cc_guess
+    comb_ch.M_check=1;
+else 
+    comb_ch.M_check=0;
 end
 
+end

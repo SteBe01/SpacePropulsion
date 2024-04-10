@@ -1,4 +1,4 @@
-function thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const)
+function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const)
     
     Pr = const.Pr;
     Tf = comb_ch.T_cc;
@@ -7,9 +7,9 @@ function thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const)
     k = const.k;    
     Re = const.Re;
     dc = geom.L_cc/(2*geom.r_cc);
-    tw = 10e-3;              %%%%%%%%%%%%%%%%%%%%% DA CAMBIAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    thermal.tw = 10e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k;
-    M = 0.27;             %%%%%%%%%%%%%%%%%%%%% DA CAMBIAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEE                          
+    M = comb_ch.M_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
 
@@ -24,7 +24,7 @@ function thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const)
     
     for ii = 1:length(Twh_init)
         q1 = h*(Tf - Twh_init(ii));
-        Twc = Twh_init(ii) - q1*tw/k;
+        Twc = Twh_init(ii) - q1*thermal.tw/k;
         q2 = 5.67e-8*0.25*(Twc^4 - Te^4);
         if q1 < q2 || q1 < 0
             break;
@@ -59,4 +59,22 @@ function thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const)
 
     % Delta T of the RP-1 during cooling
     thermal.deltaT = thermal.Q/(m_dot_fu*c);
+
+    %% Check
+
+    sigma = 1100e6;
+    rho = 8190;
+    Pc = 50e5;
+    r = geom.r_cc;
+    l = geom.L_cc;
+    
+    thermal.th_min = 2*Pc*r/sigma;
+    thermal.th_chosen = 5e-3;
+    
+    if thermal.th_chosen < thermal.th_min || thermal.th_chosen < 3e-3
+        error('wrong thickness')
+    end
+    
+    thermal.mass_cc = (l*pi*(r+thermal.th_chosen)^2-l*pi*r^2)*rho;
+    thermal.V_cc = l*pi*(r+thermal.th_chosen)^2;
 end

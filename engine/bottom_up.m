@@ -1,4 +1,4 @@
-%%
+%% Bottom up
 
 clear, clc
 close all
@@ -15,7 +15,7 @@ addpath(genpath('./functions'))
 [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
 
 %% Performances
-[engine, inj] = performances(prop, engine, comb_ch, const);
+[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const);
 
 %% Tanks
 [tank, geom] = tanks(tank, prop, geom, comb_ch);
@@ -24,4 +24,4 @@ addpath(genpath('./functions'))
 engine_shape(geom, tank,nozzle);
 
 %% Thermal protection
-thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const);
+[geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const);
