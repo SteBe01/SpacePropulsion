@@ -50,4 +50,6 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	const.R_He  = const.R/prop.MM_He;
 	prop.MM_mean = 21.9;                  % TO BE COMPUTED WITH A FORMULA
 	prop.R_MM_mean = const.R/prop.MM_mean;
+    %----------------------- constants -----------------------
+    const.N_iterations = 10000;
 end
