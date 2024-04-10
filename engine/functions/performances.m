@@ -14,17 +14,9 @@ engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;                             
 % Fuel mass flow rate
 engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;                                           % [Kg/s]
 
-% Check that the total mass flow rate is actually the sum of the fuel and
-% oxydizer one
-if engine.m_dot ~= engine.m_dot_f+engine.m_dot_ox
-   error("mass flow rate wrong DC")
-end
-
 %% Injection plate
 
-Pc = 50e5;
-
-deltaP = 0.2 * Pc;
+deltaP = 0.2 * comb_ch.P_start;
 
 rho_ox = prop.rho_lox;                                  % [kg/m3]
 rho_f = prop.rho_rp1;                                   % [kg/m3]
@@ -62,7 +54,7 @@ comb_ch.M_cc = v_cc/a;
 
 if comb_ch.M_cc <= comb_ch.M_cc_guess
     comb_ch.M_check=1;
-else 
+else
     comb_ch.M_check=0;
 end
 
