@@ -16,7 +16,7 @@ geometry.vol_reduction_factor = 0.8; % [-]
 propellants.MM_lox = 32e-3;             % [kg/mol]
 propellants.MM_rp1 = 17.5e-3;           % [kg/mol]
 propellants.rho_lox = 1.14e3;           % [kg/m^3]  density
-propellants.rho_rp1 = 0.58e3 ;          % [kg/m^3]  density AT 422 k, at 289 it is 0.807e3
+propellants.rho_rp1 = 0.807e3 ;         % [kg/m^3]  density at 289K
 propellants.MM_He = 4e-3;               % [kg/mol]
 propellants.k_He = 1.66;
 
@@ -33,6 +33,8 @@ geometry.L_star = 35*(25.4/1000);       % [m]
 geometry.M_cc_guess = 0.3;              % [-]
 geometry.eps_c = 10;                    % [-]
 geometry.flag_cc = 1;                   % [check]
+geometry.beta = 30;                     % [deg]
+geometry.Ref_val = 0.6;                 % [-]
 propellants.T_lox_in = 90;              % [k]
 propellants.T_rp1_in = 273;             % [k]
 
