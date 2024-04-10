@@ -1,21 +1,28 @@
 function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const)
 
+geom.L_inj = 0.03;
+
 % volume check
 V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
 
 V_conv = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t);
 V_cc = geom.L_cc * geom.A_cc;
-V_occ = V_conv + V_cc;
-V = (geom.L_conv+geom.L_cc) * pi * (geom.diameter_max/2)^2;
-V_cc_and_conv_inv = V - V_occ;
-fraction = V_cc_and_conv_inv/(V_tot_req);
+V_inj = geom.L_inj * pi * (geom.A_t)^2;
 
-tank.V_tot_tank = V_tot_req - V_occ;
+tot_added_length = geom.L_conv + geom.L_cc + geom.L_inj;
 
-if fraction < 0.2
+V_occ = V_conv + V_cc + V_inj;              % V occupied (cc, conv, inj)
+V_eff_occ = tot_added_length * pi * (geom.diameter_max/2)^2;
+V_around_cc_conv_inj = V_eff_occ - V_occ;
+fraction = V_around_cc_conv_inj/(V_tot_req);
+
+if fraction >= 0.2
+    tank.V_tot_tank = V_tot_req - V_eff_occ;
+elseif fraction < 0.2 || fraction > 0
     V_empty = V_tot_req * (0.2 - fraction);
-
-    tank.V_tot_tank = V_tot_req - (geom.L_cc+geom.L_conv)*pi*(geom.diameter_max/2)^2 - V_empty;
+    tank.V_tot_tank = V_tot_req - V_eff_occ - V_empty;
+else
+    error("Invalid fraction")
 end
 
 
@@ -46,14 +53,14 @@ tank.P_i_ox = P_i_ox + P_i;
 tank.P_f_fu = P_f_fu + P_f;
 tank.P_f_ox = P_f_ox + P_f;
 
-new_OF = OF * rho_f/rho_ox; % volume
+tank.volume_OF = OF * rho_f/rho_ox; % volume
 
-tank.V_tank_fu_ext = tank.V_tot_tank/(1 + new_OF);
-tank.V_tank_ox_ext = tank.V_tank_fu_ext*new_OF;
+tank.V_tank_fu_ext = tank.V_tot_tank/(1 + tank.volume_OF);
+tank.V_tank_ox_ext = tank.V_tank_fu_ext*tank.volume_OF;
 
 
 % new volume with thickness
-geom.l_tank_tot = geom.length_max - (geom.L_cc + geom.L_conv);
+geom.l_tank_tot = geom.length_max - tot_added_length;
 geom.A_tank_tot = tank.V_tot_tank / geom.l_tank_tot;
 geom.r_tank_tot = sqrt(geom.A_tank_tot / pi);
 
@@ -80,12 +87,14 @@ tank.V_initial_He_ox = tank.V_tank_ox * (tank.P_f_ox/tank.P_i_ox)^(1/prop.k_He);
 
 V_tot_OF = tank.V_tot_tank - (tank.V_initial_He_fu + tank.V_initial_He_ox); % m3
 
-tank.V_fu = V_tot_OF/(1 + new_OF);
-tank.V_ox = tank.V_fu*new_OF;
+tank.V_fu = V_tot_OF/(1 + tank.volume_OF);
+tank.V_ox = tank.V_fu*tank.volume_OF;
 
 tank.m_fu = tank.V_fu * rho_f;
 tank.m_ox = tank.V_ox * rho_ox;
-geom.fraction = (V_cc_and_conv_inv+(geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
+
+% volume fraction
+geom.fraction = (V_around_cc_conv_inj + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
 
 end
 

@@ -5,6 +5,7 @@ grid on, axis equal, hold on
 
 d = geom.diameter_max;
 l = geom.length_max;
+space = 0;
 
 % external cylinder
 plot([0 l], [0 0], 'Color', 'blue')
@@ -16,41 +17,53 @@ plot([l l], [0 d], 'Color', 'blue')
 % oxidizer
 d_ox = 2 * geom.r_tank_tot;
 h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
-plot([0.01 h_ox_tot-0.01], [0.01 0.01], 'Color', 'blue')
-plot([0.01 h_ox_tot-0.01], [d_ox-0.01 d_ox-0.01], 'Color', 'blue')
-plot([0.01 0.01], [0.01 d_ox-0.01], 'Color', 'blue')
-plot([h_ox_tot-0.01 h_ox_tot-0.01], [0.01 d_ox-0.01], 'Color', 'blue')
+plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue')
+plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
+plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
+plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
 
 % fuel
 d_fu = d_ox;
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
-plot([h_ox_tot h_ox_tot+h_fu_tot], [0.01 0.01], 'Color', 'blue')
-plot([h_ox_tot h_ox_tot+h_fu_tot], [d_fu-0.01 d_fu-0.01], 'Color', 'blue')
-plot([h_ox_tot h_ox_tot], [0.01 d_fu-0.01], 'Color', 'blue')
-plot([h_ox_tot+h_fu_tot h_ox_tot+h_fu_tot], [0.01 d_fu-0.01], 'Color', 'blue')
+offset = h_ox_tot;
+plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue')
+plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+
+% inj
+h_cc = geom.r_cc * 2;
+l_cc = geom.L_inj;
+% l_cc = geom.r_cc * 2;
+% h_cc = geom.L_inj;
+offset = offset + h_fu_tot;
+plot([offset+space offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 
 % cc
+offset = offset + l_cc;
 h_cc = geom.r_cc * 2;
 l_cc = geom.L_cc;
-offset = h_fu_tot + h_ox_tot;
-plot([offset+0.01 offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+0.01 offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
-plot([offset+0.01 offset+0.01], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 
 % convergent
 h_co_i = h_cc;
 h_co_f = 2 * sqrt(geom.A_t/pi);
 l_co = geom.L_conv;
-offset = h_fu_tot + h_ox_tot + l_cc;
+offset = offset + l_cc;
 plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')
 plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')
 plot([offset offset], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f/2 d/2-h_co_f/2], 'Color', 'blue')
 
 % Divergent
-offset = h_fu_tot + + h_ox_tot + l_cc + l_co;
-r_c_div = 0.382*geom.r_t;     
+offset = offset + l_co;
+r_c_div = 0.382*geom.r_t;
 nozzle.theta_i=pi/6;
 
 % circular part

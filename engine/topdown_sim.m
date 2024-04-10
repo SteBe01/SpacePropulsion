@@ -1,4 +1,7 @@
-clear
+%% Top down
+
+clear, clc
+close all
 
 addpath(genpath('./functions'))
 
