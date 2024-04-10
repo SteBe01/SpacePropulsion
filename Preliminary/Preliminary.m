@@ -54,7 +54,7 @@ geom.V_free = (1-geom.vol_reduction_factor)*pi*(geom.diameter_max/2)^2*geom.leng
 [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
 
 %% Performances
-[engine] = performances(prop, engine, comb_ch, const);
+[engine, inj] = performances(prop, engine, comb_ch, const);
 
 %% Tanks
 [tank] = tanks(prop, geom, comb_ch);
