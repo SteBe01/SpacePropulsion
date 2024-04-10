@@ -18,7 +18,7 @@ addpath(genpath('./functions'))
 [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const);
 
 %% Tanks
-[tank, geom] = tanks(tank, prop, geom, comb_ch);
+[tank, geom] = tanks(tank, prop, geom, engine, comb_ch);
 
 %% Visual representation
 engine_shape(geom, tank,nozzle);

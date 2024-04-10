@@ -7,6 +7,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	geom.diameter_max = 1;              % [m]
 	geom.length_max = 2;                % [m]
 	geom.vol_reduction_factor = 0.8;    % [-]
+	geom.A_tube = 0.005^2 * pi / 4;     % [m]
 
 	prop.MM_lox = 32;                % [kg/mol]
 	prop.MM_rp1 = 175;               % [kg/mol]

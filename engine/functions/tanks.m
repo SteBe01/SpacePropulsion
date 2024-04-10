@@ -1,4 +1,4 @@
-function [tank, geom] = tanks(tank, prop, geom, comb_ch)
+function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch)
 
 % volume check
 V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
@@ -25,11 +25,15 @@ rho_ox = prop.rho_lox;
 
 P_i = comb_ch.P_start;
 P_f = comb_ch.P_min;
+v_ox_i = engine.m_dot_ox / (geom.A_tube * prop.rho_lox);
+v_f_i = engine.m_dot_f / (geom.A_tube * prop.rho_rp1);
+v_ox_f = engine.m_dot_min_ox / (geom.A_tube * prop.rho_lox);
+v_f_f = engine.m_dot_min_f / (geom.A_tube * prop.rho_rp1);
 
-[P_i_fu] = pressure_loss(P_i, rho_f, 5.6241); %Need to put the functions to get these velocity values from the topdown script
-[P_i_ox] = pressure_loss(P_i, rho_ox, 8.9102);
-[P_f_fu] = pressure_loss(P_f, rho_f, 2.2496);
-[P_f_ox] = pressure_loss(P_f, rho_ox, 3.5641);
+[P_i_fu] = pressure_loss(P_i, rho_f, v_f_i); %Need to put the functions to get these velocity values from the topdown script
+[P_i_ox] = pressure_loss(P_i, rho_ox, v_ox_i);
+[P_f_fu] = pressure_loss(P_f, rho_f, v_f_f);
+[P_f_ox] = pressure_loss(P_f, rho_ox, v_ox_f);
 
 tank.P_i_fu = P_i_fu + P_i;
 tank.P_i_ox = P_i_ox + P_i;

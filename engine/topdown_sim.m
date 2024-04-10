@@ -5,7 +5,8 @@ addpath(genpath('./functions'))
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 [prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
 [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
-[tank, geom] = tanks(tank, prop, geom, comb_ch);
+[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const);
+[tank, geom] = tanks(tank, prop, geom, engine, comb_ch);
 
 k_he = 1.66; %helium monoatomic
 P_c = 50; % [bar]

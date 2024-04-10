@@ -4,15 +4,22 @@ function [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, cons
 engine.C_star_id = sqrt(prop.R_MM_mean*comb_ch.T_cc/(prop.k*(2/(prop.k+1))^((prop.k+1)/(prop.k-1))));       % [m/s]
 
 % Ideal specific impulse
-engine.I_sp_id = engine.C_star_id*engine.C_T/const.g0;                                         % [s]
+engine.I_sp_id = engine.C_star_id*engine.C_T/const.g0; % [s]
 
 % Total mass flow rate
-engine.m_dot = engine.T/(engine.I_sp_id*const.g0);                                               % [Kg/s]
+engine.m_dot = geom.A_t * comb_ch.P_start * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
 
 % Oxydizer mass flow rate
-engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;                                         % [Kg/s]
+engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;     % [Kg/s]
 % Fuel mass flow rate
-engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;                                           % [Kg/s]
+engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;            % [Kg/s]
+
+engine.m_dot_min = geom.A_t * comb_ch.P_min * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
+
+% Oxydizer mass flow rate
+engine.m_dot_min_ox = prop.OF/(1+prop.OF)*engine.m_dot_min;     % [Kg/s]
+% Fuel mass flow rate
+engine.m_dot_min_f = 1/(1+prop.OF)*engine.m_dot_min;            % [Kg/s]
 
 %% Injection plate
 
@@ -21,8 +28,8 @@ deltaP = 0.2 * comb_ch.P_start;
 rho_ox = prop.rho_lox;                                  % [kg/m3]
 rho_f = prop.rho_rp1;                                   % [kg/m3]
 
-mass_dot_ox = engine.m_dot_ox;                          %[kg/s]
-mass_dot_f = engine.m_dot_f;                            %[kg/s]
+mass_dot_ox = engine.m_dot_ox;                          % [kg/s]
+mass_dot_f = engine.m_dot_f;                            % [kg/s]
 
 min_d = 0.0006; %from literature
 
