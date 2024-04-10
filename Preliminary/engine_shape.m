@@ -1,6 +1,6 @@
 function [] = engine_shape(geom, tank)
 
-f = figure;
+figure
 grid on, axis equal, hold on
 
 d = geom.diameter_max;
@@ -14,18 +14,20 @@ plot([l l], [0 d], 'Color', 'blu')
 
 % tanks
 % oxidizer
-h_ox_tot = tank.V_tank_ox / (pi*(d/2)^2);
+d_ox = 2 * geom.r_tank_tot;
+h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
 plot([0.01 h_ox_tot-0.01], [0.01 0.01], 'Color', 'blu')
-plot([0.01 h_ox_tot-0.01], [d-0.01 d-0.01], 'Color', 'blu')
-plot([0.01 0.01], [0.01 d-0.01], 'Color', 'blu')
-plot([h_ox_tot-0.01 h_ox_tot-0.01], [0.01 d-0.01], 'Color', 'blu')
+plot([0.01 h_ox_tot-0.01], [d_ox-0.01 d_ox-0.01], 'Color', 'blu')
+plot([0.01 0.01], [0.01 d_ox-0.01], 'Color', 'blu')
+plot([h_ox_tot-0.01 h_ox_tot-0.01], [0.01 d_ox-0.01], 'Color', 'blu')
 
-% oxidizer
-h_fu_tot = tank.V_tank_fu / (pi*(d/2)^2);
+% fuel
+d_fu = d_ox;
+h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
 plot([h_ox_tot h_ox_tot+h_fu_tot], [0.01 0.01], 'Color', 'blu')
-plot([h_ox_tot h_ox_tot+h_fu_tot], [d-0.01 d-0.01], 'Color', 'blu')
-plot([h_ox_tot h_ox_tot], [0.01 d-0.01], 'Color', 'blu')
-plot([h_ox_tot+h_fu_tot h_ox_tot+h_fu_tot], [0.01 d-0.01], 'Color', 'blu')
+plot([h_ox_tot h_ox_tot+h_fu_tot], [d_fu-0.01 d_fu-0.01], 'Color', 'blu')
+plot([h_ox_tot h_ox_tot], [0.01 d_fu-0.01], 'Color', 'blu')
+plot([h_ox_tot+h_fu_tot h_ox_tot+h_fu_tot], [0.01 d_fu-0.01], 'Color', 'blu')
 
 % cc
 h_cc = geom.r_cc * 2;

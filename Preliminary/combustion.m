@@ -1,7 +1,7 @@
 function [prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const)
 
 % rho mean
-prop.rho_mean = 1.01e3;                  % TO BE COMPUTED WITH A FORMULA
+% prop.rho_mean = 1.01e3;                  % TO BE COMPUTED WITH A FORMULA
 % MM mean
 prop.MM_mean = 21.9e-3;                  % TO BE COMPUTED WITH A FORMULA
 prop.R_MM_mean = const.R/prop.MM_mean;
