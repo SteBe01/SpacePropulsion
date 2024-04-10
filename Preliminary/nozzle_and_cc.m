@@ -74,7 +74,7 @@ geometry.lambda  =  0.5*(1+ cos((geometry.alpha_prime + geometry.theta_e)/2));  
 beta = geometry.beta;                          % [deg] assumed from range of (30-45)
 
 % Convergent length
-geometry.L_conv = (geometry.r_cc - geometry.r_t)/tand(geometry.beta);   % [m]
+geometry.L_conv = (geometry.r_cc - geometry.r_t)/tand(beta);   % [m]
 
 % Total nozzle length
 geometry.L_tot_nozzle = geometry.L_conv + geometry.L_div_RAO;         % [m]

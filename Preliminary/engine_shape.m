@@ -41,9 +41,9 @@ h_co_i = h_cc;
 h_co_f = 2 * sqrt(geometry.A_t/pi);
 l_co = geometry.L_conv;
 offset = h_fu_tot + h_ox_tot + l_cc;
-plot([offset+0.01 offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blu')
-plot([offset+0.01 offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blu')
-plot([offset+0.01 offset+0.01], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blu')
+plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blu')
+plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blu')
+plot([offset offset], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blu')
 plot([offset+l_co offset+l_co], [d/2+h_co_f/2 d/2-h_co_f/2], 'Color', 'blu')
 
 end

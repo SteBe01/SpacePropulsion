@@ -33,8 +33,8 @@ geometry.L_star = 35*(25.4/1000);       % [m]
 geometry.M_cc_guess = 0.3;              % [-]
 geometry.eps_c = 10;                    % [-]
 geometry.flag_cc = 1;                   % [check]
-geometry.beta = 30;                     % [deg]
-geometry.Ref_val = 0.6;                 % [-]
+geometry.beta = 45;                     % [deg]
+geometry.Ref_val = 1;                 % [-]
 propellants.T_lox_in = 90;              % [k]
 propellants.T_rp1_in = 273;             % [k]
 
@@ -51,14 +51,11 @@ geometry.V_free = (1-geometry.vol_reduction_factor)*pi*(geometry.diameter_max/2)
 %% Combustion
 [propellants, geometry, engine, const] = combustion(propellants, geometry, engine, const);
 
-%% Nozzle
-[propellants, geometry, engine, const] = nozzle(propellants, geometry, engine, const);
+%% Nozzle and Combustion Chamber:
+[propellants, geometry, engine, const] = nozzle_and_cc(propellants, geometry, engine, const);
 
 %% Performances
 [propellants, geometry, engine, const] = performances(propellants, geometry, engine, const);
-
-%% Combustion Chamber
-[geometry] = combustion_chamber(geometry,propellants);
 
 %% Tanks
 [propellants, geometry, engine, const] = tanks(propellants, geometry, engine, const);
