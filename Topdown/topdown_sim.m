@@ -100,9 +100,9 @@ function T = thrust(A_t, P_c, OF)
 end
 
 function [m_dot, Isp] = get_mass_rate2(A_t, P_c, OF)
-	T = 3503;   %%ASSUMPTIONS WITH OF 2.24
-	k = 1.22;
-	MM = 22;
+	T = 3571;   %%ASSUMPTIONS WITH OF 2.24
+	k = 1.24;
+	MM = 21.9;
 	R = 8314;
 
 	m_dot = A_t * P_c * 1e5 * k * sqrt((2/(k+1))^((k+1)/(k-1))) / sqrt(k * R/MM * T);
