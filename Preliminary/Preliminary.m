@@ -47,22 +47,19 @@ geometry.V_max = geometry.vol_reduction_factor*pi*(geometry.diameter_max/2)^2*ge
 geometry.V_free = (1-geometry.vol_reduction_factor)*pi*(geometry.diameter_max/2)^2*geometry.length_max;
 
 %% Combustion
-
 [propellants, geometry, engine, const] = combustion(propellants, geometry, engine, const);
 
 %% Nozzle
-
 [propellants, geometry, engine, const] = nozzle(propellants, geometry, engine, const);
 
 %% Performances
-
 [propellants, geometry, engine, const] = performances(propellants, geometry, engine, const);
 
 %% Combustion Chamber
-
 [geometry] = combustion_chamber(geometry,propellants);
 
-%%
-[propellants, geometry, engine, const] = initialMasses(propellants, geometry, engine, const)
+%% Tanks
+[propellants, geometry, engine, const] = tanks(propellants, geometry, engine, const);
 
-
+%% Visual representation
+[propellants, geometry, engine, const] = engine_shape(propellants, geometry, engine, const);
