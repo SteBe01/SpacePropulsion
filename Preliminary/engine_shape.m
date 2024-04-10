@@ -7,46 +7,46 @@ d = geom.diameter_max;
 l = geom.length_max;
 
 % external cylinder
-plot([0 l], [0 0], 'Color', 'blu')
-plot([0 l], [d d], 'Color', 'blu')
-plot([0 0], [0 d], 'Color', 'blu')
-plot([l l], [0 d], 'Color', 'blu')
+plot([0 l], [0 0], 'Color', 'blue')
+plot([0 l], [d d], 'Color', 'blue')
+plot([0 0], [0 d], 'Color', 'blue')
+plot([l l], [0 d], 'Color', 'blue')
 
 % tanks
 % oxidizer
 d_ox = 2 * geom.r_tank_tot;
 h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
-plot([0.01 h_ox_tot-0.01], [0.01 0.01], 'Color', 'blu')
-plot([0.01 h_ox_tot-0.01], [d_ox-0.01 d_ox-0.01], 'Color', 'blu')
-plot([0.01 0.01], [0.01 d_ox-0.01], 'Color', 'blu')
-plot([h_ox_tot-0.01 h_ox_tot-0.01], [0.01 d_ox-0.01], 'Color', 'blu')
+plot([0.01 h_ox_tot-0.01], [0.01 0.01], 'Color', 'blue')
+plot([0.01 h_ox_tot-0.01], [d_ox-0.01 d_ox-0.01], 'Color', 'blue')
+plot([0.01 0.01], [0.01 d_ox-0.01], 'Color', 'blue')
+plot([h_ox_tot-0.01 h_ox_tot-0.01], [0.01 d_ox-0.01], 'Color', 'blue')
 
 % fuel
 d_fu = d_ox;
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
-plot([h_ox_tot h_ox_tot+h_fu_tot], [0.01 0.01], 'Color', 'blu')
-plot([h_ox_tot h_ox_tot+h_fu_tot], [d_fu-0.01 d_fu-0.01], 'Color', 'blu')
-plot([h_ox_tot h_ox_tot], [0.01 d_fu-0.01], 'Color', 'blu')
-plot([h_ox_tot+h_fu_tot h_ox_tot+h_fu_tot], [0.01 d_fu-0.01], 'Color', 'blu')
+plot([h_ox_tot h_ox_tot+h_fu_tot], [0.01 0.01], 'Color', 'blue')
+plot([h_ox_tot h_ox_tot+h_fu_tot], [d_fu-0.01 d_fu-0.01], 'Color', 'blue')
+plot([h_ox_tot h_ox_tot], [0.01 d_fu-0.01], 'Color', 'blue')
+plot([h_ox_tot+h_fu_tot h_ox_tot+h_fu_tot], [0.01 d_fu-0.01], 'Color', 'blue')
 
 % cc
 h_cc = geom.r_cc * 2;
 l_cc = geom.L_cc;
 offset = h_fu_tot + h_ox_tot;
-plot([offset+0.01 offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blu')
-plot([offset+0.01 offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blu')
-plot([offset+0.01 offset+0.01], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blu')
-plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blu')
+plot([offset+0.01 offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+0.01 offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+0.01 offset+0.01], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 
 % convergent
 h_co_i = h_cc;
 h_co_f = 2 * sqrt(geom.A_t/pi);
 l_co = geom.L_conv;
 offset = h_fu_tot + h_ox_tot + l_cc;
-plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blu')
-plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blu')
-plot([offset offset], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blu')
-plot([offset+l_co offset+l_co], [d/2+h_co_f/2 d/2-h_co_f/2], 'Color', 'blu')
+plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')
+plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')
+plot([offset offset], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blue')
+plot([offset+l_co offset+l_co], [d/2+h_co_f/2 d/2-h_co_f/2], 'Color', 'blue')
 
 % Divergent
 offset = h_fu_tot + + h_ox_tot + l_cc + l_co;
@@ -68,8 +68,8 @@ xy_r_down(1,:) = xy_r_down(1,:) + ones(1,N)*(offset);
 xy_r_up(2,:) = xy_r_up(2,:) + ones(1,N)*(geom.r_t + r_c_div+ geom.diameter_max/2);
 xy_r_down(2,:) = xy_r_down(2,:) + ones(1,N)*(-geom.r_t - r_c_div+ geom.diameter_max/2);
 
-plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blu')  
-plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blu')  
+plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blue')  
+plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blue')  
 
 % Rao Bell
 x1_up = xy_r_up(1,end); y1_up = xy_r_up(2,end);
@@ -88,18 +88,11 @@ for i = 1:length(x_par)
     y_par_up(i) = f_up(x_par(i));
 end
 y_par_down = zeros(1,length(x_par));
-plot(x_par,y_par_up,'Color', 'blu')
+plot(x_par,y_par_up,'Color', 'blue')
 for i = 1:length(x_par)
     y_par_down(i) = -f_up(x_par(i))+1;
 end
 
-plot(x_par,y_par_down,'Color', 'blu')
-
-
-
-
-
+plot(x_par,y_par_down,'Color', 'blue')
 
 end
-
-
