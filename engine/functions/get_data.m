@@ -8,11 +8,11 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	geom.length_max = 2;                % [m]
 	geom.vol_reduction_factor = 0.8;    % [-]
 
-	prop.MM_lox = 32e-3;                % [kg/mol]
-	prop.MM_rp1 = 175e-3;               % [kg/mol]
+	prop.MM_lox = 32;                % [kg/mol]
+	prop.MM_rp1 = 175;               % [kg/mol]
 	prop.rho_lox = 1.14e3;              % [kg/m^3]  density
 	prop.rho_rp1 = 0.807e3 ;            % [kg/m^3]  density at 289K
-	prop.MM_He = 4e-3;                  % [kg/mol]
+	prop.MM_He = 4;                  % [kg/mol]
 	prop.k_He = 1.66;
 
 
@@ -42,11 +42,11 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 
 
 	%----------------------- constants -----------------------
-	const.R = 8.31429;                  % [J/(mol K)]
+	const.R = 8314.29;                  % [J/(mol K)]
 	const.g0 = 9.80665;                 % [m/s^2]
 	const.R_lox = const.R/prop.MM_lox;
 	const.R_rp1 = const.R/prop.MM_rp1;
 	const.R_He  = const.R/prop.MM_He;
-	prop.MM_mean = 21.9e-3;                  % TO BE COMPUTED WITH A FORMULA
+	prop.MM_mean = 21.9;                  % TO BE COMPUTED WITH A FORMULA
 	prop.R_MM_mean = const.R/prop.MM_mean;
 end

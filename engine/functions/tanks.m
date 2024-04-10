@@ -1,5 +1,24 @@
 function [tank, geom] = tanks(tank, prop, geom, comb_ch)
 
+% volume check
+V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
+
+V_conv = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t);
+V_cc = geom.L_cc * geom.A_cc;
+V_occ = V_conv + V_cc;
+V = (geom.L_conv+geom.L_cc) * pi * (geom.diameter_max/2)^2;
+V_cc_and_conv_inv = V - V_occ;
+fraction = V_cc_and_conv_inv/(V_tot_req);
+
+tank.V_tot_tank = V_tot_req - V_occ;
+
+if fraction < 0.2
+    V_empty = V_tot_req * (0.2 - fraction);
+
+    tank.V_tot_tank = V_tot_req - (geom.L_cc+geom.L_conv)*pi*(geom.diameter_max/2)^2 - V_empty;
+end
+
+
 OF = prop.OF;
 rho_f = prop.rho_rp1;
 rho_ox = prop.rho_lox;
@@ -56,6 +75,7 @@ tank.V_ox = tank.V_fu*new_OF;
 
 tank.m_fu = tank.V_fu * rho_f;
 tank.m_ox = tank.V_ox * rho_ox;
+geom.fraction = (V_cc_and_conv_inv+(geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
 
 end
 
@@ -67,7 +87,7 @@ function [P_loss] = pressure_loss(P_1, rho, v)
     P_inj_loss = 0.2*P_1;
     P_distr_loss = 1/2*rho*v^2;
     P_feeding_loss = 0.5*101325;
-    
+
     P_loss = P_feeding_loss+P_distr_loss+P_inj_loss;
 
 end
@@ -76,13 +96,13 @@ end
 function [tank_thick, V_tank, m_tank] = tank_thickness(tank, P_tank, r_tank, L_tank)
 
     P_tank = 2 * P_tank;        % burst
-    
+
     sigma = tank.sigma;
     rho_tank = tank.rho_tank;
-    
+
     tank_thick = P_tank*r_tank/sigma;
-    V_tank = (tank_thick + r_tank)^2*pi*L_tank;        
-    
+    V_tank = (tank_thick + r_tank)^2*pi*L_tank;
+
     m_tank = ((r_tank + tank_thick)^2*pi - r_tank^2*pi) * L_tank * rho_tank;
 
 end

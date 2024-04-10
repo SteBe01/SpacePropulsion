@@ -1,5 +1,12 @@
 clear
 
+addpath(genpath('./functions'))
+
+[engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
+[prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
+[geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
+[tank, geom] = tanks(tank, prop, geom, comb_ch);
+
 k_he = 1.66; %helium monoatomic
 P_c = 50; % [bar]
 OF = 2.24;
@@ -9,13 +16,13 @@ A_tube = 0.005^2 * pi / 4; %assumed reasonable value [m2]
 rho_ox = 1.14e3; %same values as used in preliminary [kg/m3]
 rho_f = 0.807e3;
 
-V_he_f_initial = 0.3343; %values coming from tank sizing [m3]
-V_he_ox_initial = 0.5291;
+V_he_f_initial = tank.V_initial_He_fu; %values coming from tank sizing [m3]
+V_he_ox_initial = tank.V_initial_He_ox;
 
 %to find throat area giving 1kN of thrust at initial condition
 %same value should come from preliminary sizing
 %A_t = fzero(@(At) thrust(At, 50, OF) - 1000, [0, 1e-3])
-A_t = fzero(@(At) thrust2(At, 50, OF) - 1000, [0 1e-3]);
+A_t = fzero(@(At) thrust2(At, 50, comb_ch.T_cc, prop.k, prop.MM_mean, const.R) - 1000, [0 1e-3]);
 
 %to find pipe velocity at start and end condition
 %[m_dot, ~] = get_mass_rate2(A_t, 50, OF);
@@ -34,7 +41,7 @@ V_he_ox = V_he_ox_initial;
 i = 1;
 dt = 0.5; %going lower doesn't increase accuracy
 while P_c > 20
-	[m_dot, Isp] = get_mass_rate2(A_t, P_c, OF);
+	[m_dot, Isp] = get_mass_rate2(A_t, P_c, comb_ch.T_cc, prop.k, prop.MM_mean, const.R);
 	m_dot_ox = OF/(1+OF) * m_dot;
 	m_dot_f = 1/(1+OF) * m_dot;
 
@@ -74,7 +81,7 @@ while P_c > 20
 	Pc(i) = P_c;
 	vtube_f(i) = v_tube_f;
 	vtube_ox(i) = v_tube_ox;
-	T(i) = m_dot * Isp * 9.81;
+	T(i) = m_dot * Isp * const.g0;
 
 	i = i+1;
 end
@@ -99,12 +106,7 @@ function T = thrust(A_t, P_c, OF)
 	T = m_dot * Isp * 9.81;
 end
 
-function [m_dot, Isp] = get_mass_rate2(A_t, P_c, OF)
-	T = 3571;   %%ASSUMPTIONS WITH OF 2.24
-	k = 1.24;
-	MM = 21.9;
-	R = 8314;
-
+function [m_dot, Isp] = get_mass_rate2(A_t, P_c, T, k, MM, R)
 	m_dot = A_t * P_c * 1e5 * k * sqrt((2/(k+1))^((k+1)/(k-1))) / sqrt(k * R/MM * T);
 
 	c_star = sqrt(T/MM * R) / sqrt(k * (2/(k+1))^((k+1)/(k-1)));
@@ -118,7 +120,7 @@ function [m_dot, Isp] = get_mass_rate2(A_t, P_c, OF)
 	Isp = C_t * c_star / 9.81;
 end
 
-function T = thrust2(A_t, P_c, OF)
-	[m_dot, Isp] = get_mass_rate2(A_t, P_c, OF);
+function T = thrust2(A_t, P_c, T, k, MM, R)
+	[m_dot, Isp] = get_mass_rate2(A_t, P_c, T, k, MM, R);
 	T = m_dot * Isp * 9.81;
 end
