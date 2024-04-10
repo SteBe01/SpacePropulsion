@@ -23,21 +23,29 @@ prop.k_He = 1.66;
 % Prop couple: LOx and RP-1
 
 % ------------------ data (assumptions) ------------------
-geom.eps = 200;                     % [-]       expansion ratio
-prop.OF = 2.24;                     % [-]       O/F fuel ratio
-comb_ch.T_cc = 3571;                % [K]       cc temperature (tab 5.5, Sutton)
-prop.k = 1.24;                      % [-]       cp/cv
-const.P_amb = 1;                    % [Pa]
-nozzle.L_star = 45*(25.4/1000);     % [m]       (between 40-50)
-comb_ch.M_cc_guess = 0.3;           % [-]
-nozzle.eps_c = 10;                  % [-]
-nozzle.flag_cc = 1;                 % [check]
-nozzle.beta = 45;                   % [deg]
-nozzle.Ref_val = 1;                 % [-]
-prop.T_lox_in = 90;                 % [k]
-prop.T_rp1_in = 273;                % [k]
-tank.sigma = 230e6;                 % [Pa]
-tank.rho_tank = 8e3;                % [kg/m3]   stainless steel 304
+geom.eps = 200;                  % [-]       expansion ratio
+prop.OF = 2.24;                  % [-]       O/F fuel ratio
+comb_ch.T_cc = 3571;             % [K]       cc temperature (tab 5.5, Sutton)
+prop.k = 1.24;                   % [-]       cp/cv
+const.P_amb = 1;                 % [Pa]
+nozzle.L_star = 45*(25.4/1000);  % [m] (between 40-50)
+comb_ch.M_cc_guess = 0.3;        % [-]
+nozzle.eps_c = 10;               % [-]
+nozzle.flag_cc = 1;              % [check]
+nozzle.beta = 45;                % [deg]
+nozzle.Ref_val = 1;              % [-]
+prop.T_lox_in = 90;              % [k]
+prop.T_rp1_in = 273;             % [k]
+tank.sigma = 230e6;
+tank.rho_tank = 8e3;
+const.Pr = 0.62;                % [-] - Prandtl number
+thermal.T_wh = 1500;            % [K] - Wanted wall temperature
+const.Te = 4;                   % [K] - External temperature (space)
+const.k = 22;                   % [W/mK] - Conductivity of Inconel 718
+const.Re = 235e3;               % [-] - Reynolds number
+const.c = 1880;                 % [J/(Kg K)]
+
+
 
 %----------------------- constants -----------------------
 const.R = 8.31429;                  % [J/(mol K)]
@@ -83,3 +91,6 @@ fraction = (V_cc_and_conv_inv+(geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tan
 
 %% Visual representation
 engine_shape(geom, tank,nozzle);
+
+%% Thermal protection
+thermal = thermal_check(geom, prop, comb_ch, thermal, engine, const);
