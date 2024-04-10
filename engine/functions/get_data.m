@@ -7,7 +7,6 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	geom.diameter_max = 1;              % [m]
 	geom.length_max = 2;                % [m]
 	geom.vol_reduction_factor = 0.8;    % [-]
-	geom.A_tube = 0.005^2 * pi / 4;     % [m]
 
 	prop.MM_lox = 32;                % [kg/mol]
 	prop.MM_rp1 = 175;               % [kg/mol]
@@ -39,8 +38,11 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	const.Te = 4;                   % [K] - External temperature (space)
 	const.k = 22;                   % [W/mK] - Conductivity of Inconel 718
 	const.Re = 235e3;               % [-] - Reynolds number
-	const.c = 1880;                 % [J/(Kg K)]
-
+	const.c = 1880;                 % [J/(Kg K)] of RP-1
+    nozzle.chem_loss = 1 - 0.5/100; % [-] literature chemical losses
+    nozzle.bl_loss = 1 - 1.5/100;   % [-] literature boundary layer losses
+    nozzle.real_gas = 1 - 0.2/100;  % [-] literature real gass
+    prop.Cp = 5.0027e3;             % [J/ kg K] Cp of mixture
 
 	%----------------------- constants -----------------------
 	const.R = 8314.29;                  % [J/(mol K)]
@@ -50,6 +52,5 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	const.R_He  = const.R/prop.MM_He;
 	prop.MM_mean = 21.9;                  % TO BE COMPUTED WITH A FORMULA
 	prop.R_MM_mean = const.R/prop.MM_mean;
-    %----------------------- constants -----------------------
-    const.N_iterations = 10000;
+    const.N_iter = 1e4;             % [-]
 end
