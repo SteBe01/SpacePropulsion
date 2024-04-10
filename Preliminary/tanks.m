@@ -7,10 +7,10 @@ rho_ox = prop.rho_lox;
 P_i = comb_ch.P_start;
 P_f = comb_ch.P_min;
 
-[P_i_fu] = pressure_loss(P_i, rho_f);
-[P_i_ox] = pressure_loss(P_i, rho_ox);
-[P_f_fu] = pressure_loss(P_f, rho_f);
-[P_f_ox] = pressure_loss(P_f, rho_ox);
+[P_i_fu] = pressure_loss(P_i, rho_f, 5.6241); %Need to put the functions to get these velocity values from the topdown script
+[P_i_ox] = pressure_loss(P_i, rho_ox, 8.9102);
+[P_f_fu] = pressure_loss(P_f, rho_f, 2.2496);
+[P_f_ox] = pressure_loss(P_f, rho_ox, 3.5641);
 
 tank.P_i_fu = P_i_fu + P_i;
 tank.P_i_ox = P_i_ox + P_i;
