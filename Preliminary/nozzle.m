@@ -15,7 +15,7 @@ geometry.r_exit = D_exit/2;                  % [m]
 
 % RAO divergent 15° cone nozzle length
 geometry.L_div_con_15 = (geometry.r_exit-geometry.r_t)/tand(15);   % [m]
-Ref_val = 0.6;                          % [-]
+Ref_val = geometry.Ref_val;                          % [-]
 geometry.L_div_RAO = Ref_val*geometry.L_div_con_15;       % [m]
 
 geometry.alpha_prime = atan((geometry.r_exit-geometry.r_t)/geometry.L_div_RAO); %[rad]
@@ -29,7 +29,7 @@ geometry.theta_i = deg2rad(40);              % [rad] picked from graph
 geometry.lambda  =  0.5*(1+ cos((geometry.alpha_prime + geometry.theta_e)/2));     % [-]
 
 % Convergent angle
-geometry.beta = 30;                          % [deg] assumed from range of (30-45)
+beta = geometry.beta;                          % [deg] assumed from range of (30-45)
 
 % Combustion chamber radius
 geometry.r_cc = geometry.diameter_max/2;              % [m]
