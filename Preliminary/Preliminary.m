@@ -86,4 +86,4 @@ end
 fraction = (V_cc_and_conv_inv+(geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req)
 
 %% Visual representation
-engine_shape(geom, tank);
+engine_shape(geom, tank,nozzle);
