@@ -5,8 +5,8 @@ addpath(genpath('./functions'))
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 [prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
 [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
-[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const);
-[tank, geom] = tanks(tank, prop, geom, engine, comb_ch);
+[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
+[tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const);
 
 k_he = 1.66; %helium monoatomic
 P_c = 50; % [bar]
@@ -48,7 +48,10 @@ while P_c > 20
 
 	dV_ox = m_dot_ox / rho_ox * dt;
 	v_tube_ox = m_dot_ox / (rho_ox * A_tube);
-	dP_inj_ox = 0.2*P_c;
+	K = 1.7;
+
+	%dP_inj_ox = 0.2*P_c
+	dP_inj_ox = (3.627 * K * (m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476;
 	dP_distr_ox = 1/2*rho_ox*v_tube_ox^2 * 1e-5;
 	dP_feed_ox = 0.5*101325 * 1e-5;
 	P_he_ox = P_c + dP_inj_ox + dP_distr_ox + dP_feed_ox;
@@ -61,7 +64,7 @@ while P_c > 20
 
 	dV_f = m_dot_f / rho_f * dt;
 	v_tube_f = m_dot_f / (rho_f * A_tube);
-	dP_inj_f = 0.2*P_c;
+	dP_inj_f  = (3.627 * K * (m_dot_f *2.20462)^2) / (inj.N_f^2 *rho_f *0.0624  * (inj.D_f  * 39.3701)^4) * 0.0689476;
 	dP_distr_f = 1/2*rho_f*v_tube_f^2 * 1e-5;
 	dP_feed_f = 0.5*101325 * 1e-5;
 	P_he_f = P_c + dP_inj_f + dP_distr_f + dP_feed_f;

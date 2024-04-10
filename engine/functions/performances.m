@@ -51,7 +51,7 @@ inj.N_f = find(d_f < min_d, 1) - 1;
 if mod(inj.N_f,2)==1
     inj.N_f=inj.N_f-1;
 end
-inj.D_f = d_ox(inj.N_f);
+inj.D_f = d_f(inj.N_f);
 
 % Mach number in combustion chamber
 rho_mix = comb_ch.P_start/(prop.R_MM_mean*comb_ch.T_cc);    % [kg/m^3]

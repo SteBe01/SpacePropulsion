@@ -46,6 +46,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
     prop.Cp = 5.0027e3;             % [J/ kg K] Cp of mixture
 
 	%----------------------- constants -----------------------
+	const.K = 1.7;                      % [-] head pressure loss coefficient(see huzel page 114)
 	const.R = 8314.29;                  % [J/(mol K)]
 	const.g0 = 9.80665;                 % [m/s^2]
 	const.R_lox = const.R/prop.MM_lox;

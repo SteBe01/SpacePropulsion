@@ -1,4 +1,4 @@
-function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch)
+function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const)
 
 % volume check
 V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
@@ -30,10 +30,16 @@ v_f_i = engine.m_dot_f / (geom.A_tube * prop.rho_rp1);
 v_ox_f = engine.m_dot_min_ox / (geom.A_tube * prop.rho_lox);
 v_f_f = engine.m_dot_min_f / (geom.A_tube * prop.rho_rp1);
 
-[P_i_fu] = pressure_loss(P_i, rho_f, v_f_i); %Need to put the functions to get these velocity values from the topdown script
-[P_i_ox] = pressure_loss(P_i, rho_ox, v_ox_i);
-[P_f_fu] = pressure_loss(P_f, rho_f, v_f_f);
-[P_f_ox] = pressure_loss(P_f, rho_ox, v_ox_f);
+%horrible, cry about it
+dP_inj_ox_i = (3.627 * const.K * (engine.m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
+dP_inj_f_i = (3.627 * const.K * (engine.m_dot_f*2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * (inj.D_f * 39.3701)^4) * 0.0689476 * 1e5;
+dP_inj_ox_f = (3.627 * const.K * (engine.m_dot_min_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
+dP_inj_f_f = (3.627 * const.K * (engine.m_dot_min_f*2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * (inj.D_f * 39.3701)^4) * 0.0689476 * 1e5;
+
+[P_i_fu] = pressure_loss(rho_f, v_f_i, dP_inj_f_i);
+[P_i_ox] = pressure_loss(rho_ox, v_ox_i, dP_inj_ox_i);
+[P_f_fu] = pressure_loss(rho_f, v_f_f, dP_inj_f_f);
+[P_f_ox] = pressure_loss(rho_ox, v_ox_f, dP_inj_ox_f);
 
 tank.P_i_fu = P_i_fu + P_i;
 tank.P_i_ox = P_i_ox + P_i;
@@ -86,14 +92,11 @@ end
 
 %% functions
 
-function [P_loss] = pressure_loss(P_1, rho, v)
-
-    P_inj_loss = 0.2*P_1;
+function [P_loss] = pressure_loss(rho, v, P_inj_loss)
     P_distr_loss = 1/2*rho*v^2;
     P_feeding_loss = 0.5*101325;
 
     P_loss = P_feeding_loss+P_distr_loss+P_inj_loss;
-
 end
 
 

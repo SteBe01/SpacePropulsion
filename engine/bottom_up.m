@@ -10,23 +10,23 @@ addpath(genpath('./functions'))
 
 %% Combustion
 for i = 1:const.N_iterations
+    [prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
 
-[prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
+    % Nozzle and Combustion Chamber
+    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
 
-% Nozzle and Combustion Chamber
-[geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
+    % Performances
+    [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
 
-% Performances
-[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
-
-% Tanks
-[tank, geom] = tanks(tank, prop, geom, engine, comb_ch);
-if  engine.T_real<1000
-    engine.T = engine.T + 0.01;
-else
-    break
+    % Tanks
+    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const);
+    if  engine.T_real<1000
+        engine.T = engine.T + 0.01;
+    else
+        break
+    end
 end
-end
+
 %% Visual representation
 engine_shape(geom, tank,nozzle);
 
