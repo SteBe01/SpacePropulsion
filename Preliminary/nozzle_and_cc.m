@@ -62,13 +62,37 @@ geom.L_div_RAO = Ref_val*geom.L_div_con_15;       % [m]
 
 nozzle.alpha_prime = atan((geom.r_exit-geom.r_t)/geom.L_div_RAO); %[rad]
 
-% Final parabola angle
-nozzle.theta_e = deg2rad(11);              % [rad] picked from graph
-% Initial parabola angle
-nozzle.theta_i = deg2rad(40);              % [rad] picked from graph
+% switch Ref_val
+% 
+% % Final parabola angle
+% nozzle.theta_e = deg2rad(11);              % [rad] picked from graph
+% % Initial parabola angle
+% nozzle.theta_i = deg2rad(40);              % [rad] picked from graph
+% 
+% % Nozzle efficiency
+% nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
 
-% Nozzle efficiency
-nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
+switch Ref_val
+
+    case 0.6 % Shortest Nozzle
+        % Final parabola angle
+        nozzle.theta_e = deg2rad(11);              % [rad] picked from graph
+        % Initial parabola angle
+        nozzle.theta_i = deg2rad(40);              % [rad] picked from graph
+        
+        % Nozzle efficiency
+        nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
+
+    case 1 % Most Efficient, lowest lambda
+        % Final parabola angle
+        nozzle.theta_e = deg2rad(3);              % [rad] picked from graph
+        % Initial parabola angle
+        nozzle.theta_i = deg2rad(30);              % [rad] picked from graph
+        
+        % Nozzle efficiency
+        nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
+
+end
 
 % Convergent angle
 beta = nozzle.beta;                          % [deg] assumed from range of (30-45)
