@@ -68,7 +68,7 @@ end
 %% Combustion chamber losses:
 
 f = geom.Cf/4;
-delta_p = f*prop.rho_cc_in*prop.V_cc^2/geom.r_cc/2;
+delta_p = f*prop.rho_cc_in*prop.v_cc^2/geom.r_cc/2;
 comb_ch.P_start_real = comb_ch.P_start_id-delta_p;
 
 %% Nozzle Losses:

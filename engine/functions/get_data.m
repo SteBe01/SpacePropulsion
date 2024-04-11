@@ -18,8 +18,8 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	prop.rho_rp1 = 0.807e3 ;            % [kg/m^3]  density at 289K
 	prop.MM_He = 4;                     % [kg/mol]
 	prop.k_He = 1.66;
-    prop.rho_cc_in = 3.7596;
-    prop.V_cc = 0.06*1236.2;
+    prop.rho_cc_in = 3.7596;            % [kg/mol] initial density inside cc
+    prop.v_cc = 0.06*1236.2;            % [m/s] initial velocity cc
 
 	% ------------------ data (assumptions) ------------------
 	geom.eps = 200;                     % [-]       expansion ratio

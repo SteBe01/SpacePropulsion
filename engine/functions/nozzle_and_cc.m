@@ -30,29 +30,19 @@ switch nozzle.flag_cc
         k = prop.k;
         M_cc = geom.M_cc_guess;
         geom.V_cc = L_star*A_t;
-        
         geom.A_cc = A_t/M_cc*((2/(k+1)*(1+(k-1)/2*M_cc^2)))^((k+1)/2/(k-1));
-        
         geom.r_cc = sqrt(geom.A_cc/pi);
-        
         geom.L_cc = geom.V_cc/geom.A_cc;
-
     case 1
         L_star = nozzle.L_star;
         A_t = geom.A_t;
         % k = prop.k;
         eps_c = nozzle.eps_c;
-
         geom.V_cc = L_star*A_t;
-        
         geom.A_cc = A_t*eps_c;
-        
         geom.r_cc = sqrt(geom.A_cc/pi);
-        
         geom.L_cc = geom.V_cc/geom.A_cc;
-
 end
-
 
 %% Nozzle Part 2: L_conv, L_div
 
@@ -74,35 +64,26 @@ nozzle.alpha_prime = atan((geom.r_exit-geom.r_t)/geom.L_div_RAO); %[rad]
 % nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
 
 switch Ref_val
-
     case 0.6 % Shortest Nozzle
         % Final parabola angle
         nozzle.theta_e = deg2rad(11);              % [rad] picked from graph
         % Initial parabola angle
         nozzle.theta_i = deg2rad(40);              % [rad] picked from graph
-        
         % Nozzle efficiency
         nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
-
     case 1 % Most Efficient, lowest lambda
         % Final parabola angle
         nozzle.theta_e = deg2rad(3);              % [rad] picked from graph
         % Initial parabola angle
         nozzle.theta_i = deg2rad(30);              % [rad] picked from graph
-        
         % Nozzle efficiency
         nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
-
 end
 
 T0 = comb_ch.T_cc/((prop.k + 1)/2); % [K] Critical T at throat 
-
 a_t = sqrt(prop.k*prop.MM_mean*T0); % [m/s] speed of sound at throat
-
 Re_t = (a_t * prop.rho_t * geom.r_t*2)/prop.mu_t; % [-] Reynolds at throat
-
 Re_prime = (sqrt(geom.r_t/(0.382*geom.r_t)))*Re_t; % [-] Reynolds prime, assuming curvature radius as 0.382*Rt
-
 nozzle.Cd = 1 - (((prop.k+1)/2)^(3/4)) * ((3.266 - (2.128/(prop.k+1)))*Re_prime^(-0.5)) + (0.9428* Re_prime^(-1)*(((prop.k-1)*(prop.k+2)) / ((prop.k+1)^(0.5)) )); % [-] Discharge Coeff.
 
 % Convergent angle
@@ -115,16 +96,12 @@ geom.L_conv = (geom.r_cc - geom.r_t)/tand(beta);   % [m]
 geom.L_tot_nozzle = geom.L_conv + geom.L_div_RAO;         % [m]
 
 % Total length of Combustion Chamber + Convergent of Nozzle
-
 geom.L_tot_cc_conv=geom.L_conv + geom.L_cc;            %[m]
 
 % Total length of Combustion Chamber + Nozzle:
-
 geom.L_tot_cc_nozzle=geom.L_tot_nozzle +  geom.L_cc;   %[m]
 
 % Exhaust velocity
-
 nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));  % [m/s]
-
 
 end
