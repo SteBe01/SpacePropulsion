@@ -15,7 +15,7 @@ for ii=1:N_sim
     d_ox = d_ox_vec(ii);
     d_f = d_f_vec(ii);
 
-    [T,Isp] = topdown_sim_stoch(d_ox, d_f);
+    [t, T,Isp] = topdown_sim_stoch(d_ox, d_f);
 
     rows = size(T, 2);
     rows1 = size(Isp,2);
@@ -55,4 +55,3 @@ figure()
 hold on; grid on
 
 plot(I_tot)
-

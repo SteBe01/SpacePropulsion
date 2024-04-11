@@ -6,13 +6,14 @@ close all
 addpath(genpath('./functions'))
 
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
-[prop, nozzle] = combustion(prop, geom, nozzle, comb_ch, const);
+comb_ch.P_start_real = comb_ch.P_start_id;
+[prop, nozzle] = combustion(prop, geom, nozzle, comb_ch);
 [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
 [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
 [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const);
 
 k_he = prop.k_He; %helium monoatomic
-P_c = comb_ch.P_start; % [Pa]
+P_c = comb_ch.P_start_id; % [Pa]
 OF = prop.OF;
 
 A_tube = geom.A_tube; %assumed reasonable value [m2]
