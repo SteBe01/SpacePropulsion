@@ -125,4 +125,3 @@ function T = thrust2(A_t, P_c, T, k, MM, R)
 	[m_dot, Isp] = get_mass_rate2(A_t, P_c, T, k, MM, R);
 	T = m_dot * Isp * 9.81;
 end
-end
