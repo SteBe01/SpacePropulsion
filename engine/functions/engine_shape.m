@@ -17,23 +17,23 @@ plot([l l], [0 d], 'Color', 'blue')
 % oxidizer
 d_ox = 2 * geom.r_tank_tot;
 h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
-plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue')
-plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
-plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
-plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
+plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue', LineWidth=2)
+plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
+plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
+plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
 
 plot([tank.L_initial_He_ox tank.L_initial_He_ox], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
 surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
-surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','blue');
+surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','#0CF2EE');
 
 % fuel
 d_fu = d_ox;
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
 offset = h_ox_tot;
-plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue')
-plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
-plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
-plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue', LineWidth=2)
+plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
+plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
+plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
 
 plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
 surf([offset offset+tank.L_initial_He_fu;offset offset+tank.L_initial_He_fu],[d/2-d_fu/2 d/2-d_fu/2;d/2+d_fu/2 d/2+d_fu/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
