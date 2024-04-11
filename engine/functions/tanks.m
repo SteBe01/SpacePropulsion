@@ -1,7 +1,8 @@
 function [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const)
 
 % volume check
-V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
+A_tot_req = pi*(geom.diameter_max/2)^2;
+V_tot_req = geom.length_max*A_tot_req;
 
 V_conv_int = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t); % Old conv geometry (no thickness)
 V_conv_ext = geom.L_conv * pi/3 * ((geom.r_cc + thermal.th_chosen_cc)^2 + (geom.r_t + thermal.th_chosen_cc)^2 + (geom.r_cc + thermal.th_chosen_cc)*(geom.r_t + thermal.th_chosen_cc));
@@ -38,7 +39,7 @@ v_f_i = engine.m_dot_f / (geom.A_tube * prop.rho_rp1);
 v_ox_f = engine.m_dot_min_ox / (geom.A_tube * prop.rho_lox);
 v_f_f = engine.m_dot_min_f / (geom.A_tube * prop.rho_rp1);
 
-%horrible, cry about it
+% horrible, cry about it
 dP_inj_ox_i = (3.627 * const.K * (engine.m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
 dP_inj_f_i = (3.627 * const.K * (engine.m_dot_f*2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * (inj.D_f * 39.3701)^4) * 0.0689476 * 1e5;
 dP_inj_ox_f = (3.627 * const.K * (engine.m_dot_min_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
@@ -70,7 +71,8 @@ geom.L_tank_fu = tank.V_tank_fu_ext / geom.A_tank_tot;
 [geom.tank_thickness_fu, ~, masses.m_tank_fu] = tank_thickness(tank, tank.P_i_fu, geom.r_tank_tot, geom.L_tank_fu);
 tank.V_fu = geom.L_tank_fu*pi*(geom.r_tank_tot - geom.tank_thickness_fu)^2;
 
-geom.L_tank_ox = tank.V_tank_ox_ext / geom.A_tank_tot;
+geom.L_tank_ox_old = tank.V_tank_ox_ext / geom.A_tank_tot;
+geom.L_tank_ox = tank.V_tank_ox_ext / A_tot_req;
 
 [geom.tank_thickness_ox, ~, masses.m_tank_ox] = tank_thickness(tank, tank.P_i_ox, geom.r_tank_tot, geom.L_tank_ox);
 tank.V_ox = geom.L_tank_ox*pi*(geom.r_tank_tot - geom.tank_thickness_ox)^2;

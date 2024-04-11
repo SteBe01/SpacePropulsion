@@ -15,9 +15,9 @@ plot([l l], [0 d], 'Color', 'blue')
 
 % tanks
 % oxidizer
-d_ox = 2 * geom.r_tank_tot;
-d_ox_int = 2 * (geom.r_tank_tot-geom.tank_thickness_ox);
-h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
+d_ox = geom.diameter_max;
+d_ox_int = d_ox - 2 * geom.tank_thickness_ox;
+h_ox_tot = geom.L_tank_ox;
 plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue')  % ext
 plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')  % ext
 plot([space h_ox_tot-space], [d/2-d_ox_int/2-space d/2-d_ox_int/2-space], 'Color', 'blue')
@@ -30,10 +30,10 @@ surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[d/2-d_ox_int/2 d/2-d_ox_in
 surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[d/2-d_ox_int/2 d/2-d_ox_int/2;d/2+d_ox_int/2 d/2+d_ox_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','#0CF2EE');
 
 % fuel
-d_fu = d_ox;
+d_fu = 2 * geom.r_tank_tot;
 d_fu_int = 2 * (geom.r_tank_tot-geom.tank_thickness_fu);
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
-offset = h_ox_tot;
+offset = h_ox_tot + 0.5*(geom.L_tank_ox_old - geom.L_tank_ox);
 plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue')  % ext
 plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')  % ext
 plot([offset+space offset+h_fu_tot-space], [d/2-d_fu_int/2-space d/2-d_fu_int/2-space], 'Color', 'blue')
@@ -48,7 +48,7 @@ surf([offset+tank.L_initial_He_fu offset+h_fu_tot;offset+tank.L_initial_He_fu of
 % inj
 h_inj = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_inj;
-offset = offset + h_fu_tot;
+offset = offset + h_fu_tot  + 0.5*(geom.L_tank_ox_old - geom.L_tank_ox);
 plot([offset+space offset+l_cc], [d/2-h_inj/2 d/2-h_inj/2], 'Color', 'blue')
 plot([offset+space offset+l_cc], [d/2+h_inj/2 d/2+h_inj/2], 'Color', 'blue')
 plot([offset+space offset+space], [d/2+h_inj/2 d/2-h_inj/2], 'Color', 'blue')
