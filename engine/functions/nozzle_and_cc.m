@@ -2,24 +2,28 @@ function [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, noz
 
 %% Nozzle Part 1 :C_T, A_t, A_exit
 
+% Initial performances
+f = @(P_exit) -1/geom.eps + (((prop.k+1)/2)^(1/(prop.k-1))) * ((P_exit/comb_ch.P_start_real)^(1/prop.k)) * sqrt(((prop.k+1)/(prop.k-1))*(1-(P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));
+nozzle.P_exit = fzero(f,1000);                                  % [Pa]
+
 % Thrust coefficient
 engine.C_T = sqrt( 2*prop.k^2/(prop.k-1) * (2/(prop.k+1))^((prop.k+1)/(prop.k-1))*(1-(nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k))) + (nozzle.P_exit-const.P_amb)/comb_ch.P_start_real*geom.eps;                 %[-]
 
 % Throat area and radius
-geom.A_t = engine.T/(comb_ch.P_start_real * engine.C_T);            % [m^2]
-D_t = sqrt(4*geom.A_t/pi);               % [m]
-geom.r_t = D_t/2;                        % [m]
+geom.A_t = engine.T/(comb_ch.P_start_real * engine.C_T);        % [m^2]
+D_t = sqrt(4*geom.A_t/pi);                                      % [m]
+geom.r_t = D_t/2;                                               % [m]
 
 % Exit area and radius
-geom.A_exit = geom.eps*geom.A_t;                   %[m^2]
-D_exit = sqrt(4*geom.A_exit/pi);         % [m]
-geom.r_exit = D_exit/2;                  % [m]
+geom.A_exit = geom.eps*geom.A_t;                                %[m^2]
+D_exit = sqrt(4*geom.A_exit/pi);                                % [m]
+geom.r_exit = D_exit/2;                                         % [m]
 
 %% Combustion Chamber: A_cc, L_cc
 
-% L_star = characteristic length (1.143 for RP1 and o) [m]
-% A_t    = throat area                                 [m^2]
-% Ma_cc   = mach number in cc                           [-]
+% L_star = characteristic length (1.143 for RP1 and o)          [m]
+% A_t    = throat area                                          [m^2]
+% Ma_cc   = mach number in cc                                   [-]
 
 L_star = nozzle.L_star;
 A_t = geom.A_t;
@@ -32,9 +36,9 @@ geom.L_cc = geom.V_cc/geom.A_cc;
 %% Nozzle Part 2: L_conv, L_div
 
 % RAO divergent 15° cone nozzle length
-geom.L_div_con_15 = (geom.r_exit-geom.r_t)/tand(15);   % [m]
-Ref_val = nozzle.Ref_val;                          % [-]
-geom.L_div_RAO = Ref_val*geom.L_div_con_15;       % [m]
+geom.L_div_con_15 = (geom.r_exit-geom.r_t)/tand(15);            % [m]
+Ref_val = nozzle.Ref_val;                                       % [-]
+geom.L_div_RAO = Ref_val*geom.L_div_con_15;                     % [m]
 
 nozzle.alpha_prime = atan((geom.r_exit-geom.r_t)/geom.L_div_RAO); %[rad]
 
