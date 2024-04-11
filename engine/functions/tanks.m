@@ -30,7 +30,7 @@ OF = prop.OF;
 rho_f = prop.rho_rp1;
 rho_ox = prop.rho_lox;
 
-P_i = comb_ch.P_start;
+P_i = comb_ch.P_start_id;
 P_f = comb_ch.P_min;
 v_ox_i = engine.m_dot_ox / (geom.A_tube * prop.rho_lox);
 v_f_i = engine.m_dot_f / (geom.A_tube * prop.rho_rp1);

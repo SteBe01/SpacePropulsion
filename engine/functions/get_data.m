@@ -2,12 +2,14 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 
 	% ------------------- data (mandatory) -------------------
 	engine.T = 1000;                    % [N]
-	comb_ch.P_start = 50e5;             % [Pa]
+	comb_ch.P_start_id = 50e5;             % [Pa]
 	comb_ch.P_min = 20e5;               % [Pa]
 	geom.diameter_max = 1;              % [m]
 	geom.length_max = 2;                % [m]
 	geom.vol_reduction_factor = 0.8;    % [-]
 	geom.A_tube = 0.005^2 * pi / 4;     % [m]
+    geom.eps_rough = 505 * 1e-6;    % [m]
+    geom.Cf = 0.042;
 
 	prop.MM_lox = 32;                % [kg/mol]
 	prop.MM_rp1 = 175;               % [kg/mol]
@@ -15,6 +17,8 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	prop.rho_rp1 = 0.807e3 ;            % [kg/m^3]  density at 289K
 	prop.MM_He = 4;                  % [kg/mol]
 	prop.k_He = 1.66;
+    prop.rho_cc_in = 3.7596;
+    prop.V_cc = 0.06*1236.2;
 
 
 	% Prop couple: LOx and RP-1

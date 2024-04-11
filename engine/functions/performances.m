@@ -7,7 +7,7 @@ engine.C_star_id = sqrt(prop.R_MM_mean*comb_ch.T_cc/(prop.k*(2/(prop.k+1))^((pro
 engine.I_sp_id = engine.C_star_id*engine.C_T/const.g0; % [s]
 
 % Total mass flow rate
-engine.m_dot = geom.A_t * comb_ch.P_start * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
+engine.m_dot = geom.A_t * comb_ch.P_start_real * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
 
 % Oxydizer mass flow rate
 engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;     % [Kg/s]
@@ -23,7 +23,7 @@ engine.m_dot_min_f = 1/(1+prop.OF)*engine.m_dot_min;            % [Kg/s]
 
 %% Injection plate
 
-deltaP = 0.2 * comb_ch.P_start;
+deltaP = 0.2 * comb_ch.P_start_id;
 
 rho_ox = prop.rho_lox;                                  % [kg/m3]
 rho_f = prop.rho_rp1;                                   % [kg/m3]
@@ -54,7 +54,7 @@ end
 inj.D_f = d_f(inj.N_f);
 
 % Mach number in combustion chamber
-rho_mix = comb_ch.P_start/(prop.R_MM_mean*comb_ch.T_cc);    % [kg/m^3]
+rho_mix = comb_ch.P_start_id/(prop.R_MM_mean*comb_ch.T_cc);    % [kg/m^3]
 v_cc = engine.m_dot/(rho_mix * geom.A_cc);                  % [m/s]
 a = sqrt(prop.k*prop.R_MM_mean*comb_ch.T_cc);               % [m/s]
 comb_ch.M_cc = v_cc/a;

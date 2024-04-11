@@ -3,10 +3,10 @@ function [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, noz
 %% Nozzle Part 1 :C_T, A_t, A_exit
 
 % Thrust coefficient
-engine.C_T = sqrt( 2*prop.k^2/(prop.k-1) * (2/(prop.k+1))^((prop.k+1)/(prop.k-1))*(1-(nozzle.P_exit/comb_ch.P_start)^((prop.k-1)/prop.k))) + (nozzle.P_exit-const.P_amb)/comb_ch.P_start*geom.eps;                 %[-]
+engine.C_T = sqrt( 2*prop.k^2/(prop.k-1) * (2/(prop.k+1))^((prop.k+1)/(prop.k-1))*(1-(nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k))) + (nozzle.P_exit-const.P_amb)/comb_ch.P_start_real*geom.eps;                 %[-]
 
 % Throat area and radius
-geom.A_t = engine.T/(comb_ch.P_start * engine.C_T);            % [m^2]
+geom.A_t = engine.T/(comb_ch.P_start_real * engine.C_T);            % [m^2]
 D_t = sqrt(4*geom.A_t/pi);               % [m]
 geom.r_t = D_t/2;                        % [m]
 
@@ -115,7 +115,7 @@ geom.L_tot_cc_nozzle=geom.L_tot_nozzle +  geom.L_cc;   %[m]
 
 % Exhaust velocity
 
-nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start)^((prop.k-1)/prop.k)));  % [m/s]
+nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));  % [m/s]
 
 
 end
