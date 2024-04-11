@@ -31,7 +31,7 @@ rho_f = prop.rho_rp1;                                   % [kg/m3]
 mass_dot_ox = engine.m_dot_ox;                          % [kg/s]
 mass_dot_f = engine.m_dot_f;                            % [kg/s]
 
-min_d = 0.0006; %from literature
+min_d = 0.0003; %from literature
 
 K = 1.7;
 inj.A_inj_ox = mass_dot_ox*2.20462 * sqrt(2.238 * K / (rho_ox*0.06243 * deltaP*0.000145038)) * 0.00064516;
