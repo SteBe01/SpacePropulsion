@@ -19,16 +19,17 @@ for i = 1:const.N_iterations
     % Performances
     [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
 
-    % Tanks
-    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
     if  engine.T_real<const.T_id
         engine.T = engine.T + (const.T_id-engine.T_real);
-        
+
     elseif engine.T_real>const.T_id
         engine.T = engine.T + (const.T_id-engine.T_real);
         break
     end
 end
+
+% Tanks
+    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
 
 % Visual representation
 engine_shape(geom, tank,nozzle);
