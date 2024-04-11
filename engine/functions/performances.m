@@ -74,6 +74,6 @@ comb_ch.P_start_real = comb_ch.P_start_id-delta_p;
 %% Nozzle Losses:
 
 engine.T_real =nozzle.real_gas*nozzle.t_er*((nozzle.bl_loss*nozzle.lambda*nozzle.Cd*(engine.m_dot * nozzle.v_exit_start)) + geom.A_exit*(nozzle.P_exit - const.P_amb));
-engine.eta_T = engine.T_real/const.T_id;
+engine.eta_T = engine.T_real/engine.T;
 
 end
