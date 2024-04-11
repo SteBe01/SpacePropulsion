@@ -57,13 +57,7 @@ inj.D_f = d_f(inj.N_f);
 rho_mix = comb_ch.P_start_id/(prop.R_MM_mean*comb_ch.T_cc);    % [kg/m^3]
 v_cc = engine.m_dot/(rho_mix * geom.A_cc);                  % [m/s]
 a = sqrt(prop.k*prop.R_MM_mean*comb_ch.T_cc);               % [m/s]
-comb_ch.M_cc = v_cc/a;
-
-if comb_ch.M_cc <= comb_ch.M_cc_guess
-    comb_ch.M_check=1;
-else
-    comb_ch.M_check=0;
-end
+comb_ch.Ma_cc = v_cc/a;
 
 %% Combustion chamber losses:
 

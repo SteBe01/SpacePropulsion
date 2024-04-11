@@ -9,7 +9,7 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
     dc = geom.L_cc/(2*geom.r_cc);
     thermal.tw = 10e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k;
-    M = comb_ch.M_cc;
+    Ma = comb_ch.Ma_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
 
@@ -43,10 +43,10 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
     %% Cooling jacket
 
     % Total temperature
-    T0 = Tf*(1+(gamma-1)/2*M^2);
+    T0 = Tf*(1+(gamma-1)/2*Ma^2);
 
     % Recovery factor
-    R = (1+Pr^(1/3)*(gamma-1)/2*M^2)/(1+(gamma-1)/2*M^2);
+    R = (1+Pr^(1/3)*(gamma-1)/2*Ma^2)/(1+(gamma-1)/2*Ma^2);
     
     % Adiabatic wall temperature
     Taw = R*T0;

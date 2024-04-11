@@ -19,30 +19,15 @@ geom.r_exit = D_exit/2;                  % [m]
 
 % L_star = characteristic length (1.143 for RP1 and o) [m]
 % A_t    = throat area                                 [m^2]
-% M_cc   = mach number in cc                           [-]
-% Flag_cc -> 0: Compute Acc with Mach number
-%         -> 1: Compute Acc with Contraction Ratio
+% Ma_cc   = mach number in cc                           [-]
 
-switch nozzle.flag_cc
-    case 0
-        L_star = nozzle.L_star;
-        A_t = geom.A_t;
-        k = prop.k;
-        M_cc = geom.M_cc_guess;
-        geom.V_cc = L_star*A_t;
-        geom.A_cc = A_t/M_cc*((2/(k+1)*(1+(k-1)/2*M_cc^2)))^((k+1)/2/(k-1));
-        geom.r_cc = sqrt(geom.A_cc/pi);
-        geom.L_cc = geom.V_cc/geom.A_cc;
-    case 1
-        L_star = nozzle.L_star;
-        A_t = geom.A_t;
-        % k = prop.k;
-        eps_c = nozzle.eps_c;
-        geom.V_cc = L_star*A_t;
-        geom.A_cc = A_t*eps_c;
-        geom.r_cc = sqrt(geom.A_cc/pi);
-        geom.L_cc = geom.V_cc/geom.A_cc;
-end
+L_star = nozzle.L_star;
+A_t = geom.A_t;
+eps_c = nozzle.eps_c;
+geom.V_cc = L_star*A_t;
+geom.A_cc = A_t*eps_c;
+geom.r_cc = sqrt(geom.A_cc/pi);
+geom.L_cc = geom.V_cc/geom.A_cc;
 
 %% Nozzle Part 2: L_conv, L_div
 
