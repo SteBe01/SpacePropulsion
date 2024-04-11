@@ -21,9 +21,7 @@ for i = 1:const.N_iterations
 
     if  engine.T_real<const.T_id
         engine.T = engine.T + (const.T_id-engine.T_real);
-
-    elseif engine.T_real>const.T_id
-        engine.T = engine.T + (const.T_id-engine.T_real);
+    else
         break
     end
 end
