@@ -43,7 +43,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	tank.rho_tank = 8e3;
 	thermal.T_wh = 1500;                % [K]           wanted wall temperature
     thermal.sigma = 1100e6;
-    thermal.rho = 8190;
+    thermal.rho = 8190;                 % [kg/m3]       density, Inconel
     thermal.th_chosen_cc = 5e-3;
 
 	%----------------------- constants -----------------------

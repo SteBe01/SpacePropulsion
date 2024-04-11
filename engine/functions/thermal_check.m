@@ -68,5 +68,4 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
         error('Wrong thickness')
     end
     
-    thermal.mass_cc = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
 end

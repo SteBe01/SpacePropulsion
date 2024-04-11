@@ -1,4 +1,4 @@
-function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const)
+function [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const)
 
 % volume check
 V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
@@ -67,12 +67,12 @@ geom.r_tank_tot = sqrt(geom.A_tank_tot / pi);
 
 geom.L_tank_fu = tank.V_tank_fu_ext / geom.A_tank_tot;
 
-[geom.tank_thickness_fu, ~, tank.m_tank_fu] = tank_thickness(tank, tank.P_i_fu, geom.r_tank_tot, geom.L_tank_fu);
+[geom.tank_thickness_fu, ~, masses.m_tank_fu] = tank_thickness(tank, tank.P_i_fu, geom.r_tank_tot, geom.L_tank_fu);
 tank.V_fu = geom.L_tank_fu*pi*(geom.r_tank_tot - geom.tank_thickness_fu)^2;
 
 geom.L_tank_ox = tank.V_tank_ox_ext / geom.A_tank_tot;
 
-[geom.tank_thickness_ox, ~, tank.m_tank_ox] = tank_thickness(tank, tank.P_i_ox, geom.r_tank_tot, geom.L_tank_ox);
+[geom.tank_thickness_ox, ~, masses.m_tank_ox] = tank_thickness(tank, tank.P_i_ox, geom.r_tank_tot, geom.L_tank_ox);
 tank.V_ox = geom.L_tank_ox*pi*(geom.r_tank_tot - geom.tank_thickness_ox)^2;
 
 tank.V_tank_fu = tank.V_tank_fu_ext;
@@ -93,14 +93,23 @@ V_tot_OF = tank.V_tot_tank - (tank.V_initial_He_fu + tank.V_initial_He_ox); % m3
 tank.V_fu = V_tot_OF/(1 + tank.volume_OF);
 tank.V_ox = tank.V_fu*tank.volume_OF;
 
-tank.m_fu = tank.V_fu * rho_f;
-tank.m_ox = tank.V_ox * rho_ox;
+% masses
+masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
+
+masses.m_fu = tank.V_fu * rho_f;
+masses.m_ox = tank.V_ox * rho_ox;
+
+masses.fuel_tot = masses.m_fu + masses.m_ox;
+
+masses.injection_plate = V_inj * thermal.rho;
+masses.combustion_camber = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
+masses.convergent = (V_conv_ext - V_conv_int) * thermal.rho;
+
+masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
+masses.m_dry = masses.tanks_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
 
 % volume fraction
 geom.fraction = (V_around_cc_conv_inj + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
-
-% masses
-geom.m_conv = (V_conv_ext - V_conv_int) * thermal.rho;
 
 end
 
