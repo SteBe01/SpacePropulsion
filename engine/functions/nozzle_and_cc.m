@@ -54,7 +54,6 @@ switch nozzle.flag_cc
 end
 
 
-
 %% Nozzle Part 2: L_conv, L_div
 
 % RAO divergent 15° cone nozzle length
@@ -95,6 +94,16 @@ switch Ref_val
         nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
 
 end
+
+T0 = comb_ch.T_cc/((prop.k + 1)/2); % [K] Critical T at throat 
+
+a_t = sqrt(prop.k*prop.MM_mean*T0); % [m/s] speed of sound at throat
+
+Re_t = (a_t * prop.rho_t * geom.r_t*2)/prop.mu_t; % [-] Reynolds at throat
+
+Re_prime = (sqrt(geom.r_t/(0.382*geom.r_t)))*Re_t; % [-] Reynolds prime, assuming curvature radius as 0.382*Rt
+
+nozzle.Cd = 1 - (((prop.k+1)/2)^(3/4)) * ((3.266 - (2.128/(prop.k+1)))*Re_prime^(-0.5)) + (0.9428* Re_prime^(-1)*(((prop.k-1)*(prop.k+2)) / ((prop.k+1)^(0.5)) )); % [-] Discharge Coeff.
 
 % Convergent angle
 beta = nozzle.beta;                          % [deg] assumed from range of (30-45)
