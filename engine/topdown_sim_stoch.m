@@ -1,4 +1,4 @@
-function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec] = topdown_sim_stoch(d_err)
+function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec] = topdown_sim_stoch(d_err)
 
 addpath(genpath('./functions'))
 
@@ -81,9 +81,10 @@ while P_c > comb_ch.P_min
 	mdot_vec(i) = m_dot;
 	mdot_f_vec(i) = m_dot_f;
 	mdot_ox_vec(i) = m_dot_ox;
-	%Pc(i) = P_c;
-	%vtube_f(i) = v_tube_f;
-	%vtube_ox(i) = v_tube_ox;
+    Pc_vec(i) = P_c;
+    P_he_ox_vec(i) = P_he_ox;
+    P_he_f_vec(i) = P_he_f;
+    Isp_vec(i)=Isp;
 	T(i) = m_dot * Isp * const.g0;
 
 	i = i+1;
