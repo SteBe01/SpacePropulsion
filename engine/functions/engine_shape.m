@@ -22,6 +22,9 @@ plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue
 plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
 plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
 
+plot([tank.L_initial_He_ox tank.L_initial_He_ox], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'red')
+surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.5);
+
 % fuel
 d_fu = d_ox;
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
@@ -30,6 +33,9 @@ plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 
 plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
 plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
 plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+
+plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'red')
+surf([offset offset+tank.L_initial_He_fu;offset offset+tank.L_initial_He_fu],[d/2-d_fu/2 d/2-d_fu/2;d/2+d_fu/2 d/2+d_fu/2],[1 1;1 1], 'FaceAlpha',0.5);
 
 % inj
 h_cc = geom.r_cc * 2;

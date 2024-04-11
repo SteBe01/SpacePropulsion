@@ -80,7 +80,9 @@ tank.V_tank_ox = tank.V_tank_ox_ext;
 % solve initial He volumes
 
 tank.V_initial_He_fu = tank.V_tank_fu * (tank.P_f_fu/tank.P_i_fu)^(1/prop.k_He);
+tank.L_initial_He_fu = tank.V_initial_He_fu/(pi*geom.r_tank_tot^2);
 tank.V_initial_He_ox = tank.V_tank_ox * (tank.P_f_ox/tank.P_i_ox)^(1/prop.k_He);
+tank.L_initial_He_ox = tank.V_initial_He_ox/(pi*geom.r_tank_tot^2);
 
 % solve final volumes of Ox and Fu
 
