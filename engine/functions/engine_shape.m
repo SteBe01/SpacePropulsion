@@ -104,25 +104,28 @@ plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blue')
 plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blue')  
 
 % Rao Bell
-x1_up = xy_r_up(1,end); y1_up = xy_r_up(2,end);
-x2_up = geom.L_div_RAO+offset; y2_up = geom.diameter_max/2 + sqrt(geom.A_exit/pi); 
+x1 = xy_r_up(1,end); y1 = xy_r_up(2,end);
+x2 = geom.L_div_RAO+offset; y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi); 
 
-m_up = tan(nozzle.theta_i);
-a_up = (m_up*x2_up + y1_up - y2_up -m_up*x1_up)/(-x2_up^2+2*x1_up*x2_up -x1_up^2);
-b_up = m_up-2*a_up*x1_up;
-c_up = y1_up-a_up*x1_up^2-b_up*x1_up;
+mi = tan(nozzle.theta_i);
+mf = tan(nozzle.theta_e);
 
-f_up = @(x) a_up*x^2 + b_up*x + c_up;
+A = [ x1^3 x1^2 x1 1; x2^3 x2^2 x2 1; 3*x1^2 2*x1 1 0; 3*x2^2 2*x2 1 0];
+b = [y1; y2; mi; mf];
+sol = A\b;
+a = sol(1); b = sol(2);  c = sol(3) ; d = sol(4);
 
-x_par = linspace(x1_up,x2_up,N);
+f_bell = @(x) a*x^3 + b*x^2 + c*x + d;
+
+x_par = linspace(x1,x2,N);
 y_par_up = zeros(1,length(x_par));
 for i = 1:length(x_par)
-    y_par_up(i) = f_up(x_par(i));
+    y_par_up(i) = f_bell(x_par(i));
 end
 y_par_down = zeros(1,length(x_par));
 plot(x_par,y_par_up,'Color', 'blue')
 for i = 1:length(x_par)
-    y_par_down(i) = -f_up(x_par(i))+1;
+    y_par_down(i) = -f_bell(x_par(i))+1;
 end
 
 plot(x_par,y_par_down,'Color', 'blue')
