@@ -93,7 +93,11 @@ geom.L_tot_cc_nozzle=geom.L_tot_nozzle +  geom.L_cc;   %[m]
 % Exhaust velocity
 nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));  % [m/s]
 
-% Confront with conical nozzle with same performance L
-nozzle.alpha_con = acosd((2*nozzle.lambda)-1);
-nozzle.L_div_con = (geom.r_exit - geom.r_t)/tand(nozzle.alpha_con);
+%% Confront with conical nozzle with same performance L
+nozzle.alpha_con_performance = acos((2*nozzle.lambda)-1);
+nozzle.L_div_con_performance = (geom.r_exit - geom.r_t)/tan(nozzle.alpha_con_performance);
+
+%% Confront with conical nozzle with same length od bell nozzle
+nozzle.alpha_con_length = atan((geom.r_exit - geom.r_t)/geom.L_div_RAO);
+nozzle.lambda_con_length = (cos(nozzle.alpha_con_length) + 1)/2;
 end
