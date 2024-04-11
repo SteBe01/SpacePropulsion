@@ -3,7 +3,9 @@ function [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, c
 % volume check
 V_tot_req = geom.length_max*pi*(geom.diameter_max/2)^2;
 
-V_conv = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t);
+% V_conv = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t); % Old conv geometry (no thickness)
+V_conv_ext = geom.L_conv * pi/3 * ((geom.r_cc + thermal.th_chosen_cc)^2 + (geom.r_t + thermal.th_chosen_cc)^2 + (geom.r_cc + thermal.th_chosen_cc)*(geom.r_t + thermal.th_chosen_cc));
+V_conv = V_conv_ext;
 % V_cc = geom.L_cc * geom.A_cc; % Old cc geometry (no thickness)
 V_cc = geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2;
 V_inj = geom.L_inj * pi * (geom.r_cc+thermal.th_chosen_cc)^2;
