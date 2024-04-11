@@ -22,6 +22,7 @@ k_he = prop.k_He; %helium monoatomic
 OF = prop.OF;
 
 A_tube = geom.A_tube; %assumed reasonable value [m2]
+D_tube = sqrt(A_tube*4/pi);
 
 rho_ox = prop.rho_lox; %same values as used in preliminary [kg/m3]
 rho_f = prop.rho_rp1;
