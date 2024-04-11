@@ -20,7 +20,7 @@ for i = 1:const.N_iterations
     [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
 
     % Tanks
-    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const);
+    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
     if  engine.T_real<1000
         engine.T = engine.T + (1000-engine.T_real);
     else

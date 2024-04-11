@@ -62,19 +62,11 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
 
     %% Check
 
-    sigma = 1100e6;
-    rho = 8190;
-    Pc = 50e5;
-    r = geom.r_cc;
-    l = geom.L_cc;
+    thermal.th_min = 2*comb_ch.P_start_id*geom.r_cc/thermal.sigma;
     
-    thermal.th_min = 2*Pc*r/sigma;
-    thermal.th_chosen = 5e-3;
-    
-    if thermal.th_chosen < thermal.th_min || thermal.th_chosen < 3e-3
-        error('wrong thickness')
+    if thermal.th_chosen_cc < thermal.th_min || thermal.th_chosen_cc < 3e-3
+        error('Wrong thickness')
     end
     
-    thermal.mass_cc = (l*pi*(r+thermal.th_chosen)^2-l*pi*r^2)*rho;
-    thermal.V_cc = l*pi*(r+thermal.th_chosen)^2;
+    thermal.mass_cc = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
 end

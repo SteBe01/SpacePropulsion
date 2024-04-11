@@ -40,7 +40,7 @@ switch nozzle.flag_cc
     case 1
         L_star = nozzle.L_star;
         A_t = geom.A_t;
-        k = prop.k;
+        % k = prop.k;
         eps_c = nozzle.eps_c;
 
         geom.V_cc = L_star*A_t;
