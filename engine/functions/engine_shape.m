@@ -1,4 +1,4 @@
-function [] = engine_shape(geom, tank,nozzle)
+function [] = engine_shape(geom, tank, nozzle, thermal)
 
 figure
 grid on, axis equal, hold on
@@ -16,60 +16,71 @@ plot([l l], [0 d], 'Color', 'blue')
 % tanks
 % oxidizer
 d_ox = 2 * geom.r_tank_tot;
+d_ox_int = 2 * (geom.r_tank_tot-geom.tank_thickness_ox);
 h_ox_tot = tank.V_tank_ox / (pi*(d_ox/2)^2);
-plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue', LineWidth=2)
-plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
-plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
-plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue', LineWidth=2)
+plot([space h_ox_tot-space], [d/2-d_ox/2-space d/2-d_ox/2-space], 'Color', 'blue')  % ext
+plot([space h_ox_tot-space], [d/2+d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')  % ext
+plot([space h_ox_tot-space], [d/2-d_ox_int/2-space d/2-d_ox_int/2-space], 'Color', 'blue')
+plot([space h_ox_tot-space], [d/2+d_ox_int/2-space d/2+d_ox_int/2-space], 'Color', 'blue')
+plot([space space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
+plot([h_ox_tot-space h_ox_tot-space], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
 
-plot([tank.L_initial_He_ox tank.L_initial_He_ox], [d/2-d_ox/2-space d/2+d_ox/2-space], 'Color', 'blue')
-surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
-surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[d/2-d_ox/2 d/2-d_ox/2;d/2+d_ox/2 d/2+d_ox/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','#0CF2EE');
+plot([tank.L_initial_He_ox tank.L_initial_He_ox], [d/2-d_ox_int/2-space d/2+d_ox_int/2-space], 'Color', 'blue')
+surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[d/2-d_ox_int/2 d/2-d_ox_int/2;d/2+d_ox_int/2 d/2+d_ox_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
+surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[d/2-d_ox_int/2 d/2-d_ox_int/2;d/2+d_ox_int/2 d/2+d_ox_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','#0CF2EE');
 
 % fuel
 d_fu = d_ox;
+d_fu_int = 2 * (geom.r_tank_tot-geom.tank_thickness_fu);
 h_fu_tot = tank.V_tank_fu / (pi*(d_fu/2)^2);
 offset = h_ox_tot;
-plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue', LineWidth=2)
-plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
-plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
-plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue', LineWidth=2)
+plot([offset+space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2-d_fu/2-space], 'Color', 'blue')  % ext
+plot([offset+space offset+h_fu_tot-space], [d/2+d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')  % ext
+plot([offset+space offset+h_fu_tot-space], [d/2-d_fu_int/2-space d/2-d_fu_int/2-space], 'Color', 'blue')
+plot([offset+space offset+h_fu_tot-space], [d/2+d_fu_int/2-space d/2+d_fu_int/2-space], 'Color', 'blue')
+plot([offset+space offset+space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
+plot([offset+h_fu_tot-space offset+h_fu_tot-space], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
 
-plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [d/2-d_fu/2-space d/2+d_fu/2-space], 'Color', 'blue')
-surf([offset offset+tank.L_initial_He_fu;offset offset+tank.L_initial_He_fu],[d/2-d_fu/2 d/2-d_fu/2;d/2+d_fu/2 d/2+d_fu/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
-surf([offset+tank.L_initial_He_fu offset+h_fu_tot;offset+tank.L_initial_He_fu offset+h_fu_tot],[d/2-d_fu/2 d/2-d_fu/2;d/2+d_fu/2 d/2+d_fu/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','red');
+plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [d/2-d_fu_int/2-space d/2+d_fu_int/2-space], 'Color', 'blue')
+surf([offset offset+tank.L_initial_He_fu;offset offset+tank.L_initial_He_fu],[d/2-d_fu_int/2 d/2-d_fu_int/2;d/2+d_fu_int/2 d/2+d_fu_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
+surf([offset+tank.L_initial_He_fu offset+h_fu_tot;offset+tank.L_initial_He_fu offset+h_fu_tot],[d/2-d_fu_int/2 d/2-d_fu_int/2;d/2+d_fu_int/2 d/2+d_fu_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','red');
 
 % inj
-h_cc = geom.r_cc * 2;
+h_inj = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_inj;
-% l_cc = geom.r_cc * 2;
-% h_cc = geom.L_inj;
 offset = offset + h_fu_tot;
-plot([offset+space offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+space offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
-plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2-h_inj/2 d/2-h_inj/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2+h_inj/2 d/2+h_inj/2], 'Color', 'blue')
+plot([offset+space offset+space], [d/2+h_inj/2 d/2-h_inj/2], 'Color', 'blue')
+plot([offset+l_cc offset+l_cc], [d/2+h_inj/2 d/2-h_inj/2], 'Color', 'blue')
 
 % cc
 offset = offset + l_cc;
-h_cc = geom.r_cc * 2;
+h_cc_int = geom.r_cc * 2;
+h_cc = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_cc;
 plot([offset+space offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 plot([offset+space offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2-h_cc_int/2 d/2-h_cc_int/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2+h_cc_int/2 d/2+h_cc_int/2], 'Color', 'blue')
 plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 
 % convergent
-h_co_i = h_cc;
+h_co_i = h_cc_int;
+h_co_i_ext = h_cc_int + 2*thermal.th_chosen_cc;
 h_co_f = 2 * sqrt(geom.A_t/pi);
+h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*thermal.th_chosen_cc;
 l_co = geom.L_conv;
 offset = offset + l_cc;
 plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')
 plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')
-plot([offset offset], [d/2+h_co_i/2 d/2-h_co_i/2], 'Color', 'blue')
-plot([offset+l_co offset+l_co], [d/2+h_co_f/2 d/2-h_co_f/2], 'Color', 'blue')
+plot([offset offset+l_co], [d/2-h_co_i_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
+plot([offset offset+l_co], [d/2+h_co_i_ext/2 d/2+h_co_f_ext/2], 'Color', 'blue')
+plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
+plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 
-% Divergent
+% divergent
 offset = offset + l_co;
 r_c_div = 0.382*geom.r_t;
 nozzle.theta_i=pi/6;

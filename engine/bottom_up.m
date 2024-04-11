@@ -29,10 +29,10 @@ for i = 1:const.N_iterations
 end
 
 % Tanks
-    [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
+[tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
 
 % Visual representation
-engine_shape(geom, tank,nozzle);
+engine_shape(geom, tank, nozzle, thermal);
 
 % Thermal protection
 [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const);
