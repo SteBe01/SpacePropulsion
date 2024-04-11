@@ -5,11 +5,11 @@ close all
 
 addpath(genpath('./functions'))
 
-%% DATA
+% Data
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 comb_ch.P_start_real = comb_ch.P_start_id;
 
-%% Combustion
+% Combustion
 for i = 1:const.N_iterations
     [prop, nozzle] = combustion(prop, geom, nozzle, comb_ch);
 
@@ -22,14 +22,14 @@ for i = 1:const.N_iterations
     % Tanks
     [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, const);
     if  engine.T_real<1000
-        engine.T = engine.T + 0.01;
+        engine.T = engine.T + (1000-engine.T_real);
     else
         break
     end
 end
 
-%% Visual representation
+% Visual representation
 engine_shape(geom, tank,nozzle);
 
-%% Thermal protection
+% Thermal protection
 [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const);
