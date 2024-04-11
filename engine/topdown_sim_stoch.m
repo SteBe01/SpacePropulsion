@@ -4,13 +4,18 @@ addpath(genpath('./functions'))
 
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 comb_ch.P_start_real = comb_ch.P_start_id;
-[prop, nozzle] = combustion(prop, geom, nozzle, comb_ch);
-[geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
-[engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
+for i = 1:const.N_iterations
+    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
+    [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
+    if  engine.T_real<const.T_id
+        engine.T = engine.T + (const.T_id-engine.T_real);
+    else
+        break
+    end
+end
 [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
 
 k_he = prop.k_He; %helium monoatomic
-P_c = comb_ch.P_start_id; % [Pa]
 OF = prop.OF;
 
 A_tube = geom.A_tube; %assumed reasonable value [m2]
@@ -20,6 +25,8 @@ rho_f = prop.rho_rp1;
 
 V_he_f_initial = tank.V_initial_He_fu; %values coming from tank sizing [m3]
 V_he_ox_initial = tank.V_initial_He_ox;
+P_he_f_initial = tank.P_i_fu; %values coming from tank sizing [m3]
+P_he_ox_initial = tank.P_i_ox;
 
 A_t = geom.A_t;
 %to find throat area giving 1kN of thrust at initial condition
@@ -32,6 +39,10 @@ A_t = geom.A_t;
 
 V_he_f = V_he_f_initial;
 V_he_ox = V_he_ox_initial;
+P_he_ox = P_he_ox_initial;
+P_he_f = P_he_f_initial;
+
+P_c = comb_ch.P_start_real;
 
 i = 1;
 dt = 0.5; %going lower doesn't increase accuracy
@@ -45,26 +56,18 @@ while P_c > comb_ch.P_min
 	v_tube_ox = m_dot_ox / (rho_ox * A_tube);
 
 	%dP_inj_ox = 0.2*P_c
-	dP_inj_ox = (3.627 * const.K * (m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * ((inj.D_ox + d_err) * 39.3701)^4) * 0.0689476 * 1e5;
+	dP_inj_ox = (3.627 * const.K * (m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * ((inj.D_ox+d_err) * 39.3701)^4) * 0.0689476 * 1e5;
 	dP_distr_ox = 1/2*rho_ox*v_tube_ox^2;
 	dP_feed_ox = 0.5*101325;
-	P_he_ox = P_c + dP_inj_ox + dP_distr_ox + dP_feed_ox;
-	if i == 1
-		P_he_ox_initial = P_he_ox;
-	end
 
 	V_he_ox = V_he_ox + dV_ox;
 	P_he_ox = P_he_ox_initial * (V_he_ox_initial / V_he_ox) ^ k_he;
 
 	dV_f = m_dot_f / rho_f * dt;
 	v_tube_f = m_dot_f / (rho_f * A_tube);
-	dP_inj_f  = (3.627 * const.K * (m_dot_f *2.20462)^2) / (inj.N_f^2 *rho_f *0.0624  * ((inj.D_f + d_err)  * 39.3701)^4) * 0.0689476 * 1e5;
+	dP_inj_f  = (3.627 * const.K * (m_dot_f *2.20462)^2) / (inj.N_f^2 *rho_f *0.0624  * ((inj.D_f + d_err) * 39.3701)^4) * 0.0689476 * 1e5;
 	dP_distr_f = 1/2*rho_f*v_tube_f^2;
 	dP_feed_f = 0.5*101325;
-	P_he_f = P_c + dP_inj_f + dP_distr_f + dP_feed_f;
-	if i == 1
-		P_he_f_initial = P_he_f;
-	end
 
 	V_he_f = V_he_f + dV_f;
 	P_he_f = P_he_f_initial * (V_he_f_initial / V_he_f) ^ k_he;
@@ -82,9 +85,9 @@ while P_c > comb_ch.P_min
 	%vtube_f(i) = v_tube_f;
 	%vtube_ox(i) = v_tube_ox;
 	T(i) = m_dot * Isp * const.g0;
-	Isp_vec(i) = Isp;
 
 	i = i+1;
+end
 end
 
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)
