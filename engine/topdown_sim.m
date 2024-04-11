@@ -90,6 +90,9 @@ while P_c > comb_ch.P_min
 	i = i+1;
 end
 
+    t_burn=t(end);
+    [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const, t_burn);
+
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)
 	x=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',OF,'case','CEAM-rocket1','p,bar',P_c * 1e-5,'reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100,'h,cal/mol',-5430,'t(k)',300.0,'oxid','O2(L)','O',2,'wt%',100,'h,cal/mol',-3032,'t(k)',94.44,'output','mks','end');
 

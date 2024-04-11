@@ -1,4 +1,4 @@
-function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const)
+function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const, varargin)
     
     Pr = const.Pr;
     Tf = comb_ch.T_cc;
@@ -12,6 +12,10 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
     Ma = comb_ch.Ma_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
+
+    if nargin > 6
+        t_burn = varargin{1};
+    end
 
     % Nusselt number - [-]
     Nu = 0.0265*Re^0.8*Pr^0.3;
@@ -55,10 +59,17 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
     q = h*(Taw - Twh);
     
     % Total power echanged
-    thermal.Q = q*2*geom.r_cc*geom.L_cc*pi;
+    A_c = 2*geom.r_cc*geom.L_cc*pi;
+    r_t=sqrt(geom.A_t/pi);
+    A_con = pi*(geom.r_cc+r_t)*geom.L_conv;
+    A_cc=A_c+A_con;
+    thermal.Q = q*A_cc;
 
-    % Delta T of the RP-1 during cooling
-    thermal.deltaT = thermal.Q/(m_dot_fu*c);
+    if exist("t_burn", 'var')
+        % Delta T of the RP-1 during cooling
+        thermal.deltaT = thermal.Q/(m_dot_fu*c);
+        thermal.m_cooling= m_dot_fu*t_burn;
+    end
 
     %% Check
 

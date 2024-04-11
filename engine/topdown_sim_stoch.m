@@ -1,4 +1,4 @@
-function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec] = topdown_sim_stoch(d_err)
+function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec, thermal] = topdown_sim_stoch(d_err)
 
 addpath(genpath('./functions'))
 
@@ -89,6 +89,12 @@ while P_c > comb_ch.P_min
 
 	i = i+1;
 end
+    
+    t_burn=t(end);
+    [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const, t_burn);
+
+    
+
 end
 
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)
