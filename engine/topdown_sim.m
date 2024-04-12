@@ -62,7 +62,7 @@ while P_c > comb_ch.P_min
 	%dP_inj_ox = 0.2*P_c
 	dP_inj_ox = (3.627 * const.K * (m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
 	dP_distr_ox = 1/2*rho_ox*v_tube_ox^2;
-	dP_feed_ox = 0.5*101325 + (2*1.034 + 0.76)*1e5;
+	dP_feed_ox = 0.5*101325 + (2*1.034 + 1)*1e5;
 
 	V_he_ox = V_he_ox + dV_ox;
 	P_he_ox = P_he_ox_initial * (V_he_ox_initial / V_he_ox) ^ k_he;
@@ -71,7 +71,7 @@ while P_c > comb_ch.P_min
 	v_tube_f = m_dot_f / (rho_f * A_tube);
 	dP_inj_f  = (3.627 * const.K * (m_dot_f *2.20462)^2) / (inj.N_f^2 *rho_f *0.0624  * (inj.D_f  * 39.3701)^4) * 0.0689476 * 1e5;
 	dP_distr_f = 1/2*rho_f*v_tube_f^2;
-	dP_feed_f = 0.5*101325 + (2*1.034 + 0.76)*1e5;
+	dP_feed_f = 0.5*101325 + (2*1.034 + 1)*1e5;
 
 	V_he_f = V_he_f + dV_f;
 	P_he_f = P_he_f_initial * (V_he_f_initial / V_he_f) ^ k_he;
