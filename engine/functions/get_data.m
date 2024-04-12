@@ -58,10 +58,8 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
     const.N_iterations = 1e4;           % [-]
     const.T_id = 1000;                  % [N]
     const.P_amb = 1;                    % [Pa]
-	const.Pr = 0.62;                    % [-]           Prandtl number
 	const.Te = 4;                       % [K]           external temperature (space)
 	const.k = 22;                       % [W/mK]        conductivity of Inconel 718
-	const.Re = 235e3;                   % [-]           reynolds number
 	const.c = 1880;                     % [J/(Kg K)]    specific heat of RP-1
 
 end
