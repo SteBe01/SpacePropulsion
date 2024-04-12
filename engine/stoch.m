@@ -1,7 +1,7 @@
 clc; clearvars; close all
 
 mu_err = 0;
-sigma_err = 7.6/3*1e-5;
+sigma_err = 7.6/3*1e-5 +5.5/3*1e-6;
 N_sim = 100;
 
 d_err_vec = normrnd(mu_err,sigma_err,N_sim,1);
