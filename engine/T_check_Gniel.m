@@ -3,8 +3,6 @@
 
 addpath(genpath('./functions'))
 
-addpath(genpath('./CEA_illegal'))
-
 param = 1; % 1: Gnielinski 
            % 0: Dittus Boelter
 
