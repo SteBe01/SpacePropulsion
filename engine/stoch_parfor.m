@@ -1,8 +1,8 @@
 clc; clearvars; close all
 
 mu_err = 0;
-sigma_err = 7.6/3*1e-5 +5.5/3*1e-6;
-N_sim = 100;
+sigma_err = 7.6/2*1e-5 +5.5/2*1e-6;
+N_sim = 10;
 
 d_err_vec = normrnd(mu_err,sigma_err,N_sim,1);
 
@@ -191,7 +191,7 @@ hold on; grid on;
 for ii=1:N_sim
     plot(t_vec(:,ii), cstar_vec(:, ii))
 end
-title("\textbf{c^* profile}", 'Interpreter','latex');
+title("\textbf{$c^*$ profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$c^*\ [-]$", 'Interpreter','latex');
 
@@ -203,4 +203,4 @@ for ii=1:N_sim
 end
 title("\textbf{Temperature in chamber profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
-ylabel("$T_c\ [°K]$", 'Interpreter','latex');
+ylabel("$T_c\ [K]$", 'Interpreter','latex');
