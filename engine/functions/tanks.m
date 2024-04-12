@@ -121,7 +121,7 @@ end
 function [P_loss] = pressure_loss(rho, v, P_inj_loss)
     P_distr_loss = 1/2*rho*v^2;
     P_feeding_loss = 0.5*101325;
-    P_concentrated = (1.37 + 1.034 + 1)*1e5;
+    P_concentrated = ( 2*1.034 + 1)*1e5;
     P_loss = P_feeding_loss+P_distr_loss+P_inj_loss + P_concentrated;
 end
 
