@@ -57,8 +57,16 @@ tank.P_f_ox = P_f_ox + P_f;
 
 tank.volume_OF = OF * rho_f/rho_ox; % volume
 
-tank.V_tank_fu_ext = tank.V_tot_tank/(1 + tank.volume_OF);
-tank.V_tank_ox_ext = tank.V_tank_fu_ext*tank.volume_OF;
+A = [P_i_fu^(1 / prop.k_He), -P_f_fu^(1 / prop.k_He), 0, 0;
+    0,0,P_i_ox^(1 / prop.k_He), -P_f_ox^(1 / prop.k_He);
+    0, 1, 0, 1;
+    tank.volume_OF, -tank.volume_OF, -1, +1];
+b = [0; 0; tank.V_tot_tank; 0];
+
+V = A \ b;
+
+tank.V_tank_fu_ext = V(2);
+tank.V_tank_ox_ext = V(4);
 
 
 % new volume with thickness
@@ -83,17 +91,15 @@ tank.V_tank_ox = tank.V_tank_ox_ext;
 
 % solve initial He volumes
 
-tank.V_initial_He_fu = tank.V_tank_fu * (tank.P_f_fu/tank.P_i_fu)^(1/prop.k_He);
+tank.V_initial_He_fu = V(1);
 tank.L_initial_He_fu = tank.V_initial_He_fu/(pi*geom.r_tank_tot^2);
-tank.V_initial_He_ox = tank.V_tank_ox * (tank.P_f_ox/tank.P_i_ox)^(1/prop.k_He);
+tank.V_initial_He_ox = V(3);
 tank.L_initial_He_ox = tank.V_initial_He_ox/(pi*(geom.diameter_max/2)^2);
 
 % solve final volumes of Ox and Fu
 
-V_tot_OF = tank.V_tot_tank - (tank.V_initial_He_fu + tank.V_initial_He_ox); % m3
-
-tank.V_fu = V_tot_OF/(1 + tank.volume_OF);
-tank.V_ox = tank.V_fu*tank.volume_OF;
+tank.V_fu = V(2) - V(1);
+tank.V_ox = V(4) - V(3);
 
 % masses
 masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
