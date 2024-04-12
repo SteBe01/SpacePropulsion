@@ -3,6 +3,8 @@
 
 addpath(genpath('./functions'))
 
+
+
 param = 1; % 1: Gnielinski 
            % 0: Dittus Boelter
 
@@ -57,10 +59,10 @@ switch param
     Twh_init = 500:1:Tf;
    
 
-R_tot = (1/(thermal.h_gas_cc_av)) + thermal.tw/k_inconel; % Thermal resistence, MUST ADD h for gas side
+R_tot = (1/(thermal.h_gas_cc_av)) + thermal.tw/k_inconel; % [m^2/W*K] Thermal resistence
 
     for ii = 1:length(Twh_init)
-        Q_dot1 = thermal.h_gas_cc_av*(geom.A_cc)*(Tf - Twh_init(ii)); %[W]
+        Q_dot1 = thermal.h_gas_cc_av*(Tf - Twh_init(ii)); %[W/m^2]
         Twc = Twh_init(ii) - Q_dot1*R_tot; % [K]
         q2 = (5.67e-8)*(0.3)*(Twc^4 - Te^4);
         q1_vec(ii)  = Q_dot1;
@@ -157,10 +159,10 @@ q2=q2_vec(pos1)
 %     Twh_init = 500:1:Tf;
 % 
 % 
-% R_tot = (1/(thermal.h_gas_t_av)) + thermal.tw/k_inconel; % Thermal resistence, MUST ADD h for gas side
+% R_tot = (1/(thermal.h_gas_t_av)) + thermal.tw/k_inconel; % [m^2/W*K] Thermal resistence
 % 
 %     for ii = 1:length(Twh_init)
-%         Q_dot1 = thermal.h_gas_t_av*(geom.A_t)*(Tf - Twh_init(ii)); %[W]
+%         Q_dot1 = thermal.h_gas_t_av*(Tf - Twh_init(ii)); %[W/m^2]
 %         Twc = Twh_init(ii) - Q_dot1*R_tot; % [K]
 %         q2 = (5.67e-8)*(0.3)*(Twc^4 - Te^4);
 %         q1_vec(ii)  = Q_dot1;
@@ -261,10 +263,10 @@ thermal.Pr_cc=out.output.eql.prandtl.froz(:,2);
     Twh_init = 500:1:Tf;
    
 
-R_tot = (1/(thermal.h_gas_cc_av)) + thermal.tw/k_inconel; % Thermal resistence, MUST ADD h for gas side
+R_tot = (1/(thermal.h_gas_cc_av)) + thermal.tw/k_inconel; % [m^2/W*K] Thermal resistence
 
     for ii = 1:length(Twh_init)
-        Q_dot1 = thermal.h_gas_cc_av*(geom.A_cc)*(Tf - Twh_init(ii)); %[W]
+        Q_dot1 = thermal.h_gas_cc_av*(Tf - Twh_init(ii)); %[W/m^2]
         Twc = Twh_init(ii) - Q_dot1*R_tot; % [K]
         q2 = (5.67e-8)*(0.3)*(Twc^4 - Te^4);
         q1_vec(ii)  = Q_dot1;
