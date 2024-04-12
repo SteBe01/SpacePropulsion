@@ -1,19 +1,15 @@
-function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const, varargin)
-   
+  
     Tf = comb_ch.T_cc;
     Twh = thermal.T_wh;
     Te = const.Te; 
     k = const.k;    
     dc = geom.L_cc/(2*geom.r_cc);
-    thermal.tw = 10e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
+    thermal.tw = 5e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k;
     Ma = comb_ch.Ma_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
-
-    if nargin > 6
-        t_burn = varargin{1};
-    end
+    t_burn= ;
 
     %Reynolds Number
     	out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',2.24,'case', ...
@@ -77,11 +73,10 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
     A_cc=A_c+A_con;
     thermal.Q = q_av*A_cc;
 
-    if exist("t_burn", 'var')
         % Delta T of the RP-1 during cooling
         thermal.deltaT = thermal.Q/(m_dot_fu*c);
         thermal.m_cooling= m_dot_fu*t_burn;
-    end
+
 
     %% Check
 
@@ -91,4 +86,3 @@ function [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, c
         error('Wrong thickness')
     end
     
-end

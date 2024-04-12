@@ -91,7 +91,6 @@ while P_c > comb_ch.P_min
 end
     
     t_burn=t(end);
-    [geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const, t_burn);
 
     
 
