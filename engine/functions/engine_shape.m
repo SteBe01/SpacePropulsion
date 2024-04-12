@@ -1,4 +1,4 @@
-function [] = engine_shape(geom, tank, nozzle, thermal)
+function [nozzle] = engine_shape(geom, tank, nozzle, thermal)
 
 figure
 grid on, axis equal, hold on
@@ -81,110 +81,100 @@ plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 
 % divergent
+offset = offset + l_co;
+nozzle.x2 = geom.L_div_RAO+offset;
 
 switch nozzle.plot
-
     case 1
+        r_c_div = 0.382*geom.r_t;
+        nozzle.theta_i=pi/6;
 
-offset = offset + l_co;
-r_c_div = 0.382*geom.r_t;
-nozzle.theta_i=pi/6;
+        % circular part
+        circ = @(r_c_div,angle)  [r_c_div*cos(angle);  r_c_div*sin(angle)];       % Circle Function For Angles In Degrees
+        N = 100;                                                         % Number Of Points In Complete Circle
+        r_angl_up = linspace(pi*3/2, 2*pi-(pi/2-nozzle.theta_i), N);                             % Angle Defining Arc Segment (radians)
+        r_angl_down = linspace(pi/2-nozzle.theta_i, pi/2, N);
+        radius = r_c_div;                                                   % Arc Radius
+        xy_r_up = circ(radius,r_angl_up); % Matrix (2xN) Of (x,y) Coordinates
+        xy_r_down = circ(radius,r_angl_down); % Matrix (2xN) Of (x,y) Coordinates
 
-% circular part
-circ = @(r_c_div,angle)  [r_c_div*cos(angle);  r_c_div*sin(angle)];       % Circle Function For Angles In Degrees
-N = 100;                                                         % Number Of Points In Complete Circle
-r_angl_up = linspace(pi*3/2, 2*pi-(pi/2-nozzle.theta_i), N);                             % Angle Defining Arc Segment (radians)
-r_angl_down = linspace(pi/2-nozzle.theta_i, pi/2, N);
-radius = r_c_div;                                                   % Arc Radius
-xy_r_up = circ(radius,r_angl_up); % Matrix (2xN) Of (x,y) Coordinates
-xy_r_down = circ(radius,r_angl_down); % Matrix (2xN) Of (x,y) Coordinates
+        xy_r_up(1,:) = xy_r_up(1,:) + ones(1,N)*(offset);
+        xy_r_down(1,:) = xy_r_down(1,:) + ones(1,N)*(offset);
 
-xy_r_up(1,:) = xy_r_up(1,:) + ones(1,N)*(offset);
-xy_r_down(1,:) = xy_r_down(1,:) + ones(1,N)*(offset);
+        xy_r_up(2,:) = xy_r_up(2,:) + ones(1,N)*(geom.r_t + r_c_div+ geom.diameter_max/2);
+        xy_r_down(2,:) = xy_r_down(2,:) + ones(1,N)*(-geom.r_t - r_c_div+ geom.diameter_max/2);
 
-xy_r_up(2,:) = xy_r_up(2,:) + ones(1,N)*(geom.r_t + r_c_div+ geom.diameter_max/2);
-xy_r_down(2,:) = xy_r_down(2,:) + ones(1,N)*(-geom.r_t - r_c_div+ geom.diameter_max/2);
+        plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blue')
+        plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blue')
 
-plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blue')  
-plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blue')  
+        % Rao Bell
+        x1 = xy_r_up(1,end); y1 = xy_r_up(2,end);
+        x2 = geom.L_div_RAO+offset; y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi);
 
-% Rao Bell
-x1 = xy_r_up(1,end); y1 = xy_r_up(2,end);
-x2 = geom.L_div_RAO+offset; y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi); 
+        mi = tan(nozzle.theta_i);
+        mf = tan(nozzle.theta_e);
 
-mi = tan(nozzle.theta_i);
-mf = tan(nozzle.theta_e);
+        A = [ x1^3 x1^2 x1 1; x2^3 x2^2 x2 1; 3*x1^2 2*x1 1 0; 3*x2^2 2*x2 1 0];
+        b = [y1; y2; mi; mf];
+        sol = A\b;
+        a = sol(1); b = sol(2);  c = sol(3) ; d = sol(4);
 
-A = [ x1^3 x1^2 x1 1; x2^3 x2^2 x2 1; 3*x1^2 2*x1 1 0; 3*x2^2 2*x2 1 0];
-b = [y1; y2; mi; mf];
-sol = A\b;
-a = sol(1); b = sol(2);  c = sol(3) ; d = sol(4);
+        f_bell = @(x) a*x.^3 + b*x.^2 + c*x + d;
 
-f_bell = @(x) a*x^3 + b*x^2 + c*x + d;
+        x_par = linspace(x1,x2,N);
+        y_par_up = zeros(1,length(x_par));
+        for i = 1:length(x_par)
+            y_par_up(i) = f_bell(x_par(i));
+        end
+        y_par_down = zeros(1,length(x_par));
+        plot(x_par,y_par_up,'Color', 'blue')
+        for i = 1:length(x_par)
+            y_par_down(i) = -f_bell(x_par(i))+1;
+        end
 
-x_par = linspace(x1,x2,N);
-y_par_up = zeros(1,length(x_par));
-for i = 1:length(x_par)
-    y_par_up(i) = f_bell(x_par(i));
-end
-y_par_down = zeros(1,length(x_par));
-plot(x_par,y_par_up,'Color', 'blue')
-for i = 1:length(x_par)
-    y_par_down(i) = -f_bell(x_par(i))+1;
-end
+        plot(x_par,y_par_down,'Color', 'blue')
 
-plot(x_par,y_par_down,'Color', 'blue')
-
+        nozzle.f_bell = f_bell;
+        nozzle.x1 = x1; nozzle.x2 = x2;
+        nozzle.circ = circ;
+        nozzle.xy_r_up = xy_r_up;
+        nozzle.xy_r_down = xy_r_down;
     case 0
+        N = 100;
+        x1 = offset; y1 = geom.diameter_max/2 + sqrt(geom.A_t/pi);
+        y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi);
 
-     offset = offset + l_co;
-     N = 100;    
-     x1 = offset; y1 = geom.diameter_max/2 + sqrt(geom.A_t/pi);
-     x2 = geom.L_div_RAO+offset; y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi); 
-     
-     a = (y2-y1)/(x2-x1);
-     b = y1-a*x1;
-     f_conic = @(x) a*x + b;
-     
-     x_par = linspace(x1,x2,N);
-    
-     y_par_up = zeros(1,length(x_par));
-     for i = 1:length(x_par)
-     y_par_up(i) = f_conic(x_par(i));
-     end
-     y_par_down = zeros(1,length(x_par));
-     plot(x_par,y_par_up,'Color', 'blue')
-     for i = 1:length(x_par)
-     y_par_down(i) = -f_conic(x_par(i))+1;
-     end
-     
-     plot(x_par,y_par_down,'Color', 'blue')
-     plot(x_par,y_par_down,'Color', 'blue')
+        a = (y2-y1)/(nozzle.x2-x1);
+        b = y1-a*x1;
+        f_conic = @(x) a*x + b;
+
+        x_par = linspace(x1,nozzle.x2,N);
+
+        y_par_up = zeros(1,length(x_par));
+        for i = 1:length(x_par)
+            y_par_up(i) = f_conic(x_par(i));
+        end
+        y_par_down = zeros(1,length(x_par));
+        plot(x_par,y_par_up,'Color', 'blue')
+        for i = 1:length(x_par)
+            y_par_down(i) = -f_conic(x_par(i))+1;
+        end
+
+        plot(x_par,y_par_down,'Color', 'blue')
+        plot(x_par,y_par_down,'Color', 'blue')
 
 
-    for i = 1:length(x_par)
-        y_par_up_thick(i) = f_conic(x_par(i)) + thermal.th_chosen_cc;
-    end
-    plot(x_par,y_par_up_thick,'Color', 'blue')
-    for i = 1:length(x_par)
-        y_par_down_thick(i) = -f_conic(x_par(i))+1 - thermal.th_chosen_cc;
-    end
-    plot(x_par,y_par_down_thick,'Color', 'blue')
+        for i = 1:length(x_par)
+            y_par_up_thick(i) = f_conic(x_par(i)) + thermal.th_chosen_cc;
+        end
+        plot(x_par,y_par_up_thick,'Color', 'blue')
+        for i = 1:length(x_par)
+            y_par_down_thick(i) = -f_conic(x_par(i))+1 - thermal.th_chosen_cc;
+        end
+        plot(x_par,y_par_down_thick,'Color', 'blue')
 
-    
-    plot ([x2 x2],[y2 y2+thermal.th_chosen_cc],'Color', 'blue')
-    plot ([x2 x2],[-y2+1 -y2-thermal.th_chosen_cc+1],'Color', 'blue')
-
-
+        plot ([nozzle.x2 nozzle.x2],[y2 y2+thermal.th_chosen_cc],'Color', 'blue')
+        plot ([nozzle.x2 nozzle.x2],[-y2+1 -y2-thermal.th_chosen_cc+1],'Color', 'blue')
 end
-
-nozzle.f_bell = f_bell;
-nozzle.x1 = x1; nozzle.x2 = x2;
-nozzle.circ = circ;
-nozzle.xy_r_up = xy_r_up;
-nozzle.xy_r_down = xy_r_down;
-
-xline(x1, '--');
-xline(x2, '--');
 
 end
