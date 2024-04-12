@@ -83,8 +83,17 @@ b = [0, 0, 3*tank.V_tot_tank, 0,0,0,0,0]';
 
 V = A\b;
 
+tank.V_initial_He_fu = V(1);
 tank.V_tank_fu_ext = V(2);
+tank.V_initial_He_fu = V(3);
 tank.V_tank_ox_ext = V(4);
+tank.V_th_Fu = V(5);
+tank.V_th_Ox = V(6);
+tank.L_tank_fu = V(7);
+tank.L_tank_fu = V(8);
+
+tank.V_fu = V(2) - V(1);
+tank.V_ox = V(4) - V(2);
 
 % new volume with thickness
 %geom.l_tank_tot = geom.length_max - tot_added_length;
@@ -119,23 +128,27 @@ tank.V_tank_ox_ext = V(4);
 %tank.V_ox = V(4) - V(3);
 %
 %% masses
-%masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
-%
-%masses.m_fu = tank.V_fu * rho_f;
-%masses.m_ox = tank.V_ox * rho_ox;
-%
-%masses.fuel_tot = masses.m_fu + masses.m_ox;
-%
-%masses.injection_plate = V_inj * thermal.rho;
-%masses.combustion_camber = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
-%masses.convergent = (V_conv_ext - V_conv_int) * thermal.rho;
-%
-%masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
-%masses.m_dry = masses.tanks_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
-%
-%% volume fraction
-%geom.fraction = (V_around_cc_conv_inj + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
-%
+
+masses.m_tank_fu = tank.V_th_Fu * tank.rho_tank;
+masses.m_tank_ox = tank.V_th_Ox * tank.rho_tank;
+
+masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
+
+masses.m_fu = tank.V_fu * rho_f;
+masses.m_ox = tank.V_ox * rho_ox;
+
+masses.fuel_tot = masses.m_fu + masses.m_ox;
+
+masses.injection_plate = V_inj * thermal.rho;
+masses.combustion_camber = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
+masses.convergent = (V_conv_ext - V_conv_int) * thermal.rho;
+
+masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
+masses.m_dry = masses.tanks_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
+
+% volume fraction
+% geom.fraction = (V_around_cc_conv_inj + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
+
 end
 
 
