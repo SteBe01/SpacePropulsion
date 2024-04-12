@@ -30,5 +30,3 @@ end
 % Visual representation
 engine_shape(geom, tank, nozzle, thermal);
 
-% Thermal protection
-[geom, thermal] = thermal_check(geom, prop, comb_ch, thermal, engine, const);
