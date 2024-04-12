@@ -15,7 +15,7 @@ parfor ii=1:N_sim
 
     %use variable OF
     %this little maneuver is gonna cost us 51 years
-    [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f, cstar] = topdown_stoch_new(d_err);
+    [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f, cstar, T_c] = topdown_stoch_new(d_err);
         
     t_array{ii} = t';
     T_array{ii} = T';
@@ -27,6 +27,7 @@ parfor ii=1:N_sim
     P_he_ox_array{ii} = P_he_ox';
     P_he_f_array{ii} = P_he_f';
     cstar_array{ii} = cstar';
+    T_c_array{ii} = T_c'
 end
 
 %%
@@ -42,6 +43,7 @@ Pc_vec = ones(1e4, N_sim)*NaN;
 P_he_ox_vec = ones(1e4, N_sim)*NaN;
 P_he_f_vec = ones(1e4, N_sim)*NaN;
 cstar_vec = ones(1e4, N_sim)*NaN;
+T_c_vec = ones(1e4, N_sim)*NaN; 
 
 for ii=1:N_sim
     rows = size(T_array{ii}, 1);    
@@ -55,6 +57,7 @@ for ii=1:N_sim
     P_he_ox_vec(1:rows, ii) = P_he_ox_array{ii};
     P_he_f_vec(1:rows, ii) = P_he_f_array{ii};
     cstar_vec(1:rows, ii) = cstar_array{ii};
+    T_c_vec(1:rows, ii) = T_c_array{ii};
 end
 
 %%
@@ -70,6 +73,7 @@ for ii = 1:N_sim
     P_he_ox_vec(P_he_ox_vec(:,ii)<=-1, ii) = NaN;
     P_he_f_vec(P_he_f_vec(:,ii)<=-1, ii) = NaN;
     cstar_vec(cstar_vec(:,ii)<=-1, ii) = NaN;
+    T_c_vec(T_c_vec(:,ii)<=-1, ii) = NaN;
 
     I_tot_vec(ii) = 0.5*sum(T_vec(~isnan(T_vec(:,ii)), ii));
     OF_vec(:,ii) = mdot_ox_vec(:,ii)./mdot_f_vec(:,ii);
@@ -190,3 +194,13 @@ end
 title("\textbf{c^* profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$c^*\ [-]$", 'Interpreter','latex');
+
+% Temperature profile
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), T_c_vec(:, ii))
+end
+title("\textbf{Temperature in chamber profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$T_c\ [°K]$", 'Interpreter','latex');
