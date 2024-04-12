@@ -178,4 +178,13 @@ plot(x_par,y_par_down,'Color', 'blue')
 
 end
 
+nozzle.f_bell = f_bell;
+nozzle.x1 = x1; nozzle.x2 = x2;
+nozzle.circ = circ;
+nozzle.xy_r_up = xy_r_up;
+nozzle.xy_r_down = xy_r_down;
+
+xline(x1, '--');
+xline(x2, '--');
+
 end
