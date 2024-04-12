@@ -57,51 +57,81 @@ tank.P_f_ox = P_f_ox + P_f;
 
 tank.volume_OF = OF * rho_f/rho_ox; % volume
 
-A = [P_i_fu^(1 / prop.k_He), -P_f_fu^(1 / prop.k_He), 0, 0;
-    0,0,P_i_ox^(1 / prop.k_He), -P_f_ox^(1 / prop.k_He);
-    0, 1, 0, 1;
-    tank.volume_OF, -tank.volume_OF, -1, +1];
-b = [0; 0; tank.V_tot_tank; 0];
+r1 = geom.diameter_max / 2;
+r2 = geom.diameter_max / 2;
 
-V = A \ b;
+OX_v = tank.volume_OF;
+k = prop.k_He;
+P1 = tank.P_i_fu;
+P2 = tank.P_f_fu;
+P3 = tank.P_i_ox;
+P4 = tank.P_f_ox;
+th1 = 2*P1*r1 / (tank.sigma + 2*P1);
+th2 = 2*P3*r2 / (tank.sigma + 2*P3);
+C1 = pi*(r1^2-(r1-th1)^2);
+C2 = pi*(r2^2-(r2-th2)^2);
+A = [P1^(1/k), -P2^(1/k),0,0,0,0,0,0;
+    0,0,P3^(1/k),-P4^(1/k),0,0,0,0;
+    0,1,0,1,1,1,0,0;
+    OX_v, -OX_v,-1,1,0,0,0,0;
+    0,0,0,0,1,0,-C1,0;
+    0,0,0,0,0,1,0,-C2;
+    0,-1,0,0,-1,0,pi*r1^2,0;
+    0,0,0,-1,0,-1,0,pi*r2^2;
+    ];
+b = [0, 0, tank.V_tot_tank, 0,0,0,0,0]';
 
-tank.V_tank_fu_ext = V(2);
-tank.V_tank_ox_ext = V(4);
+V = A\b;
 
-
-% new volume with thickness
-geom.l_tank_tot = geom.length_max - tot_added_length;
-geom.A_tank_tot = tank.V_tot_tank / geom.l_tank_tot;
-geom.r_tank_tot = sqrt(geom.A_tank_tot / pi);
-
-geom.L_tank_fu = tank.V_tank_fu_ext / geom.A_tank_tot;
-
-[geom.tank_thickness_fu, ~, masses.m_tank_fu] = tank_thickness(tank, tank.P_i_fu, geom.r_tank_tot, geom.L_tank_fu);
-tank.V_fu = geom.L_tank_fu*pi*(geom.r_tank_tot - geom.tank_thickness_fu)^2;
-
-geom.L_tank_ox_old = tank.V_tank_ox_ext / geom.A_tank_tot;
-geom.L_tank_ox = tank.V_tank_ox_ext / A_tot_req;
-
-[geom.tank_thickness_ox, ~, masses.m_tank_ox] = tank_thickness(tank, tank.P_i_ox, geom.r_tank_tot, geom.L_tank_ox);
-tank.V_ox = geom.L_tank_ox*pi*(geom.r_tank_tot - geom.tank_thickness_ox)^2;
-
-tank.V_tank_fu = tank.V_tank_fu_ext;
-tank.V_tank_ox = tank.V_tank_ox_ext;
-
-
-% solve initial He volumes
-
-tank.V_initial_He_fu = V(1);
-tank.L_initial_He_fu = tank.V_initial_He_fu/(pi*geom.r_tank_tot^2);
-tank.V_initial_He_ox = V(3);
-tank.L_initial_He_ox = tank.V_initial_He_ox/(pi*(geom.diameter_max/2)^2);
-
-% solve final volumes of Ox and Fu
+tank.V_initial_He_ox = V(1);
+tank.V_tank_fu_int = V(2);
+tank.V_initial_He_fu = V(3);
+tank.V_tank_ox_int = V(4);
+tank.V_th_Fu = V(5);
+tank.V_th_Ox = V(6);
+tank.L_tank_fu = V(7);
+tank.L_tank_fu = V(8);
 
 tank.V_fu = V(2) - V(1);
 tank.V_ox = V(4) - V(3);
 
-% masses
+% new volume with thickness
+%geom.l_tank_tot = geom.length_max - tot_added_length;
+%geom.A_tank_tot = tank.V_tot_tank / geom.l_tank_tot;
+%geom.r_tank_tot = sqrt(geom.A_tank_tot / pi);
+%
+%geom.L_tank_fu = tank.V_tank_fu_ext / geom.A_tank_tot;
+%
+%[geom.tank_thickness_fu, ~, masses.m_tank_fu] = tank_thickness(tank, tank.P_i_fu, geom.r_tank_tot, geom.L_tank_fu);
+%tank.V_fu = geom.L_tank_fu*pi*(geom.r_tank_tot - geom.tank_thickness_fu)^2;
+%
+%geom.L_tank_ox_old = tank.V_tank_ox_ext / geom.A_tank_tot;
+%geom.L_tank_ox = tank.V_tank_ox_ext / A_tot_req;
+%
+%[geom.tank_thickness_ox, ~, masses.m_tank_ox] = tank_thickness(tank, tank.P_i_ox, geom.r_tank_tot, geom.L_tank_ox);
+%tank.V_ox = geom.L_tank_ox*pi*(geom.r_tank_tot - geom.tank_thickness_ox)^2;
+%
+%tank.V_tank_fu = tank.V_tank_fu_ext;
+%tank.V_tank_ox = tank.V_tank_ox_ext;
+%
+%
+%% solve initial He volumes
+%
+%tank.V_initial_He_fu = V(1);
+%tank.L_initial_He_fu = tank.V_initial_He_fu/(pi*geom.r_tank_tot^2);
+%tank.V_initial_He_ox = V(3);
+%tank.L_initial_He_ox = tank.V_initial_He_ox/(pi*(geom.diameter_max/2)^2);
+%
+%% solve final volumes of Ox and Fu
+%
+%tank.V_fu = V(2) - V(1);
+%tank.V_ox = V(4) - V(3);
+%
+%% masses
+
+masses.m_tank_fu = tank.V_th_Fu * tank.rho_tank;
+masses.m_tank_ox = tank.V_th_Ox * tank.rho_tank;
+
 masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
 
 masses.m_fu = tank.V_fu * rho_f;
@@ -117,7 +147,9 @@ masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.injection_plate + mas
 masses.m_dry = masses.tanks_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
 
 % volume fraction
-geom.fraction = (V_around_cc_conv_inj + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox+tank.V_tank_fu)))/(V_tot_req);
+geom.l_tank_tot = (tank.V_tank_ox_int + tank.V_th_Ox + tank.V_tank_fu_int + tank.V_th_Fu)/(pi*r1^2);
+L_new = geom.length_max - geom.l_tank_tot - (geom.L_conv + geom.L_cc + geom.L_inj);
+geom.fraction = (V_around_cc_conv_inj + L_new*pi*(r1)^2 + (geom.l_tank_tot*pi*(geom.diameter_max/2)^2 - (tank.V_tank_ox_int+tank.V_tank_fu_int+tank.V_th_Fu+tank.V_th_Ox)))/(V_tot_req);
 
 end
 
