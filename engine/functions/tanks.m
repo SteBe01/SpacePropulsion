@@ -83,14 +83,14 @@ b = [0, 0, tank.V_tot_tank, 0,0,0,0,0]';
 
 V = A\b;
 
-tank.V_initial_He_ox = V(1);
+tank.V_initial_He_fu = V(1);
 tank.V_tank_fu_int = V(2);
-tank.V_initial_He_fu = V(3);
+tank.V_initial_He_ox = V(3);
 tank.V_tank_ox_int = V(4);
 tank.V_th_Fu = V(5);
 tank.V_th_Ox = V(6);
 tank.L_tank_fu = V(7);
-tank.L_tank_fu = V(8);
+tank.L_tank_ox = V(8);
 
 tank.V_fu = V(2) - V(1);
 tank.V_ox = V(4) - V(3);

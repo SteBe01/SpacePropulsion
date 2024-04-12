@@ -40,7 +40,8 @@ P_he_f = P_he_f_initial;
 
 P_c = comb_ch.P_start_real;
 
-C = 0.5*101325 + (1.37 + 1.034 + 1)*1e5;
+C = 0.5*101325 + (2*1.034 + 0.76)*1e5;
+
 
 K1_ox = (3.627 * const.K * (rho_ox * A_tube * 2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
 K2_ox = 1/2*rho_ox;
