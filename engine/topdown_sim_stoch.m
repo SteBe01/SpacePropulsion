@@ -84,16 +84,11 @@ while P_c > comb_ch.P_min
     Pc_vec(i) = P_c;
     P_he_ox_vec(i) = P_he_ox;
     P_he_f_vec(i) = P_he_f;
-    Isp_vec(i)=Isp;
 	T(i) = m_dot * Isp * const.g0;
+    Isp_vec(i)=Isp;
 
 	i = i+1;
 end
-    
-    t_burn=t(end);
-
-    
-
 end
 
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)

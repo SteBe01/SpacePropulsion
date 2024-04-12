@@ -26,6 +26,10 @@ for ii=1:N_sim
 
     [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f] = topdown_sim_stoch(d_err);
 
+    %use variable OF
+    %this little maneuver is gonna cost us 51 years
+    %[t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f] = topdown_stoch_new(d_err);
+
     rows = size(T, 2);
     rows1 = size(Isp,2);
 
@@ -162,4 +166,3 @@ d_min = min(d_err_vec);
 d_max = max(d_err_vec);
 plot([d_min:1e-6:d_max]*1e3, polyval(fcn, [d_min:1e-6:d_max]), 'LineWidth', 2,'DisplayName', "Regression line")
 legend()
-
