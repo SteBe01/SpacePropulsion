@@ -2,14 +2,14 @@
     Tf = comb_ch.T_cc;
     Twh = thermal.T_wh;
     Te = const.Te; 
-    k = const.k;    
+    k = const.k_lin;    
     dc = geom.L_cc/(2*geom.r_cc);
     thermal.tw = 5e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k;
     Ma = comb_ch.Ma_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
-    t_burn= ;
+    t_burn= 50*60;
 
     %Reynolds Number
     	out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',2.24,'case', ...
@@ -31,7 +31,7 @@
     h_av=sum(h)/length(h);
 
     % Iterations to find Twc (external wall temperature)
-    Twh_init = 2e3:10:Tf;
+    Twh_init = 2e3:1:Tf;
     
     for ii = 1:length(Twh_init)
         q1 = h_av.*(Tf - Twh_init(ii));
@@ -48,6 +48,7 @@
     [~, pos] = min(q1_vec - q2_vec);
 
     thermal.Twc = Twc_vec(pos);
+    thermal.Twh_int = Twh_init(pos);
     thermal.q1 = q1_vec(pos);
     thermal.q2 = q2_vec(pos);
 
