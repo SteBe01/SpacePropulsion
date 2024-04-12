@@ -1,4 +1,4 @@
-function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec, thermal] = topdown_stoch_new(d_err)
+function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec, cstar_vec, thermal] = topdown_stoch_new(d_err)
 
 addpath(genpath('./functions'))
 
@@ -67,7 +67,7 @@ while P_c > comb_ch.P_min
 	m_dot_ox = rho_ox * A_tube * v_tube_ox;
 	m_dot_f = rho_f * A_tube * v_tube_f;
 	m_dot = m_dot_ox + m_dot_f;
-	[~, Isp] = get_mass_rate(A_t, P_c, m_dot_ox / m_dot_f);
+	[~, Isp, cstar] = get_mass_rate(A_t, P_c, m_dot_ox / m_dot_f);
 
 	dV_ox = m_dot_ox / rho_ox * dt;
 	dV_f = m_dot_f / rho_f * dt;
@@ -90,6 +90,7 @@ while P_c > comb_ch.P_min
 	P_he_f_vec(i) = P_he_f;
 	T(i) = m_dot * Isp * const.g0;
 	Isp_vec(i) = Isp;
+    cstar_vec(i) = cstar;
 
 	i = i+1;
 end
@@ -105,11 +106,12 @@ function deltafun = fun(Pc, P_he_ox, P_he_f, A_tube, fun_vox, fun_vof, rho_ox, r
 	deltafun = m_dot - m_dot2;
 end
 
-function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)
+function [m_dot, Isp, cstar] = get_mass_rate(A_t, P_c, OF)
 	x=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',OF,'case','CEAM-rocket1','p,bar',P_c * 1e-5,'reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100,'h,cal/mol',-5430,'t(k)',300.0,'oxid','O2(L)','O',2,'wt%',100,'h,cal/mol',-3032,'t(k)',94.44,'output','mks','end');
 
 	k = x.output.eql.gamma(end-1);
 	son_vel = x.output.eql.sonvel(end-1);
 	m_dot = A_t * P_c * k * sqrt((2/(k+1))^((k+1)/(k-1))) / son_vel;
 	Isp = x.output.eql.isp(end);
+    cstar = x.output.eql.cstar(2);
 end
