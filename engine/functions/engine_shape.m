@@ -159,6 +159,21 @@ plot(x_par,y_par_down,'Color', 'blue')
      end
      
      plot(x_par,y_par_down,'Color', 'blue')
+     plot(x_par,y_par_down,'Color', 'blue')
+
+
+    for i = 1:length(x_par)
+        y_par_up_thick(i) = f_conic(x_par(i)) + thermal.th_chosen_cc;
+    end
+    plot(x_par,y_par_up_thick,'Color', 'blue')
+    for i = 1:length(x_par)
+        y_par_down_thick(i) = -f_conic(x_par(i))+1 - thermal.th_chosen_cc;
+    end
+    plot(x_par,y_par_down_thick,'Color', 'blue')
+
+    
+    plot ([x2 x2],[y2 y2+thermal.th_chosen_cc],'Color', 'blue')
+    plot ([x2 x2],[-y2+1 -y2-thermal.th_chosen_cc+1],'Color', 'blue')
 
 
 end
