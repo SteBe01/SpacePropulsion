@@ -1,5 +1,8 @@
 function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data()
 
+    % ------------------------- bool -------------------------
+    nozzle.plot = 0;                    % [-]  Div: 0 is Conical; 1 is Rao
+
 	% ------------------- data (mandatory) -------------------
     % Prop couple: LOx and RP-1
 	engine.T = 1000;                    % [N]
@@ -12,7 +15,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	prop.MM_lox = 32;                   % [kg/kmol]
 	prop.MM_rp1 = 175;                  % [kg/kmol]
 	prop.rho_lox = 1.14e3;              % [kg/m^3]      density
-	prop.rho_rp1 = 0.81e3 ;            % [kg/m^3]      density at 289K
+	prop.rho_rp1 = 0.81e3 ;             % [kg/m^3]      density at 289K
 	prop.MM_He = 4;                     % [kg/mol]
 	prop.k_He = 1.66;
     prop.rho_cc_in = 3.7596;            % [kg/mol]      initial density inside cc
@@ -61,6 +64,5 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	const.Te = 4;                       % [K]           external temperature (space)
 	const.k = 22;                       % [W/mK]        conductivity of Inconel 718
 	const.c = 1880;                     % [J/(Kg K)]    specific heat of RP-1
-    nozzle.plot = 0;                    % [-]  Div: 0 is Conical; 1 is Rao
 
 end
