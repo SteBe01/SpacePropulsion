@@ -81,6 +81,11 @@ plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 
 % divergent
+
+switch nozzle.plot
+
+    case 1
+
 offset = offset + l_co;
 r_c_div = 0.382*geom.r_t;
 nozzle.theta_i=pi/6;
@@ -129,5 +134,33 @@ for i = 1:length(x_par)
 end
 
 plot(x_par,y_par_down,'Color', 'blue')
+
+    case 0
+
+     offset = offset + l_co;
+     N = 100;    
+     x1 = offset; y1 = geom.diameter_max/2 + sqrt(geom.A_t/pi);
+     x2 = geom.L_div_RAO+offset; y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi); 
+     
+     a = (y2-y1)/(x2-x1);
+     b = y1-a*x1;
+     f_conic = @(x) a*x + b;
+     
+     x_par = linspace(x1,x2,N);
+    
+     y_par_up = zeros(1,length(x_par));
+     for i = 1:length(x_par)
+     y_par_up(i) = f_conic(x_par(i));
+     end
+     y_par_down = zeros(1,length(x_par));
+     plot(x_par,y_par_up,'Color', 'blue')
+     for i = 1:length(x_par)
+     y_par_down(i) = -f_conic(x_par(i))+1;
+     end
+     
+     plot(x_par,y_par_down,'Color', 'blue')
+
+
+end
 
 end

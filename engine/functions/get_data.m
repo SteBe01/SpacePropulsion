@@ -61,5 +61,6 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	const.Te = 4;                       % [K]           external temperature (space)
 	const.k = 22;                       % [W/mK]        conductivity of Inconel 718
 	const.c = 1880;                     % [J/(Kg K)]    specific heat of RP-1
+    nozzle.plot = 0;                    % [-]  Div: 0 is Conical; 1 is Rao
 
 end
