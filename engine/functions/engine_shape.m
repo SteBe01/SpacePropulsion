@@ -162,19 +162,22 @@ switch nozzle.plot
 
         plot(x_par,y_par_down,'Color', 'blue')
         plot(x_par,y_par_down,'Color', 'blue')
+        
+        x_par_thick = linspace(x1,nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length),N);
 
+        y_par_up = zeros(1,length(x_par_thick));
 
-        for i = 1:length(x_par)
-            y_par_up_thick(i) = f_conic(x_par(i)) + thermal.th_chosen_cc;
+        for i = 1:length(x_par_thick)
+            y_par_up_thick(i) = f_conic(x_par_thick(i)) + thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
         end
-        plot(x_par,y_par_up_thick,'Color', 'blue')
-        for i = 1:length(x_par)
-            y_par_down_thick(i) = -f_conic(x_par(i))+1 - thermal.th_chosen_cc;
+        plot(x_par_thick,y_par_up_thick,'Color', 'blue')
+        for i = 1:length(x_par_thick)
+            y_par_down_thick(i) = -f_conic(x_par_thick(i))+1 - thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
         end
-        plot(x_par,y_par_down_thick,'Color', 'blue')
+        plot(x_par_thick,y_par_down_thick,'Color', 'blue')
 
-        plot ([nozzle.x2 nozzle.x2],[y2 y2+thermal.th_chosen_cc],'Color', 'blue')
-        plot ([nozzle.x2 nozzle.x2],[-y2+1 -y2-thermal.th_chosen_cc+1],'Color', 'blue')
+        plot ([nozzle.x2 nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[y2 y2+thermal.th_chosen_cc*cos(nozzle.alpha_con_length)],'Color', 'blue')
+        plot ([nozzle.x2 nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[-y2+1 -y2-thermal.th_chosen_cc*cos(nozzle.alpha_con_length)+1],'Color', 'blue')
 end
 
 end

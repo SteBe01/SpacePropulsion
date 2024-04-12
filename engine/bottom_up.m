@@ -31,5 +31,5 @@ end
 nozzle = engine_shape(geom, tank, nozzle, thermal);
 
 % Calculate divergent masses
-[masses] = divergent_mass(geom, nozzle, masses);
+[masses] = divergent_mass(geom, nozzle, masses,thermal);
 
