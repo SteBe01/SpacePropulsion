@@ -53,7 +53,14 @@ v_f = @(Pc, P_he) sqrt((P_he - Pc - C)/K_f);
 i = 1;
 dt = 5; %going lower doesn't increase accuracy
 while P_c > comb_ch.P_min
-	P_c = fzero(@(Pc) fun(Pc, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t), [10e5, P_c]);
+	lower_bound = 10e5;
+
+	max_Pc = min([P_he_ox - C, P_he_f - C]);
+	upper_bound = P_c;
+	while fun(upper_bound, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t) > 0
+		upper_bound = (upper_bound + max_Pc) / 2;
+	end
+	P_c = fzero(@(Pc) fun(Pc, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t), [lower_bound, upper_bound]);
 
 	v_tube_ox = v_ox(P_c, P_he_ox);
 	v_tube_f = v_f(P_c, P_he_f);
@@ -94,7 +101,6 @@ function deltafun = fun(Pc, P_he_ox, P_he_f, A_tube, fun_vox, fun_vof, rho_ox, r
 	m_dot_ox = rho_ox * A_tube * v_tube_ox;
 	m_dot_f = rho_f * A_tube * v_tube_f;
 	m_dot = m_dot_ox + m_dot_f;
-
 	m_dot2 = get_mass_rate(A_t, Pc, m_dot_ox / m_dot_f); %CEA version
 	deltafun = m_dot - m_dot2;
 end
