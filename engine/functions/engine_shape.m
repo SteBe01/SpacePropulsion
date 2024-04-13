@@ -135,6 +135,7 @@ switch nozzle.plot
         plot(x_par,y_par_down,'Color', 'blue')
 
         nozzle.f_bell = f_bell;
+        nozzle.f_bell_for_volume = @(x) a*x.^3 + b*x.^2 + c*x + d - geom.diameter_max/2;
         nozzle.x1 = x1; nozzle.x2 = x2;
         nozzle.circ = circ;
         nozzle.xy_r_up = xy_r_up;

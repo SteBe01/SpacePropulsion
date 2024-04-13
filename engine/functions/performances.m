@@ -76,10 +76,9 @@ comb_ch.P_start_real = comb_ch.P_start_id-delta_p;
 %% Nozzle Losses:
 switch nozzle.plot
     case 1
-engine.T_real =nozzle.real_gas*nozzle.t_er*((nozzle.bl_loss*nozzle.lambda*nozzle.Cd*(engine.m_dot * nozzle.v_exit_start)) + geom.A_exit*(nozzle.P_exit - const.P_amb));
+        engine.T_real =nozzle.real_gas*nozzle.t_er*((nozzle.bl_loss*nozzle.lambda*nozzle.Cd*(engine.m_dot * nozzle.v_exit_start)) + geom.A_exit*(nozzle.P_exit - const.P_amb));
     case 0 
         engine.T_real =nozzle.real_gas*nozzle.t_er*((nozzle.bl_loss*nozzle.lambda_con_length*nozzle.Cd*(engine.m_dot * nozzle.v_exit_start)) + geom.A_exit*(nozzle.P_exit - const.P_amb));
-
 end
         engine.eta_T = engine.T_real/engine.T;
 

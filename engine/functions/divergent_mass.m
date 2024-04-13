@@ -7,7 +7,7 @@ x2 = nozzle.x2;
 
 switch nozzle.plot
     case 1
-        f_bell = nozzle.f_bell;
+        f_bell = nozzle.f_bell_for_volume;
         x1 = nozzle.x1;
         xy_r_up = nozzle.xy_r_up;
 
