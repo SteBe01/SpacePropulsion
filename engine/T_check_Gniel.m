@@ -33,11 +33,11 @@ switch param
 
 %% CC:
 
- thermal.Dh_cc_cc = 2*geom.r_cc; % [m] Hydraulic diam in cc
+ thermal.Dh_cc = 2*geom.r_cc; % [m] Hydraulic diam in cc
 
     thermal.Pr_cc=out.output.eql.prandtl.froz(:,2);            
     rhov_cc=(Pc.*geom.A_t)./(geom.A_cc*out.output.eql.cstar(:,2));
-    Re_cc=(rhov_cc*thermal.Dh_cc_cc)/(out.output.eql.viscosity(:,2)*1e-6);
+    Re_cc=(rhov_cc*thermal.Dh_cc)/(out.output.eql.viscosity(:,2)*1e-6);
     thermal.Re_cc=Re_cc(:,1);
     % f = 64./Re;
     f_cc = 0.184./(thermal.Re_cc.^(0.2)); % Colebrook white for friction factor
@@ -52,7 +52,7 @@ switch param
     end
 
     % Convective heat transfer coefficient - [W/(m^2 K)]
-    thermal.h_gas_cc = thermal.Nu_cc.*(thermal.k_gas_cc_av/(thermal.Dh_cc_cc));
+    thermal.h_gas_cc = thermal.Nu_cc.*(thermal.k_gas_cc_av/(thermal.Dh_cc));
     thermal.h_gas_cc_av=sum(thermal.h_gas_cc)/length(thermal.h_gas_cc); %[W/m2K]
 
     % Iterations to find Twc (external wall temperature)
@@ -133,11 +133,11 @@ q2=q2_vec(pos1)
     
 % %% Throat
 % 
-% thermal.Dh_cc_t = 2*geom.r_t; % [m] Hydraulic diam in cc
+% thermal.Dh_t = 2*geom.r_t; % [m] Hydraulic diam in cc
 % 
 %     thermal.Pr_t=out.output.eql.prandtl.froz(:,3);            
 %     rhov_t=(Pc.*geom.A_t)./(geom.A_t*out.output.eql.cstar(:,3));
-%     Re_t=(rhov_t*thermal.Dh_cc_t)/(out.output.eql.viscosity(:,3)*1e-6);
+%     Re_t=(rhov_t*thermal.Dh_t)/(out.output.eql.viscosity(:,3)*1e-6);
 %     thermal.Re_t=Re_t(:,1);
 %     % f = 64./Re;
 %     f_t = 0.184./(thermal.Re_t.^(0.2)); % Colebrook white for friction factor
@@ -152,7 +152,7 @@ q2=q2_vec(pos1)
 %     end
 % 
 %     % Convective heat transfer coefficient - [W/(m^2 K)]
-%     thermal.h_gas_t = thermal.Nu_t.*(thermal.k_gas_t_av/(thermal.Dh_cc_t));
+%     thermal.h_gas_t = thermal.Nu_t.*(thermal.k_gas_t_av/(thermal.Dh_t));
 %     thermal.h_gas_t_av=sum(thermal.h_gas_t)/length(thermal.h_gas_t); %[W/m2K]
 % 
 %     % Iterations to find Twc (external wall temperature)
@@ -240,6 +240,8 @@ thermal.Dh_cc = geom.L_cc/(2*geom.r_cc);
 
 if thermal.Dh_cc >=10
 thermal.flag_Dittus_Boelter = 1;
+else thermal.flag_Dittus_Boelter = 0;
+
 end
 
 thermal.Pr_cc=out.output.eql.prandtl.froz(:,2);            
