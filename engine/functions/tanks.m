@@ -57,7 +57,7 @@ tank.P_f_ox = P_f_ox + P_f;
 
 tank.volume_OF = OF * rho_f/rho_ox; % volume
 
-% tank.r_ext_fu = geom.diameter_max / 2;
+tank.r_ext_fu = geom.diameter_max / 2;
 tank.r_ext_ox = geom.diameter_max / 2;
 
 OX_v = tank.volume_OF;
@@ -66,43 +66,52 @@ P1 = tank.P_i_fu;
 P2 = tank.P_f_fu;
 P3 = tank.P_i_ox;
 P4 = tank.P_f_ox;
-tank.th_tank_fu = 2*P1*tank.r_ext_fu / (tank.sigma + 2*P1);
-tank.th_tank_ox = 2*P3*tank.r_ext_ox / (tank.sigma + 2*P3);
-C1 = pi*(tank.r_ext_fu^2-(tank.r_ext_fu-tank.th_tank_fu)^2);
-C2 = pi*(tank.r_ext_ox^2-(tank.r_ext_ox-tank.th_tank_ox)^2);
-A = [P1^(1/k), -P2^(1/k),0,0,0,0,0,0;
-    0,0,P3^(1/k),-P4^(1/k),0,0,0,0;
-    0,1,0,1,1,1,0,0;
-    OX_v, -OX_v,-1,1,0,0,0,0;
-    0,0,0,0,1,0,-C1,0;
-    0,0,0,0,0,1,0,-C2;
-    0,-1,0,0,-1,0,pi*tank.r_ext_fu^2,0;
-    0,0,0,-1,0,-1,0,pi*tank.r_ext_ox^2;
-    ];
-b = [0, 0, tank.V_tot_tank, 0,0,0,0,0]';
 
-V = A\b;
+stop = 1;
+while stop
+    tank.th_tank_fu = 2*P1*tank.r_ext_fu / (tank.sigma + 2*P1);
+    tank.th_tank_ox = 2*P3*tank.r_ext_ox / (tank.sigma + 2*P3);
+    C1 = pi*(tank.r_ext_fu^2-(tank.r_ext_fu-tank.th_tank_fu)^2);
+    C2 = pi*(tank.r_ext_ox^2-(tank.r_ext_ox-tank.th_tank_ox)^2);
+    A = [P1^(1/k), -P2^(1/k),0,0,0,0,0,0;
+        0,0,P3^(1/k),-P4^(1/k),0,0,0,0;
+        0,1,0,1,1,1,0,0;
+        OX_v, -OX_v,-1,1,0,0,0,0;
+        0,0,0,0,1,0,-C1,0;
+        0,0,0,0,0,1,0,-C2;
+        0,-1,0,0,-1,0,pi*tank.r_ext_fu^2,0;
+        0,0,0,-1,0,-1,0,pi*tank.r_ext_ox^2;
+        ];
+    b = [0, 0, tank.V_tot_tank, 0,0,0,0,0]';
+    
+    V = A\b;
+    
+    tank.V_initial_He_fu = V(1);
+    tank.V_tank_fu_int = V(2);
+    tank.V_initial_He_ox = V(3);
+    tank.V_tank_ox_int = V(4);
+    tank.V_th_Fu = V(5);
+    tank.V_th_Ox = V(6);
+    tank.L_tank_fu = V(7);
+    tank.L_tank_ox = V(8);
+    
+    tank.L_initial_He_fu = tank.V_initial_He_fu / (pi * (tank.r_ext_fu-tank.th_tank_fu)^2);
+    tank.L_initial_He_ox = tank.V_initial_He_ox / (pi * (tank.r_ext_ox-tank.th_tank_ox)^2);
+    
+    tank.V_fu = V(2) - V(1);
+    tank.V_ox = V(4) - V(3);
+    
+    tank.L_empty = geom.length_max - (tank.L_tank_fu + tank.L_tank_ox + tot_added_length);
+    
+    error = abs(geom.diameter_max/2 - tank.r_ext_fu - tank.L_empty/2);
 
-tank.V_initial_He_fu = V(1);
-tank.V_tank_fu_int = V(2);
-tank.V_initial_He_ox = V(3);
-tank.V_tank_ox_int = V(4);
-tank.V_th_Fu = V(5);
-tank.V_th_Ox = V(6);
-tank.L_tank_fu = V(7);
-tank.L_tank_ox = V(8);
-
-tank.L_initial_He_fu = tank.V_initial_He_fu / (pi * (tank.r_ext_fu-tank.th_tank_fu)^2);
-tank.L_initial_He_ox = tank.V_initial_He_ox / (pi * (tank.r_ext_ox-tank.th_tank_ox)^2);
-
-tank.V_fu = V(2) - V(1);
-tank.V_ox = V(4) - V(3);
-
-tank.L_empty = geom.length_max - (tank.L_tank_fu + tank.L_tank_ox + tot_added_length);
-
-if tank.L_empty < 0
-    warning("tank L_empty < 0!")
+    if error < 1e-5
+        stop = 0;
+    else
+        tank.r_ext_fu = tank.r_ext_fu - error/3;
+    end
 end
+
 
 %% masses
 
