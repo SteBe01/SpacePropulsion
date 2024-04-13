@@ -25,7 +25,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 
 	% ------------------ data (assumptions) ------------------
 	comb_ch.T_cc = 3571;                % [K]           cc temperature (tab 5.5, Sutton)
-	geom.eps = 400;                     % [-]           expansion ratio
+	geom.eps = 200;                     % [-]           expansion ratio
     geom.L_inj = 0.01;                  % [m]           inj thickness
 	geom.A_tube = 0.005^2 * pi / 4;     % [m]
     geom.eps_rough = 505 * 1e-6;        % [m]
