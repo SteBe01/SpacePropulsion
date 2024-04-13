@@ -8,7 +8,7 @@
     Ma = comb_ch.Ma_cc;
     c = const.c;
     m_dot_fu = engine.m_dot_f;
-    t_burn= 50*60;
+    t_burn= 3000;
 
     %Reynolds Number
     	out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',2.24,'case', ...

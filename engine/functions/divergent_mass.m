@@ -2,7 +2,6 @@ function [masses] = divergent_mass(geom, nozzle, masses,thermal)
 
 thick_conic = thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
 thick = thermal.th_chosen_cc;
-nozzle.rho = 2240;
 x2 = nozzle.x2;
 
 switch nozzle.plot

@@ -35,6 +35,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
     prop.Cp = 5.0027e3;                 % [J/ kg K]     Cp of mixture, CEA
     prop.mu_t = 102.1802e-6;            % [Pa s]        throat, CEA
     prop.rho_t = 2.31;                  % [kg/m^3]      throat, CEA
+    nozzle.rho = 1.8e3;                 % [kg/m^3]      graphite density
 	nozzle.L_star = 50*(25.4/1000);     % [m]           (between 40-50)
 	nozzle.eps_c = 10;                  % [-]
 	nozzle.beta = 45;                   % [deg]
