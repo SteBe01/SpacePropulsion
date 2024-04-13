@@ -4,7 +4,7 @@ function [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, noz
 
 % Initial performances
 f = @(P_exit) -1/geom.eps + (((prop.k+1)/2)^(1/(prop.k-1))) * ((P_exit/comb_ch.P_start_real)^(1/prop.k)) * sqrt(((prop.k+1)/(prop.k-1))*(1-(P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));
-nozzle.P_exit = fzero(f,1000);                                  % [Pa]
+nozzle.P_exit = fzero(f,[0 1e5]);                                  % [Pa]
 
 % Thrust coefficient
 engine.C_T = sqrt( 2*prop.k^2/(prop.k-1) * (2/(prop.k+1))^((prop.k+1)/(prop.k-1))*(1-(nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k))) + (nozzle.P_exit-const.P_amb)/comb_ch.P_start_real*geom.eps;                 %[-]
