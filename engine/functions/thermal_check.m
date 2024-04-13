@@ -2,9 +2,8 @@
     Tf = comb_ch.T_cc;
     Twh = thermal.T_wh;
     Te = const.Te; 
-    k = const.k_lin;    
+    k = const.k_in;    
     dc = geom.L_cc/(2*geom.r_cc);
-    thermal.tw = 5e-3;              %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k;
     Ma = comb_ch.Ma_cc;
     c = const.c;

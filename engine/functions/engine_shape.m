@@ -88,7 +88,6 @@ nozzle.x2 = geom.L_div_RAO+offset;
 switch nozzle.plot
     case 1
         r_c_div = 0.382*geom.r_t;
-        nozzle.theta_i=pi/6;
 
         % circular part
         circ = @(r_c_div,angle)  [r_c_div*cos(angle);  r_c_div*sin(angle)];       % Circle Function For Angles In Degrees

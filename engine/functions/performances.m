@@ -8,12 +8,10 @@ engine.I_sp_id = engine.C_star_id*engine.C_T/const.g0; % [s]
 
 % Total mass flow rate
 engine.m_dot = geom.A_t * comb_ch.P_start_real * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
-
 % Oxydizer mass flow rate
 engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;     % [Kg/s]
 % Fuel mass flow rate
 engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;            % [Kg/s]
-
 engine.m_dot_min = geom.A_t * comb_ch.P_min * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
 
 % Oxydizer mass flow rate

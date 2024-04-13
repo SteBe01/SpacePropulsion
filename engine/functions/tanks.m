@@ -39,7 +39,6 @@ v_f_i = engine.m_dot_f / (geom.A_tube * prop.rho_rp1);
 v_ox_f = engine.m_dot_min_ox / (geom.A_tube * prop.rho_lox);
 v_f_f = engine.m_dot_min_f / (geom.A_tube * prop.rho_rp1);
 
-% horrible, cry about it
 dP_inj_ox_i = (3.627 * const.K * (engine.m_dot_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
 dP_inj_f_i = (3.627 * const.K * (engine.m_dot_f*2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * (inj.D_f * 39.3701)^4) * 0.0689476 * 1e5;
 dP_inj_ox_f = (3.627 * const.K * (engine.m_dot_min_ox*2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * (inj.D_ox * 39.3701)^4) * 0.0689476 * 1e5;
