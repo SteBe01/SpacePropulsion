@@ -25,11 +25,12 @@ for i = 1:const.N_iterations
 end
 
 % Tanks
+tank.r_ext_fu = geom.diameter_max * (0.5);
 [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
 
 % Visual representation
-% nozzle = engine_shape(geom, tank, nozzle, thermal);
+nozzle = engine_shape(geom, tank, nozzle, thermal);
 
 % Calculate divergent masses
-% [masses] = divergent_mass(geom, nozzle, masses,thermal);
+[masses] = divergent_mass(geom, nozzle, masses,thermal);
 
