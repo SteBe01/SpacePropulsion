@@ -14,8 +14,10 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 
 	prop.MM_lox = 32;                   % [kg/kmol]
 	prop.MM_rp1 = 175;                  % [kg/kmol]
-	prop.rho_lox = 1.14e3;              % [kg/m^3]      density
-	prop.rho_rp1 = 0.81e3 ;             % [kg/m^3]      density at 289K
+	prop.rho_lox = 1153.7449;           % [kg/m^3]      density at 90.37K
+	prop.rho_rp1 = 807;                 % [kg/m^3]      density at 289K (Sutton)
+    prop.rho_he_fu = 10.0693;           % [kg/m^3]      density at 294.4K (fu tank)
+    prop.rho_he_ox = 10.1256;           % [kg/m^3]      density at 294.4K (ox tank)
 	prop.MM_He = 4;                     % [kg/mol]
 	prop.k_He = 1.66;
     prop.rho_cc_in = 3.7596;            % [kg/mol]      initial density inside cc
@@ -23,15 +25,16 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 
 	% ------------------ data (assumptions) ------------------
 	comb_ch.T_cc = 3571;                % [K]           cc temperature (tab 5.5, Sutton)
-	geom.eps = 200;                     % [-]           expansion ratio
+	geom.eps = 400;                     % [-]           expansion ratio
     geom.L_inj = 0.01;                  % [m]           inj thickness
 	geom.A_tube = 0.005^2 * pi / 4;     % [m]
     geom.eps_rough = 505 * 1e-6;        % [m]
     geom.Cf = 0.042;                    % [-]           friction factor
 	prop.OF = 2.24;                     % [-]           O/F fuel ratio
 	prop.k = 1.24;                      % [-]           cp/cv
-    prop.T_lox_in = 90;                 % [k]
-	prop.T_rp1_in = 273;                % [k]
+    prop.T_lox_in = 90.37;              % [K]
+	prop.T_rp1_in = 294.2;              % [K]
+    prop.T_He = 294.4;                  % [K]
     prop.Cp = 5.0027e3;                 % [J/ kg K]     Cp of mixture
     prop.mu_t = 102.1802e-6;            % [Pa s]        from CEA
     prop.rho_t = 2.31;                  % [kg/m^3]      from CEA

@@ -122,6 +122,7 @@ masses.tanks_tot = masses.m_tank_fu + masses.m_tank_ox;
 
 masses.m_fu = tank.V_fu * rho_f;
 masses.m_ox = tank.V_ox * rho_ox;
+masses.He_tot = tank.V_initial_He_fu* prop.rho_he_fu + tank.V_initial_He_ox * prop.rho_he_ox;
 
 masses.fuel_tot = masses.m_fu + masses.m_ox;
 
@@ -129,8 +130,8 @@ masses.injection_plate = V_inj * thermal.rho;
 masses.combustion_camber = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
 masses.convergent = (V_conv_ext - V_conv_int) * thermal.rho;
 
-masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
-masses.m_dry = masses.tanks_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
+masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.He_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
+masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
 
 % volume fraction
 V_tank_tot = tank.V_tank_fu_int + tank.V_th_Fu + tank.V_tank_ox_int + tank.V_th_Ox;
