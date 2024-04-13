@@ -79,6 +79,7 @@ plot([offset offset+l_co], [d/2-h_co_i_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 plot([offset offset+l_co], [d/2+h_co_i_ext/2 d/2+h_co_f_ext/2], 'Color', 'blue')
 plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
+warning("Convergent thickness is wrong")
 
 % divergent
 offset = offset + l_co;
