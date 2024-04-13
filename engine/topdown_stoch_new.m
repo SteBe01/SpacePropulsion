@@ -1,4 +1,4 @@
-function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec, cstar_vec, T_c_vec, thermal] = topdown_stoch_new(d_err)
+function [t, T,Isp_vec, mdot_vec, mdot_f_vec, mdot_ox_vec, Pc_vec, P_he_f_vec, P_he_ox_vec, cstar_vec, T_c_vec, thermal] = topdown_stoch_new(d_err_ox, d_err_fu)
 
 addpath(genpath('./functions'))
 
@@ -39,11 +39,11 @@ P_c = comb_ch.P_start_real;
 
 C = 0.5*101325 + (1.37 + 1.034 + 1)*1e5;
 
-K1_ox = (3.627 * const.K * (rho_ox * A_tube * 2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * ((inj.D_ox + d_err) * 39.3701)^4) * 0.0689476 * 1e5;
+K1_ox = (3.627 * const.K * (rho_ox * A_tube * 2.20462)^2) / (inj.N_ox^2*rho_ox*0.06243 * ((inj.D_ox + d_err_ox) * 39.3701)^4) * 0.0689476 * 1e5;
 K2_ox = 1/2*rho_ox;
 K_ox = K1_ox + K2_ox;
 
-K1_f = (3.627 * const.K * (rho_f * A_tube * 2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * ((inj.D_f + d_err) * 39.3701)^4) * 0.0689476 * 1e5;
+K1_f = (3.627 * const.K * (rho_f * A_tube * 2.20462)^2) / (inj.N_f^2*rho_f*0.06243 * ((inj.D_f + d_err_fu) * 39.3701)^4) * 0.0689476 * 1e5;
 K2_f = 1/2*rho_f;
 K_f = K1_f + K2_f;
 

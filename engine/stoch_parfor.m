@@ -1,21 +1,32 @@
 clc; clearvars; close all
 
+toll = 7.6e-5;
 mu_err = 0;
-sigma_err = 7.6/2*1e-5 +5.5/2*1e-6;
+sigma_err = toll/3;
 N_sim = 100;
+report_sim = true;
 
-d_err_vec = normrnd(mu_err,sigma_err,N_sim,1);
+if report_sim
+    d_err_vec_ox = [toll toll 0 -toll -toll]-5.5e-6;
+    d_err_vec_fu = [toll -toll 0 toll -toll]-5.5e-6;
+    N_sim = length(d_err_vec_ox);
+else
+    d_err_vec = normrnd(mu_err,sigma_err,N_sim,1)-5.5*1e-6;
+    d_err_vec_ox = d_err_vec;
+    d_err_vec_fu = d_err_vec;
+end
 
-parfor ii=1:N_sim
+for ii=1:N_sim
     disp("Current simulation: " + num2str(ii))
 
-    d_err = d_err_vec(ii);
+    d_err_ox = d_err_vec_ox(ii);
+    d_err_fu = d_err_vec_fu(ii);
 
     % [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f] = topdown_sim_stoch(d_err);
 
     %use variable OF
     %this little maneuver is gonna cost us 51 years
-    [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f, cstar, T_c] = topdown_stoch_new(d_err);
+    [t, T,Isp, m_dot, mdot_f, mdot_ox, Pc, P_he_ox, P_he_f, cstar, T_c] = topdown_stoch_new(d_err_ox, d_err_fu);
         
     t_array{ii} = t';
     T_array{ii} = T';
@@ -27,7 +38,7 @@ parfor ii=1:N_sim
     P_he_ox_array{ii} = P_he_ox';
     P_he_f_array{ii} = P_he_f';
     cstar_array{ii} = cstar';
-    T_c_array{ii} = T_c'
+    T_c_array{ii} = T_c';
 end
 
 %%
@@ -80,13 +91,24 @@ for ii = 1:N_sim
 end
 
 
-%%
+%% Post processing plots
+
+color_vec = {'black', 'green', 'red', 'blue', 'cyan'};
 
 % Thrust profile
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), T_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), T_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Thrust profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -96,7 +118,16 @@ ylabel("$Thrust\ [N]$", 'Interpreter','latex');
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), Isp_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), Isp_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("$\mathbf{I_{sp}\ profile}$", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -106,7 +137,16 @@ ylabel("$I_{sp}\ [s]$", 'Interpreter','latex');
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), mdot_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), mdot_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Mass flow rate profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -117,7 +157,16 @@ figure()
 subplot(2,1,1);
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), mdot_ox_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), mdot_ox_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Oxidizer mass flow rate profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -126,7 +175,16 @@ ylabel("$\dot{m_{ox}}\ [Kg/s]$", 'Interpreter','latex');
 subplot(2,1,2);
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), mdot_f_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), mdot_f_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Fuel mass flow rate profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -136,7 +194,16 @@ ylabel("$\dot{m_{fu}}\ [Kg/s]$", 'Interpreter','latex');
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), OF_vec(:, ii))
+    if ii == 3 
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), OF_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{O/F profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -146,7 +213,16 @@ ylabel("$O/F\ [-]$", 'Interpreter','latex');
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), Pc_vec(:, ii)*1e-5)
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), Pc_vec(:, ii)*1e-5, 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Chamber pressure profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -157,7 +233,16 @@ figure()
 subplot(2,1,1);
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), P_he_ox_vec(:, ii)*1e-5)
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), P_he_ox_vec(:, ii)*1e-5, 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Oxidizer pressure profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
@@ -166,32 +251,52 @@ ylabel("$P_{He}\ [bar]$", 'Interpreter','latex');
 subplot(2,1,2);
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), P_he_f_vec(:, ii)*1e-5)
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), P_he_f_vec(:, ii)*1e-5, 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Fuel pressure profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$P_{He}\ [bar]$", 'Interpreter','latex');
 
 % Total impulse wrt d_err
-figure()
-hold on; grid on
-plot(d_err_vec*1e3, I_tot_vec, 'o', 'HandleVisibility','off');
-title("\textbf{Total\ impulse wrt diameter error}", 'Interpreter','latex');
-xlabel("$Error\ [mm]$", 'Interpreter','latex');
-ylabel("$Total\ impulse\ [Ns]$", 'Interpreter','latex');
-fcn = polyfit(d_err_vec, I_tot_vec, 2);
-d_min = min(d_err_vec);
-d_max = max(d_err_vec);
-plot([d_min:1e-6:d_max]*1e3, polyval(fcn, [d_min:1e-6:d_max]), 'LineWidth', 2,'DisplayName', "Regression line")
-legend()
+if ~report_sim
+    figure()
+    hold on; grid on
+    plot(d_err_vec*1e3, I_tot_vec, 'o', 'HandleVisibility','off');
+    title("\textbf{Total\ impulse wrt diameter error}", 'Interpreter','latex');
+    xlabel("$Error\ [mm]$", 'Interpreter','latex');
+    ylabel("$Total\ impulse\ [Ns]$", 'Interpreter','latex');
+    fcn = polyfit(d_err_vec, I_tot_vec, 2);
+    d_min = min(d_err_vec);
+    d_max = max(d_err_vec);
+    plot([d_min:1e-6:d_max]*1e3, polyval(fcn, [d_min:1e-6:d_max]), 'LineWidth', 2,'DisplayName', "Regression curve")
+    legend()
+end
 
 % Cstar profile
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), cstar_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), cstar_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
 end
-title("\textbf{$c^*$ profile}", 'Interpreter','latex');
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
+end
+title("$\mathbf{c^* profile}$", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$c^*\ [-]$", 'Interpreter','latex');
 
@@ -199,8 +304,29 @@ ylabel("$c^*\ [-]$", 'Interpreter','latex');
 figure();
 hold on; grid on;
 for ii=1:N_sim
-    plot(t_vec(:,ii), T_c_vec(:, ii))
+    if ii == 3
+        lw = 2;
+    else 
+        lw = 1;
+    end
+    plot(t_vec(:,ii), T_c_vec(:, ii), 'LineWidth', lw, 'Color',color_vec{ii})
+end
+if report_sim
+    legend("$D_{ox}$ max wrt $D_{fu}$ max", "$D_{ox}$ max wrt $D_{fu}$ min", ...
+        "Nominal", "$D_{ox}$ min wrt $D_{fu}$ max", "$D_{ox}$ min wrt $D_{fu}$ min", 'Interpreter', 'latex');
 end
 title("\textbf{Temperature in chamber profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$T_c\ [K]$", 'Interpreter','latex');
+
+% Error distribution
+if ~report_sim
+    pd = fitdist(d_err_vec, "Normal");
+    figure();
+    histogram(d_err_vec, 'Normalization','pdf','FaceColor',[.9 .9 .9]);
+    title("$3\sigma$", 'Interpreter', 'latex');
+    xline(sigma_err, 'k--', 'LineWidth', 2); xline(-sigma_err, 'k--', 'LineWidth', 2);
+    xgrid = linspace(min(sigma_err), max(sigma_err), 1e3);
+    pdfEst = pdf(pd, xgrid);
+    line(xgrid, pdfEst, 'LineWidth', 2);
+end
