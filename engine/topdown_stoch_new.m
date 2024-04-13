@@ -110,9 +110,7 @@ end
 function [m_dot, Isp, cstar, T_c] = get_mass_rate(A_t, P_c, OF)
 	x=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',OF,'case','CEAM-rocket1','p,bar',P_c * 1e-5,'reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100,'h,cal/mol',-5430,'t(k)',300.0,'oxid','O2(L)','O',2,'wt%',100,'h,cal/mol',-3032,'t(k)',94.44,'output','mks','end');
 
-	k = x.output.eql.gamma(end-1);
-	son_vel = x.output.eql.sonvel(end-1);
-	m_dot = A_t * P_c * k * sqrt((2/(k+1))^((k+1)/(k-1))) / son_vel;
+	m_dot = A_t * x.output.eql.sonvel(end-1) * x.output.eql.density(end-1);
 	Isp = x.output.eql.isp(end);
     cstar = x.output.eql.cstar(2);
     T_c = x.output.eql.temperature(2);

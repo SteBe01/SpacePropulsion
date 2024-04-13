@@ -57,7 +57,14 @@ v_f = @(Pc, P_he) sqrt((P_he - Pc - C)/K_f);
 i = 1;
 dt = 5; %going lower doesn't increase accuracy
 while P_c > comb_ch.P_min
-	P_c = fzero(@(Pc) fun(Pc, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t), [10e5, P_c]);
+	lower_bound = 10e5;
+	max_Pc = min([P_he_ox - C, P_he_f - C]);
+	upper_bound = P_c;
+	while fun(upper_bound, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t) > 0
+		upper_bound = (upper_bound + max_Pc) / 2;
+	end
+
+	P_c = fzero(@(Pc) fun(Pc, P_he_ox, P_he_f, A_tube, v_ox, v_f, rho_ox, rho_f, A_t), [lower_bound, upper_bound]);
 
 	v_tube_ox = v_ox(P_c, P_he_ox);
 	v_tube_f = v_f(P_c, P_he_f);
@@ -106,8 +113,6 @@ end
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)
 	x=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',OF,'case','CEAM-rocket1','p,bar',P_c * 1e-5,'reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100,'h,cal/mol',-5430,'t(k)',300.0,'oxid','O2(L)','O',2,'wt%',100,'h,cal/mol',-3032,'t(k)',94.44,'output','mks','end');
 
-	k = x.output.eql.gamma(end-1);
-	son_vel = x.output.eql.sonvel(end-1);
-	m_dot = A_t * P_c * k * sqrt((2/(k+1))^((k+1)/(k-1))) / son_vel;
+	m_dot = A_t * x.output.eql.sonvel(end-1) * x.output.eql.density(end-1);
 	Isp = x.output.eql.isp(end);
 end
