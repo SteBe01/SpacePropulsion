@@ -64,7 +64,7 @@ inj.Cd_ox=engine.m_dot_ox/(inj.A_inj_ox*sqrt(2*prop.rho_lox*0.2*comb_ch.P_start_
 inj.Cd_f=engine.m_dot_f/(inj.A_inj_f*sqrt(2*prop.rho_rp1*0.2*comb_ch.P_start_id));
 
 %length of the injection plate
-inj.L_inj=1.3*inj.D_f;
+inj.L_inj=1.1*inj.D_f;
 
 
 %% Combustion chamber losses:
