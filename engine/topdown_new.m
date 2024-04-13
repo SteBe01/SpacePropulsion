@@ -16,7 +16,6 @@ for i = 1:const.N_iterations
         break
     end
 end
-tank.r_ext_fu = geom.diameter_max * (0.5);
 [tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
 
 k_he = prop.k_He; %helium monoatomic
