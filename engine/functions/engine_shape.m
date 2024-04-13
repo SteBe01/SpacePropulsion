@@ -68,9 +68,9 @@ plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
 
 % convergent
 h_co_i = h_cc_int;
-h_co_i_ext = h_cc_int + 2*thermal.th_chosen_cc;
+h_co_i_ext = h_cc_int + sqrt(2)*thermal.th_chosen_cc;
 h_co_f = 2 * sqrt(geom.A_t/pi);
-h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*thermal.th_chosen_cc;
+h_co_f_ext = 2 * sqrt(geom.A_t/pi) + sqrt(2)*thermal.th_chosen_cc;
 l_co = geom.L_conv;
 offset = offset + l_cc;
 plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')
@@ -164,21 +164,21 @@ switch nozzle.plot
         plot(x_par,y_par_down,'Color', 'blue')
         plot(x_par,y_par_down,'Color', 'blue')
         
-        x_par_thick = linspace(x1,nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length),N);
+        x_par_thick = linspace(x1,nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length),N);
 
         y_par_up = zeros(1,length(x_par_thick));
 
         for i = 1:length(x_par_thick)
-            y_par_up_thick(i) = f_conic(x_par_thick(i)) + thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
+            y_par_up_thick(i) = f_conic(x_par_thick(i)) + (1/sqrt(2))*thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
         end
         plot(x_par_thick,y_par_up_thick,'Color', 'blue')
         for i = 1:length(x_par_thick)
-            y_par_down_thick(i) = -f_conic(x_par_thick(i))+1 - thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
+            y_par_down_thick(i) = -f_conic(x_par_thick(i))+1 - (1/sqrt(2))*thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
         end
         plot(x_par_thick,y_par_down_thick,'Color', 'blue')
 
-        plot ([nozzle.x2 nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[y2 y2+thermal.th_chosen_cc*cos(nozzle.alpha_con_length)],'Color', 'blue')
-        plot ([nozzle.x2 nozzle.x2-thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[-y2+1 -y2-thermal.th_chosen_cc*cos(nozzle.alpha_con_length)+1],'Color', 'blue')
+        plot ([nozzle.x2 nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[y2 y2+(1/sqrt(2))*thermal.th_chosen_cc*cos(nozzle.alpha_con_length)],'Color', 'blue')
+        plot ([nozzle.x2 nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[-y2+1 -y2-(1/sqrt(2))*thermal.th_chosen_cc*cos(nozzle.alpha_con_length)+1],'Color', 'blue')
 end
 
 end
