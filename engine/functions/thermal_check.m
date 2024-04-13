@@ -27,30 +27,44 @@
     Nu = 0.0265*Re.^(0.8*Pr.^0.3);
 
     % Convective heat transfer coefficient - [W/(m^2 K)]
-    h = Nu.*(k/dc);
+    thermal.k_gas_cc = out.output.eql.conduct.froz(:,2);
+    h = Nu.*(thermal.k_gas_cc/dc);
     h_av=sum(h)/length(h);
 
     % Iterations to find Twc (external wall temperature)
     Twh_init = 2e3:1:Tf;
-    
+   
     for ii = 1:length(Twh_init)
-        q1 = h_av.*(Tf - Twh_init(ii));
-        Twc = Twh_init(ii) - q1*thermal.tw/k;
-        q2 = 5.67e-8*0.25*(Twc^4 - Te^4);
-        if q1 < q2 || q1 < 0
-            break;
-        end
-        q1_vec(ii)  = q1;
+        Q_dot1 = thermal.h_gas_cc_av*(Tf - Twh_init(ii)); %[W/m^2]
+        Twc = Twh_init(ii) - Q_dot1*R_tot; % [K]
+        q2 = (5.67e-8)*(0.3)*(Twc^4 - Te^4);
+        q1_vec(ii)  = Q_dot1;
         Twc_vec(ii) = Twc;
-        q2_vec(ii) = q2;
+        q2_vec(ii) = q2; 
+
     end
 
-    [~, pos] = min(q1_vec - q2_vec);
+    for j = 1:length(q1_vec)
+        err1(j) = abs(q1_vec(j)-q2_vec(j))/q1_vec(j);
+        err2(j) = abs(q1_vec(j)-q2_vec(j))/q2_vec(j);
+       
+    end
 
-    thermal.Twc = Twc_vec(pos);
-    thermal.Twh_int = Twh_init(pos);
-    thermal.q1 = q1_vec(pos);
-    thermal.q2 = q2_vec(pos);
+[~, pos1] = min(err1);
+[~, pos2] = min(err2);
+
+
+q1=q1_vec(pos1)
+q2=q2_vec(pos1)
+
+  
+    thermal.Twc_cc = Twc_vec(pos1);
+    thermal.q1 = q1_vec(pos1);
+    thermal.q2 = q2_vec(pos1);
+
+    thermal.Twc = Twc_vec(pos1);
+    thermal.q1 = q1_vec(pos1);
+    thermal.q2 = q2_vec(pos1);
 
     %% Cooling jacket
 
