@@ -1,30 +1,27 @@
 
 addpath(genpath('./functions'))
 
-Tf = comb_ch.T_cc; %T in CC
-    Twh = thermal.T_wh; %Temperatura prima di fusione
+    Tf = comb_ch.T_cc; %T in CC
     Te = const.Te; % Temepratura space
-    const.T_coking = 650;   %max temperature for rp1 
-    k_inconel = 22;   %conductivity of Inconel 718
+    const.T_coking = 977;   %max temperature for rp1 
+    k_inconel = 20.5;   %conductivity of Inconel 718
     dc = geom.L_cc/(2*geom.r_cc);
-    thermal.tw = 5e-3; %wall thickness             %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
+    thermal.tw = 10e-3; %wall thickness             %%%%%%%%%%%%%%%%%%%%% TO BE CHANGED
     gamma = prop.k; %gamma
     Ma = comb_ch.Ma_cc; %Mach in CC
     c = const.c; % specific heat of RP-1
     m_dot_fu = engine.m_dot_f; %portata massica del fuel
-    t_burn= 2820;
+    t_burn= 2815;
     thermal.Dh_cc = 2*geom.r_cc; % [m] Hydraulic diam
     const.eps_m_inc = 0.4; % [-] emissivity coefficient inconel at 1500-3000
     Pc=(50:-1:20)*1e5;
     Pc=Pc';
     geom.eps_AM = 21e-6; % [m]
 
-    out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',2.24,'case', ...
+    out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',prop.OF,'case', ...
         'CEAM-rocket1','p,bar',(50:-1:20),'termal proprieties','reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100, ...
         'h,cal/mol',-5430,'t(k)',300.0,'oxid','O2(L)','O',2,'wt%',100,'h,cal/mol',-3032,'t(k)',94.44, ...
         'output','mks','transport','end');
-
-
 
  thermal.Dh_cc = 2*geom.r_cc; % [m] Hydraulic diam in cc
 
@@ -49,7 +46,7 @@ Tf = comb_ch.T_cc; %T in CC
     thermal.h_gas_cc_av=sum(thermal.h_gas_cc)/length(thermal.h_gas_cc); %[W/m2K]
 
     % Iterations to find Twc (external wall temperature)
-    Twh_init = 500:1:Tf;
+    Twh_init = 1000:1:Tf;
    
 
 R_tot = (1/(thermal.h_gas_cc_av)) + thermal.tw/k_inconel; % [m^2/W*K] Thermal resistence
@@ -102,7 +99,7 @@ q2=q2_vec(pos1);
     % T_aw1 = T_aw1(1);
 
     % heat flux
-    q = thermal.h_gas_cc_av.*(Taw_cc - Twh);  %[W/m2]
+    q = thermal.h_gas_cc_av.*(Taw_cc - const.T_coking);  %[W/m2]
     q_av= sum(q)/length(q); %[W/m2]
     
     % Total power echanged
