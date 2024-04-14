@@ -61,19 +61,19 @@ h_cc = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_cc;
 
 difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
-length = difference / tand(nozzle.beta);
+length_1 = difference / tand(nozzle.beta);
 % plot([offset-l_cc+space offset+length], [d/2+h_cc/2 d/2+h_cc/2], 'or')
 
-plot([offset+space offset+l_cc+length], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+space offset+l_cc+length], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc+length_1], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc+length_1], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
 plot([offset+space offset+l_cc], [d/2-h_cc_int/2 d/2-h_cc_int/2], 'Color', 'blue')          % do not touch
 plot([offset+space offset+l_cc], [d/2+h_cc_int/2 d/2+h_cc_int/2], 'Color', 'blue')          % do not touch
 plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')                 % left
 
-plot([offset+l_cc offset+l_cc+length], [d/2+h_cc_int/2 d/2+h_cc/2], 'Color', 'blue')        % bottom to top
-plot([offset+l_cc+length offset+l_cc], [d/2-h_cc/2 d/2-h_cc_int/2], 'Color', 'blue')        % top to bottom
+plot([offset+l_cc offset+l_cc+length_1], [d/2+h_cc_int/2 d/2+h_cc/2], 'Color', 'blue')        % bottom to top
+plot([offset+l_cc+length_1 offset+l_cc], [d/2-h_cc/2 d/2-h_cc_int/2], 'Color', 'blue')        % top to bottom
 
-V_cc = (l_cc+length)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
+V_cc = (l_cc+length_1)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length_1*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
 masses.combustion_chamber = V_cc * thermal.rho;
 
 % convergent
@@ -85,14 +85,14 @@ l_co = geom.L_conv;
 offset = offset + l_cc;
 plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')                    % do not touch
 plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')                    % do not touch
-plot([offset+length offset+l_co], [d/2-h_co_i_ext/2+difference d/2-h_co_f_ext/2], 'Color', 'blue')
-plot([offset+length offset+l_co], [d/2+h_co_i_ext/2-difference d/2+h_co_f_ext/2], 'Color', 'blue')
+plot([offset+length_1 offset+l_co], [d/2-h_co_i_ext/2+difference d/2-h_co_f_ext/2], 'Color', 'blue')
+plot([offset+length_1 offset+l_co], [d/2+h_co_i_ext/2-difference d/2+h_co_f_ext/2], 'Color', 'blue')
 % plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 
 diff_conv = h_co_f_ext - h_co_f;
-cone1 = (l_co-length)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
-cone2 = length*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - length*(pi/3)*((h_cc_int/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_cc_int/2)*((h_cc-diff_conv)/2));
+cone1 = (l_co-length_1)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length_1)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
+cone2 = length_1*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - length_1*(pi/3)*((h_cc_int/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_cc_int/2)*((h_cc-diff_conv)/2));
 V_conv = cone1 + cone2;
 masses.m_conv = V_conv * thermal.rho;
 
