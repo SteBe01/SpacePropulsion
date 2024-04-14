@@ -17,6 +17,7 @@ Tf = comb_ch.T_cc; %T in CC
     const.eps_m_inc = 0.4; % [-] emissivity coefficient inconel at 1500-3000
     Pc=(50:-1:20)*1e5;
     Pc=Pc';
+    geom.eps_AM = 21e-6; % [m]
 
     out=CEA('problem','rocket','frozen','fac','acat',10,'supar', 200, 'o/f',2.24,'case', ...
         'CEAM-rocket1','p,bar',(50:-1:20),'termal proprieties','reactants','fuel','RP-1(L)','C',1,'H',1.9423,'wt%',100, ...
@@ -31,16 +32,16 @@ Tf = comb_ch.T_cc; %T in CC
     rhov_cc=(Pc.*geom.A_t)./(geom.A_cc*out.output.eql.cstar(:,2));
     Re_cc=(rhov_cc*thermal.Dh_cc)/(out.output.eql.viscosity(:,2)*1e-6);
     thermal.Re_cc=Re_cc(:,1);
-    % f = 64./Re;
-    f_cc = 0.184./(thermal.Re_cc.^(0.2)); % Colebrook white for friction factor
     thermal.k_gas_cc = out.output.eql.conduct.froz(:,2);
-    
     thermal.k_gas_cc_av = max(thermal.k_gas_cc); %[W/m K] worst case scenario
 
     % Nusselt number - [-]
     for j = 1:length(Re_cc)
 
-    thermal.Nu_cc(j) = ((f_cc(j)/8)*(thermal.Re_cc(j)-1000)*thermal.Pr_cc(j))/(1 + ( (12.7*((f_cc(j)/8)^(0.5))) * ((thermal.Pr_cc(j)^(2/3))-1) ));
+         f = @(l) -0.869*log((geom.eps_AM/(3.7*2*geom.r_cc)) + (2.51/(Re_cc(j)*sqrt(l)) )) - 1/sqrt(l); % Solving zero for Colebrook White formula
+         l(j) = fzero(f,[0.0001 0.2]);
+    
+    thermal.Nu_cc(j) = ((l(j)/8)*(thermal.Re_cc(j)-1000)*thermal.Pr_cc(j))/(1 + ( (12.7*((l(j)/8)^(0.5))) * ((thermal.Pr_cc(j)^(2/3))-1) ));
     end
 
     % Convective heat transfer coefficient - [W/(m^2 K)]
