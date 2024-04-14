@@ -13,7 +13,7 @@ for i = 1:const.N_iterations
         break
     end
 end
-[tank, geom] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
+[tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, nozzle, const);
 
 k_he = prop.k_He; %helium monoatomic
 OF = prop.OF;

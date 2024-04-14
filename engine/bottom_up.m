@@ -25,11 +25,8 @@ for i = 1:const.N_iterations
 end
 
 % Tanks
-[tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const);
+[tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, nozzle, const);
 
 % Visual representation
-nozzle = engine_shape(geom, tank, nozzle, thermal);
-
-% Calculate divergent masses
-[masses] = divergent_mass(geom, nozzle, masses,thermal);
+[nozzle, masses] = engine_shape(geom, tank, nozzle, masses, thermal);
 

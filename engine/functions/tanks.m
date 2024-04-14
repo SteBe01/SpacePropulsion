@@ -1,19 +1,31 @@
-function [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, const)
+function [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, nozzle, const)
 
 % volume check
 A_tot_req = pi*(geom.diameter_max/2)^2;
 V_tot_req = geom.length_max*A_tot_req;
-
-V_conv_int = geom.L_conv * pi/3 * (geom.r_cc^2 + geom.r_t^2 + geom.r_cc*geom.r_t); % Old conv geometry (no thickness)
-V_conv_ext = geom.L_conv * pi/3 * ((geom.r_cc + thermal.th_chosen_cc)^2 + (geom.r_t + thermal.th_chosen_cc)^2 + (geom.r_cc + thermal.th_chosen_cc)*(geom.r_t + thermal.th_chosen_cc));
-V_conv = V_conv_ext;
-% V_cc = geom.L_cc * geom.A_cc; % Old cc geometry (no thickness)
-V_cc = geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2;
-V_inj = geom.L_inj * pi * (geom.r_cc+thermal.th_chosen_cc)^2;
-
 tot_added_length = geom.L_conv + geom.L_cc + geom.L_inj;
 
-V_occ = V_conv + V_cc + V_inj;              % V occupied (cc, conv, inj)
+V_inj = geom.L_inj * pi * (geom.r_cc+thermal.th_chosen_cc)^2;
+
+% same values in engine_shape.m
+h_cc_int = geom.r_cc * 2;
+h_cc = 2 * (geom.r_cc + thermal.th_chosen_cc);
+l_cc = geom.L_cc;
+
+difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
+length = difference / tand(nozzle.beta);
+
+h_co_f = 2 * sqrt(geom.A_t/pi);
+h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
+l_co = geom.L_conv;
+
+V_cc = (l_cc+length)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
+diff_conv = h_co_f_ext - h_co_f;
+cone1 = (l_co-length)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
+cone2 = length*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - length*(pi/3)*((h_cc_int/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_cc_int/2)*((h_cc-diff_conv)/2));
+V_conv = cone1 + cone2;
+V_occ = V_inj + V_cc + V_conv;
+
 V_eff_occ = tot_added_length * pi * (geom.diameter_max/2)^2;
 V_around_cc_conv_inj = V_eff_occ - V_occ;
 fraction = V_around_cc_conv_inj/(V_tot_req);
@@ -126,18 +138,10 @@ masses.He_tot = tank.V_initial_He_fu* prop.rho_he_fu + tank.V_initial_He_ox * pr
 masses.fuel_tot = masses.m_fu + masses.m_ox;
 
 masses.injection_plate = V_inj * thermal.rho;
-masses.combustion_chamber = (geom.L_cc*pi*(geom.r_cc+thermal.th_chosen_cc)^2-geom.L_cc*pi*geom.r_cc^2)*thermal.rho;
-% masses.convergent = (V_conv_ext - V_conv_int) * thermal.rho;
-
-% masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.He_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
-% masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_camber + masses.convergent;
-masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber;
-masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber;
-warning("Masses do not consider convergent and divergent nozzles - use SolidWorks")
 
 % volume fraction
 V_tank_tot = tank.V_tank_fu_int + tank.V_th_Fu + tank.V_tank_ox_int + tank.V_th_Ox;
-geom.fraction = (V_tot_req - (V_tank_tot + geom.V_cc + V_conv + V_inj))/V_tot_req;
+geom.fraction = (V_tot_req - (V_tank_tot + V_cc + V_conv + V_inj))/V_tot_req;
 
 end
 

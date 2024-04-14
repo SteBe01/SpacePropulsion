@@ -1,4 +1,4 @@
-function [nozzle] = engine_shape(geom, tank, nozzle, thermal)
+function [nozzle, masses] = engine_shape(geom, tank, nozzle, masses, thermal)
 
 figure
 grid on, axis equal, hold on
@@ -73,6 +73,9 @@ plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')     
 plot([offset+l_cc offset+l_cc+length], [d/2+h_cc_int/2 d/2+h_cc/2], 'Color', 'blue')        % bottom to top
 plot([offset+l_cc+length offset+l_cc], [d/2-h_cc/2 d/2-h_cc_int/2], 'Color', 'blue')        % top to bottom
 
+V_cc = (l_cc+length)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
+masses.combustion_chamber = V_cc * thermal.rho;
+
 % convergent
 h_co_i = h_cc_int;
 h_co_i_ext = h_cc_int + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
@@ -86,11 +89,16 @@ plot([offset+length offset+l_co], [d/2-h_co_i_ext/2+difference d/2-h_co_f_ext/2]
 plot([offset+length offset+l_co], [d/2+h_co_i_ext/2-difference d/2+h_co_f_ext/2], 'Color', 'blue')
 % plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
-warning("Convergent thickness is wrong")
 
-% difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
-% length = difference / tand(nozzle.beta);
-% plot([offset-l_cc+space offset+length], [d/2+h_cc/2 d/2+h_cc/2], 'or')
+diff_conv = h_co_f_ext - h_co_f;
+cone1 = (l_co-length)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
+cone2 = length*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - length*(pi/3)*((h_cc_int/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_cc_int/2)*((h_cc-diff_conv)/2));
+V_conv = cone1 + cone2;
+masses.m_conv = V_conv * thermal.rho;
+
+% masses
+masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv;
+masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv;
 
 % divergent
 offset = offset + l_co;
@@ -151,6 +159,29 @@ switch nozzle.plot
         nozzle.circ = circ;
         nozzle.xy_r_up = xy_r_up;
         nozzle.xy_r_down = xy_r_down;
+
+        % masses
+        thick = thermal.th_chosen_cc;
+        x2 = nozzle.x2;
+
+        f_bell = nozzle.f_bell_for_volume;
+        x1 = nozzle.x1;
+        xy_r_up = nozzle.xy_r_up;
+
+        V_bell = pi*(integral(@(x) (f_bell(x)+thick).^2, x1, x2) - integral(@(x) f_bell(x).^2, x1, x2));
+        masses.m_bell = V_bell*nozzle.rho;
+
+        p_up = polyfit(xy_r_up(1,:), xy_r_up(2,:), 2);
+        fcn_circ = @(x) polyval(p_up, x);
+
+        V_circ = pi*(integral(@(x) (fcn_circ(x)+thick).^2, xy_r_up(1,1), xy_r_up(1,end)) - integral(@(x) fcn_circ(x).^2, xy_r_up(1,1), xy_r_up(1,end)));
+        masses.m_circ = V_circ*nozzle.rho;
+
+        masses.rao = masses.m_bell + masses.m_circ;
+        masses.m_wet = masses.m_wet + masses.rao;
+        masses.m_dry = masses.m_dry + masses.rao;
+
+        warning("Approximated masses for the divergent nozzle, use SolidWorks")
     case 0
         % internal data:
         x1 = offset;
@@ -160,6 +191,7 @@ switch nozzle.plot
         a = (y2-y1)/(nozzle.x2-x1);
         b = y1-a*x1;
         f_conic = @(x) a*x + b;                 % internal
+        th_conv_nonradial = nozzle.th_div*(1/cos(nozzle.alpha_con_length));
 
         plot([x1 nozzle.x2], [f_conic(x1) f_conic(nozzle.x2)], 'Color','blue')
         plot([x1 nozzle.x2], [-f_conic(x1)+geom.diameter_max -f_conic(nozzle.x2)+geom.diameter_max], 'Color','blue')
@@ -171,6 +203,13 @@ switch nozzle.plot
 
         plot([nozzle.x2 nozzle.x2], [f_conic(nozzle.x2) f_conic_ext(nozzle.x2)], 'Color','blue')
         plot([nozzle.x2 nozzle.x2], [-f_conic(nozzle.x2)+geom.diameter_max -f_conic_ext(nozzle.x2)+geom.diameter_max], 'Color','blue')
+
+        % masses
+        V_cone = geom.L_div_con_15*(pi/3)*((sqrt(geom.A_exit/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_t/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_exit/pi)+th_conv_nonradial)*(sqrt(geom.A_t/pi)+th_conv_nonradial)) - geom.L_div_con_15*(pi/3)*(sqrt(geom.A_exit/pi)^2 + sqrt(geom.A_t/pi)^2 + sqrt(geom.A_exit/pi)*sqrt(geom.A_t/pi));
+        masses.m_cone = V_cone*nozzle.rho;
+        masses.m_wet = masses.m_wet + masses.m_cone;
+        masses.m_dry = masses.m_dry + masses.m_cone;
 end
+
 
 end
