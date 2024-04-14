@@ -4,7 +4,7 @@ toll = 76e-6;
 roughness = 21e-6;
 mu_err = 0;
 sigma_err = toll/3;
-N_sim = 50;
+N_sim = 100;
 report_sim = true;
 
 if report_sim
@@ -22,6 +22,7 @@ else
     d_err_vec_fu = d_err_vec;
 end
 
+tic
 for ii=1:N_sim
     disp("Current simulation: " + num2str(ii))
 
@@ -46,6 +47,8 @@ for ii=1:N_sim
     cstar_array{ii} = cstar';
     T_c_array{ii} = T_c';
 end
+time_elapsed = toc;
+disp("Time to run " + N_sim + " simulations: " + time_elapsed/60 + " min");
 
 %%
 t_vec = ones(1e4, N_sim)*NaN;
@@ -80,19 +83,7 @@ end
 %%
 
 for ii = 1:N_sim
-    T_vec(T_vec(:,ii)<=-1,ii) = NaN;
-    Isp_vec(Isp_vec(:,ii)<=-1,ii) = NaN;
-    t_vec(t_vec(:,ii)<=-1,ii) = NaN;
-    mdot_vec(mdot_vec(:,ii)<=-1,ii) = NaN;
-    mdot_f_vec(mdot_f_vec(:,ii)<=-1,ii) = NaN;
-    mdot_ox_vec(mdot_ox_vec(:,ii)<=-1,ii) = NaN;
-    Pc_vec(Pc_vec(:,ii)<=-1, ii) = NaN;
-    P_he_ox_vec(P_he_ox_vec(:,ii)<=-1, ii) = NaN;
-    P_he_f_vec(P_he_f_vec(:,ii)<=-1, ii) = NaN;
-    cstar_vec(cstar_vec(:,ii)<=-1, ii) = NaN;
-    T_c_vec(T_c_vec(:,ii)<=-1, ii) = NaN;
-
-    I_tot_vec(ii) = mean(diff(t_vec(1:rows, ii)))*sum(T_vec(~isnan(T_vec(:,ii)), ii));
+    I_tot_vec(ii) = mean(diff(t_vec(1:rows, ii)), 'all', 'omitnan')*sum(T_vec(~isnan(T_vec(:,ii)), ii));
     OF_vec(:,ii) = mdot_ox_vec(:,ii)./mdot_f_vec(:,ii);
 end
 
