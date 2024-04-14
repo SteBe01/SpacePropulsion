@@ -1,4 +1,4 @@
-function [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const)
+function [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, thermal, const)
 
 %% Nozzle Part 1 :C_T, A_t, A_exit
 
@@ -32,6 +32,13 @@ geom.V_cc = L_star*A_t;
 geom.A_cc = A_t*eps_c;
 geom.r_cc = sqrt(geom.A_cc/pi);
 geom.L_cc = geom.V_cc/geom.A_cc;
+
+% sizing combustion chamber
+th_burst = 2*comb_ch.P_start_id*(geom.r_cc)/thermal.sigma;
+th_chosen = thermal.th_chosen_cc;
+if max(th_chosen,th_burst) ~= th_chosen
+    warning("Thickness is not enough!")
+end
 
 %% Nozzle Part 2: L_conv, L_div
 

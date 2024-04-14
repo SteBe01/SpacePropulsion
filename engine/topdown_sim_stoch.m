@@ -5,7 +5,7 @@ addpath(genpath('./functions'))
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 comb_ch.P_start_real = comb_ch.P_start_id;
 for i = 1:const.N_iterations
-    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
+    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, thermal, const);
     [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
     if  engine.T_real<const.T_id
         engine.T = engine.T + (const.T_id-engine.T_real);

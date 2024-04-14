@@ -12,7 +12,7 @@ comb_ch.P_start_real = comb_ch.P_start_id;
 % Combustion
 for i = 1:const.N_iterations
     % Nozzle and Combustion Chamber
-    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, const);
+    [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, thermal, const);
 
     % Performances
     [engine, inj, comb_ch] = performances(prop, geom, engine, comb_ch, const,nozzle);
