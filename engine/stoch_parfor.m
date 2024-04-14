@@ -3,8 +3,8 @@ clc; clearvars; close all
 toll = 7.6e-5;
 mu_err = 0;
 sigma_err = toll/3;
-N_sim = 100;
-report_sim = true;
+N_sim = 20;
+report_sim = false;
 
 if report_sim
     d_err_vec_ox = [toll toll 0 -toll -toll]-5.5e-6;
@@ -16,7 +16,7 @@ else
     d_err_vec_fu = d_err_vec;
 end
 
-for ii=1:N_sim
+parfor ii=1:N_sim
     disp("Current simulation: " + num2str(ii))
 
     d_err_ox = d_err_vec_ox(ii);
@@ -92,6 +92,8 @@ end
 
 
 %% Post processing plots
+
+if report_sim
 
 color_vec = {'black', 'green', 'red', 'blue', 'cyan'};
 
@@ -319,8 +321,136 @@ title("\textbf{Temperature in chamber profile}", 'Interpreter','latex');
 xlabel("$Time\ [s]$", 'Interpreter','latex');
 ylabel("$T_c\ [K]$", 'Interpreter','latex');
 
-% Error distribution
-if ~report_sim
+else
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Thrust profile
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), T_vec(:, ii))
+end
+title("\textbf{Thrust profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$Thrust\ [N]$", 'Interpreter','latex');
+
+% Isp
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), Isp_vec(:, ii))
+end
+
+title("$\mathbf{I_{sp}\ profile}$", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$I_{sp}\ [s]$", 'Interpreter','latex');
+
+% m_dot
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), mdot_vec(:, ii))
+end
+title("\textbf{Mass flow rate profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$\dot{m}\ [Kg/s]$", 'Interpreter','latex');
+
+%m_dot fuel and oxidizer
+figure()
+    subplot(2,1,1);
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), mdot_ox_vec(:, ii))
+end
+title("\textbf{Oxidizer mass flow rate profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$\dot{m_{ox}}\ [Kg/s]$", 'Interpreter','latex');
+
+    subplot(2,1,2);
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), mdot_f_vec(:, ii))
+end
+title("\textbf{Fuel mass flow rate profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$\dot{m_{fu}}\ [Kg/s]$", 'Interpreter','latex');
+
+% O/F
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), OF_vec(:, ii))
+end
+title("\textbf{O/F profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$O/F\ [-]$", 'Interpreter','latex');
+
+% Pchamber
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), Pc_vec(:, ii)*1e-5)
+end
+
+title("\textbf{Chamber pressure profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$P_{cc}\ [bar]$", 'Interpreter','latex');
+
+% P helium tanks
+figure()
+subplot(2,1,1);
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), P_he_ox_vec(:, ii)*1e-5)
+end
+title("\textbf{Oxidizer pressure profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$P_{He}\ [bar]$", 'Interpreter','latex');
+
+subplot(2,1,2);
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), P_he_f_vec(:, ii)*1e-5)
+end
+title("\textbf{Fuel pressure profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$P_{He}\ [bar]$", 'Interpreter','latex');
+
+% Total impulse wrt d_err
+
+    figure()
+    hold on; grid on
+    plot(d_err_vec*1e3, I_tot_vec, 'o', 'HandleVisibility','off');
+    title("\textbf{Total\ impulse wrt diameter error}", 'Interpreter','latex');
+    xlabel("$Error\ [mm]$", 'Interpreter','latex');
+    ylabel("$Total\ impulse\ [Ns]$", 'Interpreter','latex');
+    fcn = polyfit(d_err_vec, I_tot_vec, 2);
+    d_min = min(d_err_vec);
+    d_max = max(d_err_vec);
+    plot([d_min:1e-6:d_max]*1e3, polyval(fcn, [d_min:1e-6:d_max]), 'LineWidth', 2,'DisplayName', "Regression curve")
+    legend()
+
+% Cstar profile
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), cstar_vec(:, ii))
+end
+title("$\mathbf{c^* profile}$", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$c^*\ [-]$", 'Interpreter','latex');
+
+% Temperature profile
+figure();
+hold on; grid on;
+for ii=1:N_sim
+    plot(t_vec(:,ii), T_c_vec(:, ii))
+end
+title("\textbf{Temperature in chamber profile}", 'Interpreter','latex');
+xlabel("$Time\ [s]$", 'Interpreter','latex');
+ylabel("$T_c\ [K]$", 'Interpreter','latex');
+
     pd = fitdist(d_err_vec, "Normal");
     figure();
     histogram(d_err_vec, 'Normalization','pdf','FaceColor',[.9 .9 .9]);
@@ -330,3 +460,4 @@ if ~report_sim
     pdfEst = pdf(pd, xgrid);
     line(xgrid, pdfEst, 'LineWidth', 2);
 end
+% Error distribution
