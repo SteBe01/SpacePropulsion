@@ -14,19 +14,16 @@ nozzle.Ref_val = 1;
 % Calculate divergent masses
 nozzle.plot = 0;
 [prop, geom, comb_ch, engine, tank, nozzle, masses, thermal] = standard(prop, geom, comb_ch, engine, tank, nozzle, thermal, const);
-mass_conical = masses.m_cone;
-engine.eta_T
-nozzle.lambda_con_length;
-
+mass_conical = masses.m_cone
+eta_con= engine.eta_T
 % rao == 1
 nozzle.plot = 1;
 [prop, geom, comb_ch, engine, tank, nozzle, masses, thermal] = standard(prop, geom, comb_ch, engine, tank, nozzle, thermal, const);
-mass_rao = masses.m_bell;
-engine.eta_T
-nozzle.lambda;
+mass_rao = masses.m_bell
+eta_bell= engine.eta_T
 
-geom.L_div_con_15;
-geom.L_div_RAO;
+
+%%
 
 close all
 
