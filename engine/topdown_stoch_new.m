@@ -88,7 +88,7 @@ while P_c > comb_ch.P_min
 	Pc_vec(i) = P_c;
 	P_he_ox_vec(i) = P_he_ox;
 	P_he_f_vec(i) = P_he_f;
-	T(i) = m_dot * Isp * const.g0;
+	T(i) = m_dot * Isp * const.g0 * engine.eta_T;
 	Isp_vec(i) = Isp;
     cstar_vec(i) = cstar;
     T_c_vec(i) = T_c;
