@@ -39,6 +39,7 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
 	nozzle.eps_c = 10;                  % [-]
 	nozzle.beta = 45;                   % [deg]
 	nozzle.Ref_val = 1;                 % [-]
+    nozzle.th_div = 5e-3;               % [m]           th divergent -------------------------
     nozzle.t_er = 1 - 2/100;            % [-]           literature throat erosion maybe 2% is too high
     nozzle.real_gas = 1 - 0.7/100;      % [-]           literature real gass
     nozzle.bl_loss = 1 - 1.5/100;       % [-]           literature boundary layer losses

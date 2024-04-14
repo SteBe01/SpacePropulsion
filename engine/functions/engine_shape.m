@@ -59,27 +59,38 @@ offset = offset + l_cc;
 h_cc_int = geom.r_cc * 2;
 h_cc = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_cc;
-plot([offset+space offset+l_cc], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+space offset+l_cc], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
-plot([offset+space offset+l_cc], [d/2-h_cc_int/2 d/2-h_cc_int/2], 'Color', 'blue')
-plot([offset+space offset+l_cc], [d/2+h_cc_int/2 d/2+h_cc_int/2], 'Color', 'blue')
-plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
-plot([offset+l_cc offset+l_cc], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+
+difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
+length = difference / tand(nozzle.beta);
+% plot([offset-l_cc+space offset+length], [d/2+h_cc/2 d/2+h_cc/2], 'or')
+
+plot([offset+space offset+l_cc+length], [d/2-h_cc/2 d/2-h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc+length], [d/2+h_cc/2 d/2+h_cc/2], 'Color', 'blue')
+plot([offset+space offset+l_cc], [d/2-h_cc_int/2 d/2-h_cc_int/2], 'Color', 'blue')          % do not touch
+plot([offset+space offset+l_cc], [d/2+h_cc_int/2 d/2+h_cc_int/2], 'Color', 'blue')          % do not touch
+plot([offset+space offset+space], [d/2+h_cc/2 d/2-h_cc/2], 'Color', 'blue')                 % left
+
+plot([offset+l_cc offset+l_cc+length], [d/2+h_cc_int/2 d/2+h_cc/2], 'Color', 'blue')        % bottom to top
+plot([offset+l_cc+length offset+l_cc], [d/2-h_cc/2 d/2-h_cc_int/2], 'Color', 'blue')        % top to bottom
 
 % convergent
 h_co_i = h_cc_int;
-h_co_i_ext = h_cc_int + sqrt(2)*thermal.th_chosen_cc;
+h_co_i_ext = h_cc_int + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 h_co_f = 2 * sqrt(geom.A_t/pi);
-h_co_f_ext = 2 * sqrt(geom.A_t/pi) + sqrt(2)*thermal.th_chosen_cc;
+h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 l_co = geom.L_conv;
 offset = offset + l_cc;
-plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')
-plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')
-plot([offset offset+l_co], [d/2-h_co_i_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
-plot([offset offset+l_co], [d/2+h_co_i_ext/2 d/2+h_co_f_ext/2], 'Color', 'blue')
-plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
+plot([offset offset+l_co], [d/2-h_co_i/2 d/2-h_co_f/2], 'Color', 'blue')                    % do not touch
+plot([offset offset+l_co], [d/2+h_co_i/2 d/2+h_co_f/2], 'Color', 'blue')                    % do not touch
+plot([offset+length offset+l_co], [d/2-h_co_i_ext/2+difference d/2-h_co_f_ext/2], 'Color', 'blue')
+plot([offset+length offset+l_co], [d/2+h_co_i_ext/2-difference d/2+h_co_f_ext/2], 'Color', 'blue')
+% plot([offset offset], [d/2+h_co_i_ext/2 d/2-h_co_i_ext/2], 'Color', 'blue')
 plot([offset+l_co offset+l_co], [d/2+h_co_f_ext/2 d/2-h_co_f_ext/2], 'Color', 'blue')
 warning("Convergent thickness is wrong")
+
+% difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
+% length = difference / tand(nozzle.beta);
+% plot([offset-l_cc+space offset+length], [d/2+h_cc/2 d/2+h_cc/2], 'or')
 
 % divergent
 offset = offset + l_co;
@@ -141,44 +152,25 @@ switch nozzle.plot
         nozzle.xy_r_up = xy_r_up;
         nozzle.xy_r_down = xy_r_down;
     case 0
-        N = 100;
-        x1 = offset; y1 = geom.diameter_max/2 + sqrt(geom.A_t/pi);
+        % internal data:
+        x1 = offset;
+        y1 = geom.diameter_max/2 + sqrt(geom.A_t/pi);
         y2 = geom.diameter_max/2 + sqrt(geom.A_exit/pi);
 
         a = (y2-y1)/(nozzle.x2-x1);
         b = y1-a*x1;
-        f_conic = @(x) a*x + b;
+        f_conic = @(x) a*x + b;                 % internal
 
-        x_par = linspace(x1,nozzle.x2,N);
+        plot([x1 nozzle.x2], [f_conic(x1) f_conic(nozzle.x2)], 'Color','blue')
+        plot([x1 nozzle.x2], [-f_conic(x1)+geom.diameter_max -f_conic(nozzle.x2)+geom.diameter_max], 'Color','blue')
 
-        y_par_up = zeros(1,length(x_par));
-        for i = 1:length(x_par)
-            y_par_up(i) = f_conic(x_par(i));
-        end
-        y_par_down = zeros(1,length(x_par));
-        plot(x_par,y_par_up,'Color', 'blue')
-        for i = 1:length(x_par)
-            y_par_down(i) = -f_conic(x_par(i))+1;
-        end
+        f_conic_ext = @(x) a*x + b + nozzle.th_div*(1/cos(nozzle.alpha_con_length));        % external
 
-        plot(x_par,y_par_down,'Color', 'blue')
-        plot(x_par,y_par_down,'Color', 'blue')
-        
-        x_par_thick = linspace(x1,nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length),N);
+        plot([x1 nozzle.x2], [f_conic_ext(x1) f_conic_ext(nozzle.x2)], 'Color','blue')
+        plot([x1 nozzle.x2], [-f_conic_ext(x1)+geom.diameter_max -f_conic_ext(nozzle.x2)+geom.diameter_max], 'Color','blue')
 
-        y_par_up = zeros(1,length(x_par_thick));
-
-        for i = 1:length(x_par_thick)
-            y_par_up_thick(i) = f_conic(x_par_thick(i)) + (1/sqrt(2))*thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
-        end
-        plot(x_par_thick,y_par_up_thick,'Color', 'blue')
-        for i = 1:length(x_par_thick)
-            y_par_down_thick(i) = -f_conic(x_par_thick(i))+1 - (1/sqrt(2))*thermal.th_chosen_cc/cos(nozzle.alpha_con_length);
-        end
-        plot(x_par_thick,y_par_down_thick,'Color', 'blue')
-
-        plot ([nozzle.x2 nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[y2 y2+(1/sqrt(2))*thermal.th_chosen_cc*cos(nozzle.alpha_con_length)],'Color', 'blue')
-        plot ([nozzle.x2 nozzle.x2-(1/sqrt(2))*thermal.th_chosen_cc*sin(nozzle.alpha_con_length)],[-y2+1 -y2-(1/sqrt(2))*thermal.th_chosen_cc*cos(nozzle.alpha_con_length)+1],'Color', 'blue')
+        plot([nozzle.x2 nozzle.x2], [f_conic(nozzle.x2) f_conic_ext(nozzle.x2)], 'Color','blue')
+        plot([nozzle.x2 nozzle.x2], [-f_conic(nozzle.x2)+geom.diameter_max -f_conic_ext(nozzle.x2)+geom.diameter_max], 'Color','blue')
 end
 
 end
