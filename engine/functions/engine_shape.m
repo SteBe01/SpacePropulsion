@@ -96,10 +96,6 @@ cone2 = length_1*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - 
 V_conv = cone1 + cone2;
 masses.m_conv = V_conv * thermal.rho;
 
-% masses
-masses.m_wet = masses.tanks_tot + masses.fuel_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv;
-masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv;
-
 % divergent
 offset = offset + l_co;
 nozzle.x2 = geom.L_div_RAO+offset;
@@ -178,8 +174,9 @@ switch nozzle.plot
         masses.m_circ = V_circ*nozzle.rho;
 
         masses.rao = masses.m_bell + masses.m_circ;
-        masses.m_wet = masses.m_wet + masses.rao;
-        masses.m_dry = masses.m_dry + masses.rao;
+
+        masses.m_wet = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv + masses.rao + masses.fuel_tot ;
+        masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv + masses.rao;
 
         warning("Approximated masses for the divergent nozzle, use SolidWorks")
     case 0
@@ -207,9 +204,8 @@ switch nozzle.plot
         % masses
         V_cone = geom.L_div_con_15*(pi/3)*((sqrt(geom.A_exit/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_t/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_exit/pi)+th_conv_nonradial)*(sqrt(geom.A_t/pi)+th_conv_nonradial)) - geom.L_div_con_15*(pi/3)*(sqrt(geom.A_exit/pi)^2 + sqrt(geom.A_t/pi)^2 + sqrt(geom.A_exit/pi)*sqrt(geom.A_t/pi));
         masses.m_cone = V_cone*nozzle.rho;
-        masses.m_wet = masses.m_wet + masses.m_cone;
-        masses.m_dry = masses.m_dry + masses.m_cone;
+        masses.m_wet = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv + masses.m_cone + masses.fuel_tot ;
+        masses.m_dry = masses.tanks_tot + masses.He_tot + masses.injection_plate + masses.combustion_chamber + masses.m_conv + masses.m_cone;
 end
-
 
 end

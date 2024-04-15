@@ -34,7 +34,7 @@ geom.r_cc = sqrt(geom.A_cc/pi);
 geom.L_cc = geom.V_cc/geom.A_cc;
 
 % sizing combustion chamber
-th_burst = 2*comb_ch.P_start_id*(geom.r_cc)/thermal.sigma;
+th_burst = 2*comb_ch.P_start_id*geom.r_cc/thermal.sigma;
 th_chosen = thermal.th_chosen_cc;
 if max(th_chosen,th_burst) ~= th_chosen
     warning("Thickness is not enough!")
@@ -49,17 +49,7 @@ geom.L_div_RAO = Ref_val*geom.L_div_con_15;                     % [m]
 
 nozzle.alpha_prime = atan((geom.r_exit-geom.r_t)/geom.L_div_RAO); %[rad]
 
-% switch Ref_val
-% 
-% % Final parabola angle
-% nozzle.theta_e = deg2rad(11);              % [rad] picked from graph
-% % Initial parabola angle
-% nozzle.theta_i = deg2rad(40);              % [rad] picked from graph
-% 
-% % Nozzle efficiency
-% nozzle.lambda  =  0.5*(1+ cos((nozzle.alpha_prime + nozzle.theta_e)/2));     % [-]
-
-switch Ref_val
+switch Ref_val % from tables
     case 0.6 % Shortest Nozzle
         % Final parabola angle
         nozzle.theta_e = deg2rad(12);              % [rad] picked from graph
@@ -92,10 +82,10 @@ geom.L_conv = (geom.r_cc - geom.r_t)/tand(beta);   % [m]
 geom.L_tot_nozzle = geom.L_conv + geom.L_div_RAO;         % [m]
 
 % Total length of Combustion Chamber + Convergent of Nozzle
-geom.L_tot_cc_conv=geom.L_conv + geom.L_cc;            %[m]
+geom.L_tot_cc_conv = geom.L_conv + geom.L_cc;            %[m]
 
 % Total length of Combustion Chamber + Nozzle:
-geom.L_tot_cc_nozzle=geom.L_tot_nozzle +  geom.L_cc;   %[m]
+geom.L_tot_cc_nozzle = geom.L_tot_nozzle +  geom.L_cc;   %[m]
 
 % Exhaust velocity
 nozzle.v_exit_start = sqrt(2*(prop.k/(prop.k - 1))*prop.R_MM_mean*comb_ch.T_cc*(1 - (nozzle.P_exit/comb_ch.P_start_real)^((prop.k-1)/prop.k)));  % [m/s]

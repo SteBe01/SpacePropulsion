@@ -7,7 +7,6 @@ tot_added_length = geom.L_conv + geom.L_cc + geom.L_inj;
 
 V_inj = geom.L_inj * pi * (geom.r_cc+thermal.th_chosen_cc)^2;
 
-% same values in engine_shape.m
 h_cc_int = geom.r_cc * 2;
 h_cc = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_cc;
@@ -28,7 +27,7 @@ fraction = V_around_cc_conv_inj/(V_tot_req);
 
 if fraction >= 0.2
     tank.V_tot_tank = V_tot_req - V_eff_occ;
-elseif fraction < 0.2 || fraction > 0
+elseif fraction < 0.2 && fraction > 0
     V_empty = V_tot_req * (0.2 - fraction);
     tank.V_tot_tank = V_tot_req - V_eff_occ - V_empty;
 else
@@ -147,6 +146,6 @@ end
 function [P_loss] = pressure_loss(rho, v, P_inj_loss)
     P_distr_loss = 1/2*rho*v^2;
     P_feeding_loss = 0.5*101325;
-    P_concentrated = ( 2*1.034 + 0.76)*1e5;
-    P_loss = P_feeding_loss+P_distr_loss+P_inj_loss + P_concentrated;
+    P_concentrated = (2*1.034 + 0.76)*1e5;
+    P_loss = P_feeding_loss + P_distr_loss + P_inj_loss + P_concentrated;
 end

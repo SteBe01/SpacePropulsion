@@ -8,16 +8,12 @@ engine.I_sp_id = engine.C_star_id*engine.C_T/const.g0; % [s]
 
 % Total mass flow rate
 engine.m_dot = geom.A_t * comb_ch.P_start_real * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
-% Oxydizer mass flow rate
-engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;     % [Kg/s]
-% Fuel mass flow rate
-engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;            % [Kg/s]
-engine.m_dot_min = geom.A_t * comb_ch.P_min * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
+engine.m_dot_ox = prop.OF/(1+prop.OF)*engine.m_dot;     % [Kg/s] Oxydizer mass flow rate
+engine.m_dot_f = 1/(1+prop.OF)*engine.m_dot;            % [Kg/s] Fuel mass flow rate
 
-% Oxydizer mass flow rate
-engine.m_dot_min_ox = prop.OF/(1+prop.OF)*engine.m_dot_min;     % [Kg/s]
-% Fuel mass flow rate
-engine.m_dot_min_f = 1/(1+prop.OF)*engine.m_dot_min;            % [Kg/s]
+engine.m_dot_min = geom.A_t * comb_ch.P_min * prop.k * sqrt((2/(prop.k+1))^((prop.k+1)/(prop.k-1))) / sqrt(prop.k * prop.R_MM_mean * comb_ch.T_cc); % [kg/s]
+engine.m_dot_min_ox = prop.OF/(1+prop.OF)*engine.m_dot_min;     % [Kg/s] Oxydizer mass flow rate
+engine.m_dot_min_f = 1/(1+prop.OF)*engine.m_dot_min;            % [Kg/s] Fuel mass flow rate
 
 %% Injection plate
 
@@ -31,7 +27,7 @@ mass_dot_f = engine.m_dot_f;                            % [kg/s]
 
 min_d = 0.0005; %from literature
 
-K = 1.7;
+K = const.K;
 inj.A_inj_ox = mass_dot_ox*2.20462 * sqrt(2.238 * K / (rho_ox*0.06243 * deltaP*0.000145038)) * 0.00064516;
 
 N = 1:200;
@@ -57,17 +53,13 @@ v_cc = engine.m_dot/(rho_mix * geom.A_cc);                  % [m/s]
 a = sqrt(prop.k*prop.R_MM_mean*comb_ch.T_cc);               % [m/s]
 comb_ch.Ma_cc = v_cc/a;
 
-%Cd of the injectors
+% Cd of the injectors
 inj.Cd_ox=engine.m_dot_ox/(inj.A_inj_ox*sqrt(2*prop.rho_lox*0.2*comb_ch.P_start_id));
 inj.Cd_f=engine.m_dot_f/(inj.A_inj_f*sqrt(2*prop.rho_rp1*0.2*comb_ch.P_start_id));
 
-%length of the injection plate
-inj.L_inj=1.1*inj.D_f;
-
-
 %% Combustion chamber losses:
 
-delta_p = geom.f*prop.rho_cc_in*prop.v_cc^2/geom.r_cc/2;
+delta_p = geom.f*prop.rho_cc_in*prop.v_cc^2/(geom.r_cc*2);
 comb_ch.P_start_real = comb_ch.P_start_id-delta_p;
 
 %% Nozzle Losses:
