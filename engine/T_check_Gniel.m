@@ -1,4 +1,3 @@
-
 addpath(genpath('./functions'))
 
     Tf = comb_ch.T_cc; %T in CC
@@ -136,11 +135,10 @@ q2=q2_vec(pos1);
     else
         disp('cooling (enough coolant)')
     end
-    
 
+engine.t_res = (nozzle.L_star*prop.rho_cc_in*geom.A_t)/engine.m_dot; % [s]
 
-
-
+thermal.T_fin_RP1 = thermal.deltaT_cc + prop.T_rp1_in; % [K]
 
 
 % %% Throat
@@ -243,4 +241,3 @@ q2=q2_vec(pos1);
 %     if thermal.th_chosen_cc < thermal.th_min || thermal.th_chosen_cc < 3e-3
 %         error('Wrong thickness')
 %     end
-

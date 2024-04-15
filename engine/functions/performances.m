@@ -59,7 +59,8 @@ inj.Cd_f=engine.m_dot_f/(inj.A_inj_f*sqrt(2*prop.rho_rp1*0.2*comb_ch.P_start_id)
 
 %% Combustion chamber losses:
 
-delta_p = geom.f*prop.rho_cc_in*prop.v_cc^2/(geom.r_cc*2);
+delta_p = geom.L_cc*geom.f*prop.rho_cc_in*prop.v_cc^2/(geom.r_cc*4);
+comb_ch.delta_p = delta_p;
 comb_ch.P_start_real = comb_ch.P_start_id-delta_p;
 
 %% Nozzle Losses:
