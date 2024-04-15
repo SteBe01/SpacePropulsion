@@ -7,7 +7,8 @@ function [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data(
     % Prop couple: LOx and RP-1
 	engine.T = 1000;                    % [N]
 	comb_ch.P_start_id = 50e5;          % [Pa]
-	comb_ch.P_min = 20e5;               % [Pa]
+	comb_ch.P_min = 19.68e5;            % [Pa] %with this design pressure at 20 bar we have 2% residual in tank
+	comb_ch.P_min_oper = 20e5;            % [Pa]
 	geom.diameter_max = 1;              % [m]
 	geom.length_max = 2;                % [m]
 	geom.vol_reduction_factor = 0.8;    % [-]

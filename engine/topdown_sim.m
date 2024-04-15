@@ -50,7 +50,7 @@ P_c = comb_ch.P_start_real;
 
 i = 1;
 dt = 0.5; %going lower doesn't increase accuracy
-while P_c > comb_ch.P_min
+while P_c > 20e5
 	[m_dot, Isp] = get_mass_rate2(A_t, P_c, comb_ch.T_cc, prop.k, prop.MM_mean, const.R);
 	%[m_dot, Isp] = get_mass_rate(A_t, P_c, OF); %CEA version
 	m_dot_ox = OF/(1+OF) * m_dot;
@@ -83,6 +83,7 @@ while P_c > comb_ch.P_min
 	%store history values
 	t(i) = dt * (i-1);
 	mdot(i) = m_dot;
+	mdotf(i) = m_dot_f;
 	Pc(i) = P_c;
 	vtube_f(i) = v_tube_f;
 	vtube_ox(i) = v_tube_ox;
@@ -91,7 +92,9 @@ while P_c > comb_ch.P_min
 	i = i+1;
 end
 
-    t_burn=t(end);
+t_burn=t(end);
+
+(masses.m_fu - sum(mdotf)*dt) / masses.m_fu
 
 
 function [m_dot, Isp] = get_mass_rate(A_t, P_c, OF)

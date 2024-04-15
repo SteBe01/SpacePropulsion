@@ -52,7 +52,7 @@ v_f = @(Pc, P_he) sqrt((P_he - Pc - C)/K_f);
 
 i = 1;
 dt = 5; %going lower doesn't increase accuracy
-while P_c > comb_ch.P_min
+while P_c > comb_ch.P_min_oper
 	lower_bound = 10e5;
 
 	max_Pc = min([P_he_ox - C, P_he_f - C]);

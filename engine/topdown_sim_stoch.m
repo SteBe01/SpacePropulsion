@@ -46,7 +46,7 @@ P_c = comb_ch.P_start_real;
 
 i = 1;
 dt = 0.5; %going lower doesn't increase accuracy
-while P_c > comb_ch.P_min
+while P_c > comb_ch.P_min_oper
 	[m_dot, Isp] = get_mass_rate2(A_t, P_c, comb_ch.T_cc, prop.k, prop.MM_mean, const.R);
 	%[m_dot, Isp] = get_mass_rate(A_t, P_c, OF); %CEA version
 	m_dot_ox = OF/(1+OF) * m_dot;
