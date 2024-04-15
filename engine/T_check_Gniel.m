@@ -10,7 +10,7 @@ addpath(genpath('./functions'))
     Ma = comb_ch.Ma_cc; %Mach in CC
     c = const.c; % specific heat of RP-1
     m_dot_fu = engine.m_dot_f; %portata massica del fuel
-    t_burn= 2815;
+    t_burn= 3000;
     thermal.Dh_cc = 2*geom.r_cc; % [m] Hydraulic diam
     const.eps_m_inc = 0.4; % [-] emissivity coefficient inconel at 1500-3000
     Pc=(50:-1:20)*1e5;
