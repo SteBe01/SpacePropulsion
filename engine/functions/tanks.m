@@ -15,15 +15,11 @@ l_cc = geom.L_cc;
 difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 length = difference / tand(nozzle.beta);
 
-h_co_f = 2 * sqrt(geom.A_t/pi);
 h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 l_co = geom.L_conv;
 
-V_cc = (l_cc+length)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
-diff_conv = h_co_f_ext - h_co_f;
-cone1 = (l_co-length)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
-cone2 = length*(pi/3)*((h_cc_int/2)^2 + (h_cc/2)^2 + (h_cc_int/2)*(h_cc/2)) - length*(pi/3)*((h_cc_int/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_cc_int/2)*((h_cc-diff_conv)/2));
-V_conv = cone1 + cone2;
+V_cc = (l_cc+length)*pi*((h_cc/2)^2);
+V_conv = (l_co-length)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2));
 V_occ = V_inj + V_cc + V_conv;
 
 V_eff_occ = tot_added_length * pi * (geom.diameter_max/2)^2;
