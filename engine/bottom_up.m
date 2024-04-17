@@ -5,6 +5,8 @@ close all
 
 addpath(genpath('./functions'))
 
+export = 1;
+
 % Data
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 comb_ch.P_start_real = comb_ch.P_start_id;
@@ -30,3 +32,11 @@ end
 % Visual representation
 [nozzle, masses] = engine_shape(geom, tank, nozzle, masses, thermal);
 
+if export
+    set(gca, 'visible', 'off')
+    set(gca, 'XTickLabel', [])
+    set(gca, 'YTickLabel', [])
+    set(gca, 'TickLength', [0 0])
+    grid off
+    exportgraphics(gcf, "engine_matlab.pdf", "ContentType","vector")
+end

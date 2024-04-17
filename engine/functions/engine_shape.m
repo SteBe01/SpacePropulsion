@@ -6,25 +6,26 @@ grid on, axis equal, hold on
 d = geom.diameter_max;
 l = geom.length_max;
 
+h_ox_tot = tank.L_tank_ox;
+
 % external cylinder
-plot([0 l], [-d/2 -d/2], 'Color', 'blue')
-plot([0 l], [d/2 d/2], 'Color', 'blue')
-plot([0 0], [-d/2 d/2], 'Color', 'blue')
-plot([l l], [-d/2 d/2], 'Color', 'blue')
+plot([h_ox_tot l], [-d/2 -d/2], '--b')
+plot([h_ox_tot l], [d/2 d/2], '--b')
+% plot([0 0], [-d/2 d/2], '--b')
+plot([l l], [-d/2 d/2], '--b')
 
 % tanks
 % oxidizer
 d_ox = 2*tank.r_ext_ox;
 d_ox_int = d_ox - 2 * tank.th_tank_ox;
-h_ox_tot = tank.L_tank_ox;
-plot([0 h_ox_tot], [-d_ox/2 -d_ox/2], 'Color', 'blue')  % ext
-plot([0 h_ox_tot], [+d_ox/2 +d_ox/2], 'Color', 'blue')  % ext
-plot([0 h_ox_tot], [-d_ox_int/2 -d_ox_int/2], 'Color', 'blue')
-plot([0 h_ox_tot], [+d_ox_int/2 +d_ox_int/2], 'Color', 'blue')
-plot([0 0], [-d_ox/2 +d_ox/2], 'Color', 'blue')
-plot([h_ox_tot h_ox_tot], [-d_ox/2 +d_ox/2], 'Color', 'blue')
+plot([0 h_ox_tot], [-d_ox/2 -d_ox/2], 'Color', 'black')  % ext
+plot([0 h_ox_tot], [+d_ox/2 +d_ox/2], 'Color', 'black')  % ext
+plot([0 h_ox_tot], [-d_ox_int/2 -d_ox_int/2], 'Color', 'black')
+plot([0 h_ox_tot], [+d_ox_int/2 +d_ox_int/2], 'Color', 'black')
+plot([0 0], [-d_ox/2 +d_ox/2], 'Color', 'black')
+plot([h_ox_tot h_ox_tot], [-d_ox/2 +d_ox/2], 'Color', 'black')
 
-plot([tank.L_initial_He_ox tank.L_initial_He_ox], [-d_ox_int/2 +d_ox_int/2], 'Color', 'blue')
+plot([tank.L_initial_He_ox tank.L_initial_He_ox], [-d_ox_int/2 +d_ox_int/2], 'Color', 'black')
 surf([0 tank.L_initial_He_ox;0 tank.L_initial_He_ox],[-d_ox_int/2 -d_ox_int/2;+d_ox_int/2 +d_ox_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
 surf([tank.L_initial_He_ox h_ox_tot;tank.L_initial_He_ox h_ox_tot],[-d_ox_int/2 -d_ox_int/2;+d_ox_int/2 +d_ox_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','#0CF2EE');
 
@@ -33,14 +34,14 @@ d_fu = 2 * tank.r_ext_fu;
 d_fu_int = d_fu - 2*tank.th_tank_fu;
 h_fu_tot = tank.L_tank_fu;
 offset = h_ox_tot + 0.5*tank.L_empty;
-plot([offset offset+h_fu_tot], [-d_fu/2 -d_fu/2], 'Color', 'blue')  % ext
-plot([offset offset+h_fu_tot], [+d_fu/2 +d_fu/2], 'Color', 'blue')  % ext
-plot([offset offset+h_fu_tot], [-d_fu_int/2 -d_fu_int/2], 'Color', 'blue')
-plot([offset offset+h_fu_tot], [+d_fu_int/2 +d_fu_int/2], 'Color', 'blue')
-plot([offset offset], [-d_fu/2 +d_fu/2], 'Color', 'blue')
-plot([offset+h_fu_tot offset+h_fu_tot], [-d_fu/2 +d_fu/2], 'Color', 'blue')
+plot([offset offset+h_fu_tot], [-d_fu/2 -d_fu/2], 'Color', 'black')  % ext
+plot([offset offset+h_fu_tot], [+d_fu/2 +d_fu/2], 'Color', 'black')  % ext
+plot([offset offset+h_fu_tot], [-d_fu_int/2 -d_fu_int/2], 'Color', 'black')
+plot([offset offset+h_fu_tot], [+d_fu_int/2 +d_fu_int/2], 'Color', 'black')
+plot([offset offset], [-d_fu/2 +d_fu/2], 'Color', 'black')
+plot([offset+h_fu_tot offset+h_fu_tot], [-d_fu/2 +d_fu/2], 'Color', 'black')
 
-plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [-d_fu_int/2 +d_fu_int/2], 'Color', 'blue')
+plot([offset+tank.L_initial_He_fu offset+tank.L_initial_He_fu], [-d_fu_int/2 +d_fu_int/2], 'Color', 'black')
 surf([offset offset+tank.L_initial_He_fu;offset offset+tank.L_initial_He_fu],[-d_fu_int/2 -d_fu_int/2;+d_fu_int/2 +d_fu_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','yellow');
 surf([offset+tank.L_initial_He_fu offset+h_fu_tot;offset+tank.L_initial_He_fu offset+h_fu_tot],[-d_fu_int/2 -d_fu_int/2;+d_fu_int/2 +d_fu_int/2],[1 1;1 1], 'FaceAlpha',0.2, 'FaceColor','red');
 
@@ -48,10 +49,10 @@ surf([offset+tank.L_initial_He_fu offset+h_fu_tot;offset+tank.L_initial_He_fu of
 h_inj = 2 * (geom.r_cc + thermal.th_chosen_cc);
 l_cc = geom.L_inj;
 offset = offset + h_fu_tot + 0.5*tank.L_empty;
-plot([offset offset+l_cc], [-h_inj/2 -h_inj/2], 'Color', 'blue')
-plot([offset offset+l_cc], [+h_inj/2 +h_inj/2], 'Color', 'blue')
-plot([offset offset], [+h_inj/2 -h_inj/2], 'Color', 'blue')
-plot([offset+l_cc offset+l_cc], [+h_inj/2 -h_inj/2], 'Color', 'blue')
+plot([offset offset+l_cc], [-h_inj/2 -h_inj/2], 'Color', 'black')
+plot([offset offset+l_cc], [+h_inj/2 +h_inj/2], 'Color', 'black')
+plot([offset offset], [+h_inj/2 -h_inj/2], 'Color', 'black')
+plot([offset+l_cc offset+l_cc], [+h_inj/2 -h_inj/2], 'Color', 'black')
 
 % cc
 offset = offset + l_cc;
@@ -63,14 +64,14 @@ difference = -(h_cc/2-h_cc_int/2) + (1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 length_1 = difference / tand(nozzle.beta);
 % plot([offset-l_cc offset+length], [+h_cc/2 +h_cc/2], 'or')
 
-plot([offset offset+l_cc+length_1], [-h_cc/2 -h_cc/2], 'Color', 'blue')
-plot([offset offset+l_cc+length_1], [+h_cc/2 +h_cc/2], 'Color', 'blue')
-plot([offset offset+l_cc], [-h_cc_int/2 -h_cc_int/2], 'Color', 'blue')          % do not touch
-plot([offset offset+l_cc], [+h_cc_int/2 +h_cc_int/2], 'Color', 'blue')          % do not touch
-plot([offset offset], [+h_cc/2 -h_cc/2], 'Color', 'blue')                 % left
+plot([offset offset+l_cc+length_1], [-h_cc/2 -h_cc/2], 'Color', 'black')
+plot([offset offset+l_cc+length_1], [+h_cc/2 +h_cc/2], 'Color', 'black')
+plot([offset offset+l_cc], [-h_cc_int/2 -h_cc_int/2], 'Color', 'black')          % do not touch
+plot([offset offset+l_cc], [+h_cc_int/2 +h_cc_int/2], 'Color', 'black')          % do not touch
+plot([offset offset], [+h_cc/2 -h_cc/2], 'Color', 'black')                 % left
 
-plot([offset+l_cc offset+l_cc+length_1], [+h_cc_int/2 +h_cc/2], 'Color', 'blue')        % bottom to top
-plot([offset+l_cc+length_1 offset+l_cc], [-h_cc/2 -h_cc_int/2], 'Color', 'blue')        % top to bottom
+plot([offset+l_cc offset+l_cc+length_1], [+h_cc_int/2 +h_cc/2], 'Color', 'black')        % bottom to top
+plot([offset+l_cc+length_1 offset+l_cc], [-h_cc/2 -h_cc_int/2], 'Color', 'black')        % top to bottom
 
 V_cc = (l_cc+length_1)*pi*((h_cc/2)^2 - (h_cc_int/2)^2) - (pi/3)*length_1*(geom.r_cc^2 + (geom.r_cc+difference)^2 + geom.r_cc*(geom.r_cc+difference));
 masses.combustion_chamber = V_cc * thermal.rho;
@@ -82,12 +83,12 @@ h_co_f = 2 * sqrt(geom.A_t/pi);
 h_co_f_ext = 2 * sqrt(geom.A_t/pi) + 2*(1/cosd(nozzle.beta))*thermal.th_chosen_cc;
 l_co = geom.L_conv;
 offset = offset + l_cc;
-plot([offset offset+l_co], [-h_co_i/2 -h_co_f/2], 'Color', 'blue')                    % do not touch
-plot([offset offset+l_co], [+h_co_i/2 +h_co_f/2], 'Color', 'blue')                    % do not touch
-plot([offset+length_1 offset+l_co], [-h_co_i_ext/2+difference -h_co_f_ext/2], 'Color', 'blue')
-plot([offset+length_1 offset+l_co], [+h_co_i_ext/2-difference +h_co_f_ext/2], 'Color', 'blue')
-% plot([offset offset], [+h_co_i_ext/2 -h_co_i_ext/2], 'Color', 'blue')
-plot([offset+l_co offset+l_co], [+h_co_f_ext/2 -h_co_f_ext/2], 'Color', 'blue')
+plot([offset offset+l_co], [-h_co_i/2 -h_co_f/2], 'Color', 'black')                    % do not touch
+plot([offset offset+l_co], [+h_co_i/2 +h_co_f/2], 'Color', 'black')                    % do not touch
+plot([offset+length_1 offset+l_co], [-h_co_i_ext/2+difference -h_co_f_ext/2], 'Color', 'black')
+plot([offset+length_1 offset+l_co], [+h_co_i_ext/2-difference +h_co_f_ext/2], 'Color', 'black')
+% plot([offset offset], [+h_co_i_ext/2 -h_co_i_ext/2], 'Color', 'black')
+plot([offset+l_co offset+l_co], [+h_co_f_ext/2 -h_co_f_ext/2], 'Color', 'black')
 
 diff_conv = h_co_f_ext - h_co_f;
 cone1 = (l_co-length_1)*(pi/3)*((h_co_f_ext/2)^2 + (h_cc/2)^2 + (h_co_f_ext/2)*(h_cc/2)) - (l_co-length_1)*(pi/3)*((h_co_f/2)^2 + ((h_cc-diff_conv)/2)^2 + (h_co_f/2)*((h_cc-diff_conv)/2));
@@ -118,8 +119,8 @@ switch nozzle.plot
         xy_r_up(2,:) = xy_r_up(2,:) + ones(1,N)*(geom.r_t + r_c_div+ geom.diameter_max/2);
         xy_r_down(2,:) = xy_r_down(2,:) + ones(1,N)*(-geom.r_t - r_c_div+ geom.diameter_max/2);
 
-        plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'blue')
-        plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'blue')
+        plot(xy_r_up(1,:), xy_r_up(2,:),'Color', 'black')
+        plot(xy_r_down(1,:), xy_r_down(2,:),'Color', 'black')
 
         % Rao Bell
         x1 = xy_r_up(1,end); y1 = xy_r_up(2,end);
@@ -141,12 +142,12 @@ switch nozzle.plot
             y_par_up(i) = f_bell(x_par(i)) - geom.diameter_max/2;
         end
         y_par_down = zeros(1,length(x_par));
-        plot(x_par,y_par_up,'Color', 'blue')
+        plot(x_par,y_par_up,'Color', 'black')
         for i = 1:length(x_par)
             y_par_down(i) = -f_bell(x_par(i)) + geom.diameter_max/2;
         end
 
-        plot(x_par,y_par_down,'Color', 'blue')
+        plot(x_par,y_par_down,'Color', 'black')
 
         nozzle.f_bell = f_bell;
         nozzle.f_bell_for_volume = @(x) a*x.^3 + b*x.^2 + c*x + d - geom.diameter_max/2;
@@ -189,16 +190,16 @@ switch nozzle.plot
         f_conic = @(x) a*x + b;                 % internal
         th_conv_nonradial = nozzle.th_div*(1/cos(nozzle.alpha_con_length));
 
-        plot([x1 nozzle.x2], [f_conic(x1)-d/2 f_conic(nozzle.x2)-d/2], 'Color','blue')
-        plot([x1 nozzle.x2], [-f_conic(x1)+geom.diameter_max-d/2 -f_conic(nozzle.x2)+geom.diameter_max-d/2], 'Color','blue')
+        plot([x1 nozzle.x2], [f_conic(x1)-d/2 f_conic(nozzle.x2)-d/2], 'Color','black')
+        plot([x1 nozzle.x2], [-f_conic(x1)+geom.diameter_max-d/2 -f_conic(nozzle.x2)+geom.diameter_max-d/2], 'Color','black')
 
         f_conic_ext = @(x) a*x + b + nozzle.th_div*(1/cos(nozzle.alpha_con_length));        % external
 
-        plot([x1 nozzle.x2], [f_conic_ext(x1)-d/2 f_conic_ext(nozzle.x2)-d/2], 'Color','blue')
-        plot([x1 nozzle.x2], [-f_conic_ext(x1)+geom.diameter_max-d/2 -f_conic_ext(nozzle.x2)+geom.diameter_max-d/2], 'Color','blue')
+        plot([x1 nozzle.x2], [f_conic_ext(x1)-d/2 f_conic_ext(nozzle.x2)-d/2], 'Color','black')
+        plot([x1 nozzle.x2], [-f_conic_ext(x1)+geom.diameter_max-d/2 -f_conic_ext(nozzle.x2)+geom.diameter_max-d/2], 'Color','black')
 
-        plot([nozzle.x2 nozzle.x2], [f_conic(nozzle.x2)-d/2 f_conic_ext(nozzle.x2)-d/2], 'Color','blue')
-        plot([nozzle.x2 nozzle.x2], [-f_conic(nozzle.x2)+geom.diameter_max-d/2 -f_conic_ext(nozzle.x2)+geom.diameter_max-d/2], 'Color','blue')
+        plot([nozzle.x2 nozzle.x2], [f_conic(nozzle.x2)-d/2 f_conic_ext(nozzle.x2)-d/2], 'Color','black')
+        plot([nozzle.x2 nozzle.x2], [-f_conic(nozzle.x2)+geom.diameter_max-d/2 -f_conic_ext(nozzle.x2)+geom.diameter_max-d/2], 'Color','black')
 
         % masses
         V_cone = geom.L_div_con_15*(pi/3)*((sqrt(geom.A_exit/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_t/pi)+th_conv_nonradial)^2 + (sqrt(geom.A_exit/pi)+th_conv_nonradial)*(sqrt(geom.A_t/pi)+th_conv_nonradial)) - geom.L_div_con_15*(pi/3)*(sqrt(geom.A_exit/pi)^2 + sqrt(geom.A_t/pi)^2 + sqrt(geom.A_exit/pi)*sqrt(geom.A_t/pi));
