@@ -5,14 +5,14 @@ close all
 
 addpath(genpath('./functions'))
 
-export = 1;
+export = 0;
 
 % Data
 [engine, comb_ch, geom, prop, tank, nozzle, thermal, const] = get_data();
 comb_ch.P_start_real = comb_ch.P_start_id;
 
 % Combustion
-for i = 1:const.N_iterations
+for ii = 1:const.N_iterations
     % Nozzle and Combustion Chamber
     [geom, engine, nozzle] = nozzle_and_cc(prop, geom, engine, comb_ch, nozzle, thermal, const);
 
@@ -25,6 +25,7 @@ for i = 1:const.N_iterations
         break
     end
 end
+clear ii
 
 % Tanks
 [tank, geom, masses] = tanks(tank, prop, geom, engine, comb_ch, inj, thermal, nozzle, const);
